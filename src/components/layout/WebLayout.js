@@ -1,8 +1,10 @@
 import "./weblayout.css";
-import {Component} from "react";
+import React, {Component} from 'react';
 import axiosInstance from '../../api/axiosInstance';
-import {Button, Menu, MenuDivider, MenuItem} from "@blueprintjs/core";
+import {Menu, MenuItem} from "@blueprintjs/core";
 import { Colors } from "@blueprintjs/core";
+import DiagramComponent from "../DiagramCanva"
+
 
 
 class WebLayout extends Component {
@@ -28,6 +30,9 @@ class WebLayout extends Component {
             });
         }
     }
+
+    //diagram
+
     render() {
         const { loading, error, operations } = this.state;
         return (
@@ -53,7 +58,7 @@ class WebLayout extends Component {
                         </Menu>
                     </nav>
                     <article className="content-article" style={{ color: Colors.LIGHT_GRAY1, background: Colors.DARK_GRAY2 }}>
-                        <h1><Button intent="success" text="Clique em mim!" /></h1>
+                        <DiagramComponent />
                     </article>
                     <aside className="content-sidebar" style={{ color: Colors.LIGHT_GRAY1, background: Colors.DARK_GRAY5 }}>
                         <h1>Sidebar</h1>
