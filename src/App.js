@@ -1,12 +1,12 @@
 import './App.css';
-import { Button } from "@blueprintjs/core";
+import WebLayout from "./components/layout/WebLayout";
 
 function App() {
-  return (
-      <div className="App">
-        <Button intent="success" text="Clique em mim!" />
-      </div>
-  );
+    return (
+        <div>
+            <WebLayout />
+        </div>
+    );
 }
 
 export default App;
