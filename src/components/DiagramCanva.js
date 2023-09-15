@@ -11,6 +11,10 @@ import createEngine, {
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import { CustomCanvasWidget } from './helpers/CustomCanvasWidget';
 import { LinkWidget, PointModel } from '@projectstorm/react-diagrams-core';
+/*todo: label with formulary or called by right sidebar*/
+/*import { EditableLabelFactory } from './EditableLabelFactory';*/
+/*todo: label with formulary or called by right sidebar*/
+/*import { EditableLabelModel } from './EditableLabelModel';*/
 
 class AdvancedLinkModel extends DefaultLinkModel {
     constructor() {
@@ -130,6 +134,10 @@ export default function DiagramComponent() {
             state.dragNewLink.config.allowLooseLinks = false;
         }
 
+        // register our label factory
+        /*todo: label with formulary or called by right sidebar*/
+       /* engine.getLabelFactories().registerFactory(new EditableLabelFactory());*/
+
         const model = engine.getModel();
 
         const node1 = new DefaultNodeModel('Node 1', 'rgb(0,192,255)');
@@ -141,12 +149,15 @@ export default function DiagramComponent() {
         node2.setPosition(400, 100);
 
         const link1 = port1.link(port2);
+        /*todo: label with formulary or called by right sidebar*/
+        /*link1.addLabel(new EditableLabelModel({
+                label: 'Hello, I am label!'
+            })
 
-        const node3 = new DefaultNodeModel('Node 3', 'rgb(0,192,255)');
-        node3.addOutPort('Out');
-        node3.setPosition(100, 200);
+        );*/
+        model.addAll(node1, node2, link1);
+        engine.setModel(model);
 
-        model.addAll(node1, node2, node3, link1);
     }, [engine]);
 
     return (
