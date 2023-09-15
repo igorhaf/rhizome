@@ -55,7 +55,7 @@ export class CustomCanvasWidget extends React.Component {
             <>
                 <Global styles={S.Expand} />
                 <S.Container
-                    background={this.props.background || 'rgb(60, 60, 60)'}
+                    background={'#383E47'}
                     color={this.props.color || 'rgba(255,255,255, 0.05)'}
                 >
                     {this.props.children}
