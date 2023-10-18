@@ -1,3 +1,4 @@
+<!--TabsComponent.vue-->
 <template>
     <div class="tabs-container mt-6">
         <div class="tabs-wrapper flex overflow-x-auto">
@@ -23,7 +24,7 @@ export default {
     data() {
         return {
             tabs: [
-                { id: 1, label: 'Tab 1', content: 'MxGraphComponent', isEditing: false }
+                { id: 1, label: 'Frame 1', content: 'MxGraphComponent', isEditing: false }
             ],
             nextTabId: 2,
             activeTab: 0
@@ -37,7 +38,7 @@ export default {
         addTab() {
             const nextTab = {
                 id: this.nextTabId,
-                label: `Tab ${this.nextTabId}`,
+                label: `Frame ${this.nextTabId}`,
                 content: 'MxGraphComponent',
                 isEditing: false
             };

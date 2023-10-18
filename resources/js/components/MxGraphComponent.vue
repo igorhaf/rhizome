@@ -1,3 +1,4 @@
+<!--MxGraphComponent.vue-->
 <template>
     <div ref="graphContainer"
          class="graph-container"
@@ -39,13 +40,6 @@ export default {
         this.addClickEventListener();
         this.addDblClickListener();
         this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
-
-        try {
-
-            console.log("Dados carregados com sucesso!");
-        } catch (error) {
-            console.error('Erro ao carregar os dados do gráfico:', error);
-        }
     },
     beforeDestroy() {
         if (this.graph) {
@@ -57,12 +51,8 @@ export default {
             const encoder = new mxCodec();
             const result = encoder.encode(this.graph.getModel());
             const xml = mxUtils.getXml(result);
-            const graphData = this.getGraphData();
 
-            // Emitindo o novo evento com os dados atualizados do gráfico.
             EventBus.emit('graphDataUpdated', xml);
-
-            EventBus.emit('graphDataUpdated', graphData);
 
             try {
                 await api.post('/graph-data', { data: xml });
@@ -133,6 +123,16 @@ export default {
             } finally {
                 this.graph.getModel().endUpdate();
             }
+
+            new mxRubberband(this.graph);
+
+            const keyHandler = new mxKeyHandler(this.graph);
+            keyHandler.bindKey(46, (evt) => {
+                if (this.graph.isEnabled()) {
+                    this.graph.removeCells();
+                }
+            });
+
         },
         addClickEventListener() {
             this.graph.addListener(mxEvent.CLICK, (sender, evt) => {
@@ -168,6 +168,7 @@ export default {
                 this.graph.getModel().endUpdate();
             }
         }
+
     }
 }
 </script>
