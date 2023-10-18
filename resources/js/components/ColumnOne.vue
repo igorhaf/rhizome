@@ -1,14 +1,36 @@
 <template>
-    <div class="bg-white p-4 shadow-lg rounded">
-        <tree-view :tree-data="data"></tree-view>
+    <div class="bg-white p-4 shadow-lg rounded flex flex-col h-full space-y-4">
+
+        <!-- TreeView Card -->
+        <div class="flex flex-col flex-1 bg-gray-100 p-4 rounded shadow">
+            <h2 class="text-xl font-bold mb-4">Tree View</h2>
+            <div class="flex-1 overflow-auto" style="max-height: 45vh;">
+                <div class="min-w-max">
+                    <tree-view :tree-data="data"></tree-view>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Card -->
+        <div class="flex flex-col flex-1 bg-gray-100 p-4 rounded shadow">
+            <h2 class="text-xl font-bold mb-4">Projects</h2>
+            <div class="flex-1 overflow-auto" style="max-height: 45vh;">
+                <div class="min-w-max">
+                    <projects :tree-data="data"></projects>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
+
 <script>
 import TreeView from './TreeView.vue';
+import Projects from './Projects.vue';
 
 export default {
     components: {
+        Projects,
         TreeView
     },
     data() {

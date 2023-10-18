@@ -7,7 +7,12 @@ module.exports = {
         './resources/**/*.vue',
     ],
   theme: {
-    extend: {},
+      extend: {
+          colors: {
+              'primary': '#1a202c',  // Cor primária personalizada
+              'secondary': '#2d3748' // Cor secundária personalizada
+          }
+      }
   },
   plugins: [],
 }

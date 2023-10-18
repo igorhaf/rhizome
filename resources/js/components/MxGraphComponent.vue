@@ -18,6 +18,12 @@ const {
 
 export default {
     name: "MxGraphComponent",
+    props: {
+        graphContent: {
+            type: Object,
+            default: null
+        }
+    },
     data() {
         return {
             graph: null,
@@ -51,6 +57,12 @@ export default {
             const encoder = new mxCodec();
             const result = encoder.encode(this.graph.getModel());
             const xml = mxUtils.getXml(result);
+            const graphData = this.getGraphData();
+
+            // Emitindo o novo evento com os dados atualizados do gráfico.
+            EventBus.emit('graphDataUpdated', xml);
+
+            EventBus.emit('graphDataUpdated', graphData);
 
             try {
                 await api.post('/graph-data', { data: xml });
@@ -116,7 +128,7 @@ export default {
             const parent = this.graph.getDefaultParent();
             this.graph.getModel().beginUpdate();
             try {
-                this.graph.insertVertex(parent, null, "Olá, mxGraph!", 20, 20, 80, 30);
+                this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30);
 
             } finally {
                 this.graph.getModel().endUpdate();
