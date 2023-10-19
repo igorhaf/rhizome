@@ -111,6 +111,8 @@ export default {
             this.graph.gridSize = 10;
             this.graph.scrollbars = false;  // Desabilita as barras de rolagem
             this.graph.pageVisible = false; // Evita que o mxGraph ajuste o tamanho do contêiner
+            this.graph.setEnabled(true);
+            this.graph.setCellsDeletable(true);
             this.graph.stylesheet.getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
             this.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
             this.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
