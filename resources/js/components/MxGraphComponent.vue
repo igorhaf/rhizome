@@ -47,6 +47,13 @@ export default {
         }
     },
     methods: {
+        created() {
+          EventBus.on('tabClosed', (tabIndex) => {
+            if (this.graph[tabIndex]) {
+              this.graph[tabIndex].destroy();
+            }
+          });
+        },
         async sendGraphDataToAPI() {
             const encoder = new mxCodec();
             const result = encoder.encode(this.graph.getModel());

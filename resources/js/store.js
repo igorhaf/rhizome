@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 
-const store = createStore({
+export const store = createStore({
     state() {
         return {
             dataCompartilhada: null
@@ -17,5 +17,3 @@ const store = createStore({
         }
     }
 });
-
-export default store;

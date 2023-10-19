@@ -20176,15 +20176,23 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     }
   },
   methods: {
-    sendGraphDataToAPI: function sendGraphDataToAPI() {
+    created: function created() {
       var _this2 = this;
+      _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.on('tabClosed', function (tabIndex) {
+        if (_this2.graph[tabIndex]) {
+          _this2.graph[tabIndex].destroy();
+        }
+      });
+    },
+    sendGraphDataToAPI: function sendGraphDataToAPI() {
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var encoder, result, xml;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               encoder = new mxCodec();
-              result = encoder.encode(_this2.graph.getModel());
+              result = encoder.encode(_this3.graph.getModel());
               xml = mxUtils.getXml(result);
               _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('graphDataUpdated', xml);
               _context2.prev = 4;
@@ -20208,7 +20216,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       }))();
     },
     loadGraphFromDatabase: function loadGraphFromDatabase() {
-      var _this3 = this;
+      var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var response, xmlData, doc, codec;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
@@ -20221,9 +20229,9 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               xmlData = response.data;
               doc = mxUtils.parseXml(xmlData);
               codec = new mxCodec(doc);
-              codec.decode(doc.documentElement, _this3.graph.getModel());
-              _this3.graph.getModel().endUpdate();
-              _this3.graph.getModel().beginUpdate();
+              codec.decode(doc.documentElement, _this4.graph.getModel());
+              _this4.graph.getModel().endUpdate();
+              _this4.graph.getModel().beginUpdate();
             case 9:
             case "end":
               return _context3.stop();
@@ -20232,7 +20240,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       }))();
     },
     initGraph: function initGraph() {
-      var _this4 = this;
+      var _this5 = this;
       var container = this.$refs.graphContainer;
       this.graph = new mxGraph(container);
       this.graph.setCellsEditable(true);
@@ -20240,7 +20248,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       this.graph.setMultigraph(false); // Evita múltiplas arestas entre dois vértices
       this.graph.setAllowDanglingEdges(false); // Evita que arestas fiquem penduradas
       this.graph.getModel().addListener(mxEvent.AFTER_ADD, function () {
-        _this4.graph.refresh();
+        _this5.graph.refresh();
       });
       // Define o estilo da aresta
       var style = this.graph.getStylesheet().getDefaultEdgeStyle();
@@ -20282,8 +20290,8 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       new mxRubberband(this.graph);
       var keyHandler = new mxKeyHandler(this.graph);
       keyHandler.bindKey(46, function (evt) {
-        if (_this4.graph.isEnabled()) {
-          _this4.graph.removeCells();
+        if (_this5.graph.isEnabled()) {
+          _this5.graph.removeCells();
         }
       });
     },
@@ -20296,14 +20304,14 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       });
     },
     addDblClickListener: function addDblClickListener() {
-      var _this5 = this;
+      var _this6 = this;
       this.graph.addListener(mxEvent.DOUBLE_CLICK, function (sender, evt) {
         var cell = evt.getProperty('cell');
         if (cell) {
           if (cell.isVertex()) {
-            _this5.graph.startEditing(cell);
+            _this6.graph.startEditing(cell);
           } else if (cell.isEdge()) {
-            _this5.graph.startEditingAtCell(cell);
+            _this6.graph.startEditingAtCell(cell);
           }
         }
       });
@@ -20435,6 +20443,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     saveTabName: function saveTabName(tab) {
       tab.isEditing = false;
+    },
+    closeTab: function closeTab(index) {
+      this.tabs.splice(index, 1);
+      if (this.activeTab >= index) {
+        this.activeTab = Math.max(0, this.activeTab - 1);
+      }
+      _EventBus__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('tabClosed', index);
+      this.$emit('tabChanged', this.activeTab); // Adicione essa linha
     }
   }
 });
@@ -21006,6 +21022,10 @@ var _hoisted_4 = ["onUpdate:modelValue", "onBlur"];
 var _hoisted_5 = {
   key: 1
 };
+var _hoisted_6 = {
+  key: 2
+};
+var _hoisted_7 = ["onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.tabs, function (tab, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
@@ -21030,7 +21050,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ref_for: true,
       ref: "tabInput",
       "class": "border p-1 rounded"
-    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, tab.label]]) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(tab.label), 1 /* TEXT */))], 42 /* CLASS, PROPS, HYDRATE_EVENTS */, _hoisted_3);
+    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, tab.label]]) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(tab.label), 1 /* TEXT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      onClick: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+        return $options.closeTab(index);
+      }, ["stop"]),
+      "class": "ml-2 text-red-500 cursor-pointer"
+    }, "X", 8 /* PROPS */, _hoisted_7)], 42 /* CLASS, PROPS, HYDRATE_EVENTS */, _hoisted_3);
   }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.addTab && $options.addTab.apply($options, arguments);
@@ -21251,7 +21276,7 @@ api.interceptors.response.use(function (response) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   store: () => (/* binding */ store)
 /* harmony export */ });
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 
@@ -21273,7 +21298,6 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
     }
   }
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
 
 /***/ }),
 

@@ -9,6 +9,8 @@
                  class="tab inline-flex flex-shrink-0 px-6 py-2 mr-1 rounded-t-lg cursor-pointer">
                 <input v-if="tab.isEditing" v-model="tab.label" @blur="saveTabName(tab)" ref="tabInput" class="border p-1 rounded"/>
                 <span v-else>{{ tab.label }}</span>
+                <span v-else>{{ tab.label }}</span>
+                <span @click.stop="closeTab(index)" class="ml-2 text-red-500 cursor-pointer">X</span>
             </div>
             <div @click="addTab" class="add-tab inline-flex flex-shrink-0 px-6 py-2 rounded-t-lg cursor-pointer bg-blue-500 text-white">
                 +
@@ -58,7 +60,15 @@ export default {
         },
         saveTabName(tab) {
             tab.isEditing = false;
-        }
+        },
+      closeTab(index) {
+          this.tabs.splice(index, 1);
+          if (this.activeTab >= index) {
+            this.activeTab = Math.max(0, this.activeTab - 1);
+          }
+          EventBus.emit('tabClosed', index);
+          this.$emit('tabChanged', this.activeTab);  // Adicione essa linha
+      }
     }
 }
 </script>
