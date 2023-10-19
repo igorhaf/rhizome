@@ -19,14 +19,12 @@
 
 <script>
 import { FolderIcon, FolderOpenIcon, DocumentIcon } from '@heroicons/vue/solid';
-
+import { EventBus } from '../EventBus.js';
 export default {
-    name: "TreeView",
-    components: {
-        FolderIcon,
-        FolderOpenIcon,
-        DocumentIcon,
-        TreeView: "TreeView"
+    data() {
+        return {
+            frames: [] // Supondo que você tenha uma lista de frames
+        };
     },
     props: {
         treeData: {
@@ -35,6 +33,13 @@ export default {
         }
     },
     methods: {
+        addNewFrame(frameName) {
+            this.treeData.push({
+                id: this.treeData.length + 1,
+                name: frameName,
+                expanded: false
+            });
+        },
         toggle(node) {
             node.expanded = !node.expanded;
         },
@@ -42,7 +47,14 @@ export default {
             event.dataTransfer.setData('nodeData', JSON.stringify(node));
         },
 
-    }
+    },
+    created() {
+        EventBus.on('add-frame', this.addNewFrame);
+
+    },
+    beforeDestroy() {
+        EventBus.off('add-frame', this.addNewFrame);
+    },
 }
 </script>
 <style scoped>

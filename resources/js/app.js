@@ -18,4 +18,3 @@ app.component('column-three', ColumnThree);
 app.use(store); // Aqui você adiciona o Vuex store ao aplicativo
 
 app.mount('#app');
-

@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import {DocumentIcon, FolderIcon, FolderOpenIcon} from "@heroicons/vue/solid";
+import {EventBus} from "../EventBus";
 export default {
     props: ['tabs', 'activeTab'],
 
@@ -46,6 +48,7 @@ export default {
             this.activeTab = this.tabs.length - 1;
             this.nextTabId++;
             this.$emit('tabAdded');
+            EventBus.emit('add-frame', nextTab.label); // Enviar o nome do frame junto com o evento
         },
         enableEdit(tab) {
             tab.isEditing = true;

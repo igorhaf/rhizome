@@ -43,46 +43,49 @@ export default {
                     expanded: false,
                     children: [
                         { id: 2, name: "if" },
-                        { id: 3, name: "else" }
+                        { id: 3, name: "else" },
+                        { id: 4, name: "if else" },
+                        { id: 5, name: "switch" },
+                        { id: 6, name: "schedule" },
+                        { id: 7, name: "sleep" },
+                        { id: 8, name: "end" },
+                        { id: 9, name: "frame" },
+                        { id: 10, name: "hook" },
                     ]
                 },
                 {
-                    id: 4,
+                    id: 11,
                     name: "Third-party",
                     expanded: false,
                     children: [
                         {
-                            id: 5,
+                            id: 12,
                             name: "gmail",
                             expanded: false,
                             children: [
-                                { id: 6, name: "send mail" },
-                                { id: 7, name: "get mail" }
+                                { id: 13, name: "send mail" },
+                                { id: 14, name: "get mail" }
                             ]
                         },
                         {
-                            id: 8,
+                            id: 15,
                             name: "trello",
                             expanded: false,
                             children: [
-                                { id: 9, name: "create card" },
-                                { id: 10, name: "remove card" }
+                                { id: 16, name: "create card" },
+                                { id: 17, name: "remove card" }
                             ]
                         }
                     ]
                 },
                 {
-                    id: 11,
+                    id: 18,
                     name: "Miscellaneous",
                     expanded: false,
                     children: [
                         {
-                            id: 12,
-                            name: "Documents",
-                            expanded: false,
-                            children: [
-                                { id: 13, name: "Repositories" }
-                            ]
+                            id: 19,
+                            name: "Database",
                         }
                     ]
                 }

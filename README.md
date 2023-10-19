@@ -15,7 +15,10 @@ Nexabuild is an open-source project developed using Laravel and Vue.js. It aims 
 ## Getting Started
 1. Clone the repository.
 2. Follow the setup instructions to initialize both Laravel and Vue.js components.
-3. Start integrating APIs using the intuitive drag and drop interface.
+3. Start integrating APIs using the intuitive drag and drop interface. 
+4. npm run dev
+5. npm run watch
+6. :wq../vendor/bin/sail up
 
 ## Contributions
 All contributions are welcome! Feel free to fork the repository and submit pull requests.
@@ -40,6 +43,9 @@ Nexabuild é um projeto de código aberto desenvolvido com Laravel e Vue.js. Ele
 1. Clone o repositório.
 2. Siga as instruções de configuração para inicializar os componentes Laravel e Vue.js.
 3. Comece a integrar as APIs usando a interface intuitiva de arrastar e soltar.
+4. npm run dev
+5. npm run watch
+6. :wq../vendor/bin/sail up
 
 ## Contribuições
 Todas as contribuições são bem-vindas! Sinta-se à vontade para fazer um fork do repositório e enviar pull requests.

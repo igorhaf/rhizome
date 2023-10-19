@@ -19756,46 +19756,62 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           id: 3,
           name: "else"
+        }, {
+          id: 4,
+          name: "if else"
+        }, {
+          id: 5,
+          name: "switch"
+        }, {
+          id: 6,
+          name: "schedule"
+        }, {
+          id: 7,
+          name: "sleep"
+        }, {
+          id: 8,
+          name: "end"
+        }, {
+          id: 9,
+          name: "frame"
+        }, {
+          id: 10,
+          name: "hook"
         }]
       }, {
-        id: 4,
+        id: 11,
         name: "Third-party",
         expanded: false,
         children: [{
-          id: 5,
+          id: 12,
           name: "gmail",
           expanded: false,
           children: [{
-            id: 6,
+            id: 13,
             name: "send mail"
           }, {
-            id: 7,
+            id: 14,
             name: "get mail"
           }]
         }, {
-          id: 8,
+          id: 15,
           name: "trello",
           expanded: false,
           children: [{
-            id: 9,
+            id: 16,
             name: "create card"
           }, {
-            id: 10,
+            id: 17,
             name: "remove card"
           }]
         }]
       }, {
-        id: 11,
+        id: 18,
         name: "Miscellaneous",
         expanded: false,
         children: [{
-          id: 12,
-          name: "Documents",
-          expanded: false,
-          children: [{
-            id: 13,
-            name: "Repositories"
-          }]
+          id: 19,
+          name: "Database"
         }]
       }],
       objects: [{
@@ -20288,18 +20304,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/FolderIcon.js");
-/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/FolderOpenIcon.js");
-/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/DocumentIcon.js");
+/* harmony import */ var _EventBus_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../EventBus.js */ "./resources/js/EventBus.js");
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "TreeView",
-  components: {
-    FolderIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_0__["default"],
-    FolderOpenIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_1__["default"],
-    DocumentIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__["default"],
-    TreeView: "TreeView"
+  data: function data() {
+    return {
+      frames: [] // Supondo que você tenha uma lista de frames
+    };
   },
+
   props: {
     treeData: {
       type: Array,
@@ -20309,12 +20323,25 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    addNewFrame: function addNewFrame(frameName) {
+      this.treeData.push({
+        id: this.treeData.length + 1,
+        name: frameName,
+        expanded: false
+      });
+    },
     toggle: function toggle(node) {
       node.expanded = !node.expanded;
     },
     startDrag: function startDrag(event, node) {
       event.dataTransfer.setData('nodeData', JSON.stringify(node));
     }
+  },
+  created: function created() {
+    _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.on('add-frame', this.addNewFrame);
+  },
+  beforeDestroy: function beforeDestroy() {
+    _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.off('add-frame', this.addNewFrame);
   }
 });
 
@@ -20331,6 +20358,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _EventBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../EventBus */ "./resources/js/EventBus.js");
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['tabs', 'activeTab'],
   data: function data() {
@@ -20361,6 +20391,7 @@ __webpack_require__.r(__webpack_exports__);
       this.activeTab = this.tabs.length - 1;
       this.nextTabId++;
       this.$emit('tabAdded');
+      _EventBus__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('add-frame', nextTab.label); // Enviar o nome do frame junto com o evento
     },
     enableEdit: function enableEdit(tab) {
       var _this = this;
@@ -21068,6 +21099,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EventBus: () => (/* binding */ EventBus)
 /* harmony export */ });
 /* harmony import */ var mitt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mitt */ "./node_modules/mitt/dist/mitt.mjs");
+/*EventBus*/
 
 var EventBus = (0,mitt__WEBPACK_IMPORTED_MODULE_0__["default"])();
 
