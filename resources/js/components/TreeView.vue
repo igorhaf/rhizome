@@ -6,9 +6,7 @@
                     <FolderOpenIcon v-if="node.expanded" class="w-5 h-5 text-yellow-400"/>
                     <FolderIcon v-else class="w-5 h-5 text-yellow-400"/>
                 </span>
-                <span v-else @dragstart="startDrag($event, node)" draggable="true">
-                    <DocumentIcon class="w-5 h-5"/>
-                </span>
+                  <div class="exception" v-else @dragstart="startDrag($event, node)" draggable="true"></div>
                 {{ node.name }}
             </div>
             <tree-view v-if="node.expanded && node.children" :tree-data="node.children" />

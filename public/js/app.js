@@ -21150,7 +21150,6 @@ var _hoisted_4 = ["onDragstart"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_FolderOpenIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FolderOpenIcon");
   var _component_FolderIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FolderIcon");
-  var _component_DocumentIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("DocumentIcon");
   var _component_tree_view = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("tree-view", true);
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_1, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.treeData, function (node) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
@@ -21166,15 +21165,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_FolderIcon, {
       key: 1,
       "class": "w-5 h-5 text-yellow-400"
-    }))])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
+    }))])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: 1,
+      "class": "exception",
       onDragstart: function onDragstart($event) {
         return $options.startDrag($event, node);
       },
       draggable: "true"
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_DocumentIcon, {
-      "class": "w-5 h-5"
-    })], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(node.name), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_2), node.expanded && node.children ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_tree_view, {
+    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(node.name), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_2), node.expanded && node.children ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_tree_view, {
       key: 0,
       "tree-data": node.children
     }, null, 8 /* PROPS */, ["tree-data"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
