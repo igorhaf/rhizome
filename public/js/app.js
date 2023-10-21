@@ -19752,31 +19752,49 @@ __webpack_require__.r(__webpack_exports__);
         expanded: false,
         children: [{
           id: 2,
-          name: "if"
+          name: "if",
+          type: "if",
+          iconClass: "webhook"
         }, {
           id: 3,
-          name: "else"
+          name: "else",
+          type: "else",
+          iconClass: "webhook"
         }, {
           id: 4,
-          name: "if else"
+          name: "if else",
+          type: "if else",
+          iconClass: "webhook"
         }, {
           id: 5,
-          name: "switch"
+          name: "switch",
+          type: "switch",
+          iconClass: "switch"
         }, {
           id: 6,
-          name: "schedule"
+          name: "schedule",
+          type: "schedule",
+          iconClass: "webhook"
         }, {
           id: 7,
-          name: "sleep"
+          name: "sleep",
+          type: "sleep",
+          iconClass: "webhook"
         }, {
           id: 8,
-          name: "end"
+          name: "end",
+          type: "end",
+          iconClass: "webhook"
         }, {
           id: 9,
-          name: "frame"
+          name: "frame",
+          type: "frame",
+          iconClass: "webhook"
         }, {
           id: 10,
-          name: "hook"
+          name: "webhook",
+          type: "webhook",
+          iconClass: "webhook"
         }]
       }, {
         id: 11,
@@ -21143,10 +21161,7 @@ var _hoisted_1 = {
   "class": "pl-4 space-y-2"
 };
 var _hoisted_2 = ["onClick"];
-var _hoisted_3 = {
-  key: 0
-};
-var _hoisted_4 = ["onDragstart"];
+var _hoisted_3 = ["onDragstart"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_FolderOpenIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FolderOpenIcon");
   var _component_FolderIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FolderIcon");
@@ -21159,20 +21174,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.toggle(node);
       }
-    }, [node.children && node.children.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_3, [node.expanded ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_FolderOpenIcon, {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [node.children && node.children.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+      key: 0
+    }, [node.expanded ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_FolderOpenIcon, {
       key: 0,
       "class": "w-5 h-5 text-yellow-400"
     })) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_FolderIcon, {
       key: 1,
       "class": "w-5 h-5 text-yellow-400"
-    }))])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    }))], 64 /* STABLE_FRAGMENT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: 1,
-      "class": "exception",
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(['treeview-icons', node.iconClass]),
       onDragstart: function onDragstart($event) {
         return $options.startDrag($event, node);
       },
       draggable: "true"
-    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(node.name), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_2), node.expanded && node.children ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_tree_view, {
+    }, null, 42 /* CLASS, PROPS, HYDRATE_EVENTS */, _hoisted_3))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(node.name), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_2), node.expanded && node.children ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_tree_view, {
       key: 0,
       "tree-data": node.children
     }, null, 8 /* PROPS */, ["tree-data"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
