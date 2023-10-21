@@ -75,8 +75,9 @@ export default {
             let doc = mxUtils.parseXml(xmlData);
             const codec = new mxCodec(doc);
             codec.decode(doc.documentElement, this.graph.getModel());
-            this.graph.getModel().endUpdate();
             this.graph.getModel().beginUpdate();
+            this.graph.getModel().endUpdate();
+
         },
 
         initGraph() {
@@ -91,12 +92,13 @@ export default {
             this.graph.getModel().addListener(mxEvent.AFTER_ADD, () => {
                 this.graph.refresh();
             });
+
             // Define o estilo da aresta
-            const style = this.graph.getStylesheet().getDefaultEdgeStyle();
-            style[mxConstants.STYLE_ROUNDED] = true;
+            const style = this.graph.getStylesheet().getDefaultVertexStyle();
+            /*style[mxConstants.STYLE_ROUNDED] = true;
             style[mxConstants.STYLE_STROKEWIDTH] = 2;
             style[mxConstants.STYLE_STROKECOLOR] = '#000000';  // Define a cor da linha
-            style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+            style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;*/
 
             style[mxConstants.STYLE_EXIT_X] = 1.0;  // Ponto de saída no meio do vértice
             style[mxConstants.STYLE_EXIT_Y] = 0.5;  // Ponto de saída na parte inferior do vértice
@@ -104,6 +106,9 @@ export default {
             style[mxConstants.STYLE_ENTRY_X] = 0;  // Ponto de entrada no meio do vértice
             style[mxConstants.STYLE_ENTRY_Y] = 0.5;    // Ponto de entrada na parte superior do vértice
             style[mxConstants.STYLE_ENTRY_PERIMETER] = 0;  // Desativa a busca do ponto de entrada ao redor do perímetro do vértice
+
+
+
 
             this.graph.setPanning(true);
             this.graph.panningHandler.useLeftButtonForPanning = true;
@@ -116,6 +121,20 @@ export default {
             this.graph.stylesheet.getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
             this.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
             this.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
+            this.graph.setCellsResizable(false);
+
+            mxEvent.addListener(container, 'drop', (evt) => {
+                const x = mxEvent.getClientX(evt);
+                const y = mxEvent.getClientY(evt);
+                const coord = mxUtils.convertPoint(container, x, y);
+                this.drop(evt, coord.x, coord.y);
+            });
+
+            container.setAttribute('draggable', 'true');
+            mxEvent.addListener(container, 'dragover', (evt) => {
+                evt.stopPropagation();
+                evt.preventDefault();
+            });
             const initialWidth = container.offsetWidth;
             const initialHeight = container.offsetHeight;
             this.graph.addListener(mxEvent.SIZE, (sender, evt) => {
@@ -124,10 +143,14 @@ export default {
             });
             new mxRubberband(this.graph);
             new mxKeyHandler(this.graph);
+
+
             const parent = this.graph.getDefaultParent();
             this.graph.getModel().beginUpdate();
+
+
             try {
-                this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30);
+                this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30, 'iconStyle');
 
             } finally {
                 this.graph.getModel().endUpdate();
@@ -135,12 +158,16 @@ export default {
 
             new mxRubberband(this.graph);
 
+
+
             const keyHandler = new mxKeyHandler(this.graph);
             keyHandler.bindKey(46, (evt) => {
                 if (this.graph.isEnabled()) {
                     this.graph.removeCells();
                 }
             });
+
+
 
         },
         addClickEventListener() {
@@ -162,22 +189,34 @@ export default {
                     }
                 }
             });
-        },
-        drop(event) {
-            const nodeData = JSON.parse(event.dataTransfer.getData('nodeData'));
-            const iconName = nodeData.children ? '📂' : '📄'; // Using emojis for simplicity. Replace with icons if needed.
-            const label = `${iconName} ${nodeData.name}`;
 
-            const point = this.graph.getPointForEvent(event);
+        },
+        getIconURLFromClassName(className) {
+            // Isso é apenas um exemplo. Você deve ajustar de acordo com suas necessidades.
+            const icons = {
+                'webhook': './images/icons/webhook.svg',
+                'if': './images/icons/if.svg',
+                'else': './images/icons/starttime.svg',
+                // ... adicione todas as classes de ícones e seus respectivos URLs
+            };
+
+            return icons[className] || './images/icons/switch.svg';
+        },
+        drop(evt, x, y) {
+            const data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
+            const shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
+
             const parent = this.graph.getDefaultParent();
             this.graph.getModel().beginUpdate();
+
             try {
-                this.graph.insertVertex(parent, null, label, point.x, point.y, 100, 30);
+                const iconURL = this.getIconURLFromClassName(shapeType);
+
+                this.graph.insertVertex(parent, null, '', x, y, 60, 60, `shape=image;image=${iconURL}`);
             } finally {
                 this.graph.getModel().endUpdate();
             }
         }
-
     }
 }
 </script>
