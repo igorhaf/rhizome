@@ -20257,11 +20257,13 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       new mxKeyHandler(this.graph);
       var parent = this.graph.getDefaultParent();
       this.graph.getModel().beginUpdate();
-      try {
-        this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30, 'iconStyle');
-      } finally {
-        this.graph.getModel().endUpdate();
-      }
+
+      /* try {
+           this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30, 'iconStyle');
+        } finally {
+           this.graph.getModel().endUpdate();
+       }*/
+
       new mxRubberband(this.graph);
       var keyHandler = new mxKeyHandler(this.graph);
       keyHandler.bindKey(46, function (evt) {
@@ -20311,6 +20313,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       try {
         var iconURL = this.getIconURLFromClassName(shapeType);
         this.graph.insertVertex(parent, null, '', x, y, 60, 60, "shape=image;image=".concat(iconURL));
+        console.log(iconURL);
       } finally {
         this.graph.getModel().endUpdate();
       }

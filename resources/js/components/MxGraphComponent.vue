@@ -149,12 +149,12 @@ export default {
             this.graph.getModel().beginUpdate();
 
 
-            try {
+           /* try {
                 this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30, 'iconStyle');
 
             } finally {
                 this.graph.getModel().endUpdate();
-            }
+            }*/
 
             new mxRubberband(this.graph);
 
@@ -213,6 +213,7 @@ export default {
                 const iconURL = this.getIconURLFromClassName(shapeType);
 
                 this.graph.insertVertex(parent, null, '', x, y, 60, 60, `shape=image;image=${iconURL}`);
+                console.log(iconURL);
             } finally {
                 this.graph.getModel().endUpdate();
             }
