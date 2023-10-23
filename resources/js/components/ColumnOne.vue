@@ -42,15 +42,15 @@ export default {
                     name: "Logic Layer",
                     expanded: false,
                     children: [
-                        { id: 2, name: "if", type: "if", iconClass: "if" },
-                        { id: 3, name: "else", type: "else", iconClass: "else" },
-                        { id: 4, name: "if else", type: "if else", iconClass: "webhook"  },
+                        { id: 2, name: "start", type: "start", iconClass: "start"  },
+                        { id: 3, name: "schedule", type: "schedule", iconClass: "schedule"  },
+                        { id: 4, name: "if", type: "if", iconClass: "if" },
                         { id: 5, name: "switch", type: "switch", iconClass: "switch"  },
-                        { id: 6, name: "schedule", type: "schedule", iconClass: "schedule"  },
-                        { id: 7, name: "sleep", type: "sleep", iconClass: "sleep"  },
-                        { id: 8, name: "end", type: "end", iconClass: "webhook"  },
-                        { id: 9, name: "frame", type: "frame", iconClass: "webhook"  },
-                        { id: 10, name: "webhook", type: "webhook", iconClass: "webhook"  },
+                        { id: 6, name: "sleep", type: "sleep", iconClass: "sleep"  },
+                        { id: 7, name: "start-time", type: "start-time", iconClass: "start-time"  },
+                        { id: 8, name: "webhook", type: "webhook", iconClass: "webhook"  },
+                        { id: 9, name: "exception", type: "exception", iconClass: "exception" },
+                        { id: 10, name: "stop", type: "stop", iconClass: "stop"  },
                     ]
                 },
                 {

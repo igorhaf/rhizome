@@ -9,7 +9,7 @@
                   <FolderIcon v-else class="w-5 h-5 text-yellow-400"/>
                 </template>
                 <template v-else>
-                  <div :class="['treeview-icons', node.iconClass]" @dragstart="startDrag($event, node)" draggable="true"></div>
+                  <div :class="['nb-icons', node.iconClass]" @dragstart="startDrag($event, node)" draggable="true"></div>
                 </template>
               </span>
                 {{ node.name }}

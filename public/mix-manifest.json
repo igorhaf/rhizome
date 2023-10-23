@@ -1,4 +1,22 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/js/app.js": "/js/app.js?id=b8eddc0c213ab22a6ee1f29225622232",
+    "/css/app.css": "/css/app.css?id=1057896dee8f1498d4b253cfed53b7b8",
+    "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
+    "/images/icons/exception.svg": "/images/icons/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
+    "/images/icons/if.svg": "/images/icons/if.svg?id=05f169bb9a47542e6306163f992f9138",
+    "/images/icons/schedule.svg": "/images/icons/schedule.svg?id=bc5201e816a7429ffd99245a402f2931",
+    "/images/icons/sleep.svg": "/images/icons/sleep.svg?id=b361d48ab929e2cb3c25a6423ac991df",
+    "/images/icons/start-time.svg": "/images/icons/start-time.svg?id=b23b13e544cdce36f697868cb10e1a84",
+    "/images/icons/start.svg": "/images/icons/start.svg?id=f9846cb6df827feb4b776b34ce0fe0bd",
+    "/images/icons/stop.svg": "/images/icons/stop.svg?id=e188f7d823bc150a871603f67df702ae",
+    "/images/icons/switch.svg": "/images/icons/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd",
+    "/images/icons/webhook.svg": "/images/icons/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671",
+    "/images/if.svg": "/images/if.svg?id=05f169bb9a47542e6306163f992f9138",
+    "/images/schedule.svg": "/images/schedule.svg?id=bc5201e816a7429ffd99245a402f2931",
+    "/images/sleep.svg": "/images/sleep.svg?id=b361d48ab929e2cb3c25a6423ac991df",
+    "/images/start-time.svg": "/images/start-time.svg?id=b23b13e544cdce36f697868cb10e1a84",
+    "/images/start.svg": "/images/start.svg?id=f9846cb6df827feb4b776b34ce0fe0bd",
+    "/images/stop.svg": "/images/stop.svg?id=e188f7d823bc150a871603f67df702ae",
+    "/images/switch.svg": "/images/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd",
+    "/images/webhook.svg": "/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671"
 }

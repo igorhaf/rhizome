@@ -19752,19 +19752,19 @@ __webpack_require__.r(__webpack_exports__);
         expanded: false,
         children: [{
           id: 2,
+          name: "start",
+          type: "start",
+          iconClass: "start"
+        }, {
+          id: 3,
+          name: "schedule",
+          type: "schedule",
+          iconClass: "schedule"
+        }, {
+          id: 4,
           name: "if",
           type: "if",
           iconClass: "if"
-        }, {
-          id: 3,
-          name: "else",
-          type: "else",
-          iconClass: "else"
-        }, {
-          id: 4,
-          name: "if else",
-          type: "if else",
-          iconClass: "webhook"
         }, {
           id: 5,
           name: "switch",
@@ -19772,29 +19772,29 @@ __webpack_require__.r(__webpack_exports__);
           iconClass: "switch"
         }, {
           id: 6,
-          name: "schedule",
-          type: "schedule",
-          iconClass: "schedule"
-        }, {
-          id: 7,
           name: "sleep",
           type: "sleep",
           iconClass: "sleep"
         }, {
+          id: 7,
+          name: "start-time",
+          type: "start-time",
+          iconClass: "start-time"
+        }, {
           id: 8,
-          name: "end",
-          type: "end",
-          iconClass: "webhook"
-        }, {
-          id: 9,
-          name: "frame",
-          type: "frame",
-          iconClass: "webhook"
-        }, {
-          id: 10,
           name: "webhook",
           type: "webhook",
           iconClass: "webhook"
+        }, {
+          id: 9,
+          name: "exception",
+          type: "exception",
+          iconClass: "exception"
+        }, {
+          id: 10,
+          name: "stop",
+          type: "stop",
+          iconClass: "stop"
         }]
       }, {
         id: 11,
@@ -20258,9 +20258,11 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       var parent = this.graph.getDefaultParent();
       this.graph.getModel().beginUpdate();
       try {
-        var shapeType = 'Start';
+        var shapeType = 'start';
+        var vertexName = "<div class='nb-icon-label'>Start</div>";
         var iconURL = this.getIconURLFromClassName(shapeType);
-        this.graph.insertVertex(parent, null, "Start", 80, 150, 64, 64, "shape=image;image=".concat(iconURL));
+        this.graph.setHtmlLabels(true);
+        this.graph.insertVertex(parent, null, vertexName, 80, 150, 48, 48, "shape=image;image=".concat(iconURL));
       } finally {
         this.graph.getModel().endUpdate();
       }
@@ -20296,25 +20298,29 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     getIconURLFromClassName: function getIconURLFromClassName(className) {
       // Isso é apenas um exemplo. Você deve ajustar de acordo com suas necessidades.
       var icons = {
-        'webhook': './images/icons/webhook.svg',
-        'if': './images/icons/if.svg',
-        'else': './images/icons/starttime.svg'
-        // ... adicione todas as classes de ícones e seus respectivos URLs
+        'if': '../images/icons/if.svg',
+        'schedule': '../images/icons/schedule.svg',
+        'sleep': '../images/icons/sleep.svg',
+        'start': '../images/icons/start.svg',
+        'start-time': '../images/icons/start-time.svg',
+        'stop': '../images/icons/stop.svg',
+        'switch': '../images/icons/switch.svg',
+        'webhook': '../images/icons/webhook.svg'
       };
-
-      return icons[className] || './images/icons/switch.svg';
+      return icons[className] || './images/icons/stop.svg';
     },
     drop: function drop(evt, x, y) {
       var data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
       var shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
-      var vertexName = JSON.parse(data).name; // se você estiver enviando um objeto JSON como data
+      var vertexName = "<div class=\"nb-icon-label\">".concat(JSON.parse(data).name, "</div>"); // se você estiver enviando um objeto JSON como data
 
       var parent = this.graph.getDefaultParent();
       this.graph.getModel().beginUpdate();
       try {
         var iconURL = this.getIconURLFromClassName(shapeType);
         if (x !== undefined || y !== undefined) {
-          this.graph.insertVertex(parent, null, vertexName, x, y, 64, 64, "shape=image;image=".concat(iconURL));
+          this.graph.setHtmlLabels(true);
+          this.graph.insertVertex(parent, null, vertexName, x, y, 48, 48, "shape=image;image=".concat(iconURL));
         }
         console.log(x);
       } finally {
@@ -21107,7 +21113,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "w-5 h-5 text-yellow-400"
     }))], 64 /* STABLE_FRAGMENT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: 1,
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(['treeview-icons', node.iconClass]),
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(['nb-icons', node.iconClass]),
       onDragstart: function onDragstart($event) {
         return $options.startDrag($event, node);
       },

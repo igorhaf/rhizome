@@ -151,9 +151,12 @@ export default {
 
             try {
 
-                const shapeType = 'Start';
+                const shapeType = 'start';
+                const vertexName = "<div class='nb-icon-label'>Start</div>";
+
                 const iconURL = this.getIconURLFromClassName(shapeType);
-                this.graph.insertVertex(parent, null, "Start", 80, 150, 64, 64, `shape=image;image=${iconURL}`);
+                this.graph.setHtmlLabels(true);
+                this.graph.insertVertex(parent, null, vertexName, 80, 150, 48, 48, `shape=image;image=${iconURL}`);
 
             } finally {
                 this.graph.getModel().endUpdate();
@@ -197,18 +200,22 @@ export default {
         getIconURLFromClassName(className) {
             // Isso é apenas um exemplo. Você deve ajustar de acordo com suas necessidades.
             const icons = {
-                'webhook': './images/icons/webhook.svg',
-                'if': './images/icons/if.svg',
-                'else': './images/icons/starttime.svg',
-                // ... adicione todas as classes de ícones e seus respectivos URLs
+                'if': '../images/icons/if.svg',
+                'schedule': '../images/icons/schedule.svg',
+                'sleep': '../images/icons/sleep.svg',
+                'start': '../images/icons/start.svg',
+                'start-time': '../images/icons/start-time.svg',
+                'stop': '../images/icons/stop.svg',
+                'switch': '../images/icons/switch.svg',
+                'webhook': '../images/icons/webhook.svg'
             };
 
-            return icons[className] || './images/icons/switch.svg';
+            return icons[className] || './images/icons/stop.svg';
         },
         drop(evt, x, y) {
             const data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
             const shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
-            const vertexName = JSON.parse(data).name; // se você estiver enviando um objeto JSON como data
+            const vertexName = `<div class="nb-icon-label">${JSON.parse(data).name}</div>`; // se você estiver enviando um objeto JSON como data
 
             const parent = this.graph.getDefaultParent();
             this.graph.getModel().beginUpdate();
@@ -216,7 +223,9 @@ export default {
             try {
                 const iconURL = this.getIconURLFromClassName(shapeType);
                 if(x !== undefined || y !== undefined) {
-                    this.graph.insertVertex(parent, null, vertexName, x, y, 64, 64, `shape=image;image=${iconURL}`);
+                    this.graph.setHtmlLabels(true);
+
+                    this.graph.insertVertex(parent, null, vertexName, x, y, 48, 48, `shape=image;image=${iconURL}`);
                 }
                 console.log(x);
             } finally {
