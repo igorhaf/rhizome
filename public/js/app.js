@@ -20239,8 +20239,8 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       mxEvent.addListener(container, 'drop', function (evt) {
         var x = mxEvent.getClientX(evt);
         var y = mxEvent.getClientY(evt);
-        var coord = mxUtils.convertPoint(container, x, y);
-        _this5.drop(evt, coord.x, coord.y);
+        var cord = mxUtils.convertPoint(container, x, y);
+        _this5.drop(evt, cord.x, cord.y);
       });
       container.setAttribute('draggable', 'true');
       mxEvent.addListener(container, 'dragover', function (evt) {
@@ -20257,13 +20257,13 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       new mxKeyHandler(this.graph);
       var parent = this.graph.getDefaultParent();
       this.graph.getModel().beginUpdate();
-
-      /* try {
-           this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30, 'iconStyle');
-        } finally {
-           this.graph.getModel().endUpdate();
-       }*/
-
+      try {
+        var shapeType = 'Start';
+        var iconURL = this.getIconURLFromClassName(shapeType);
+        this.graph.insertVertex(parent, null, "Start", 80, 150, 64, 64, "shape=image;image=".concat(iconURL));
+      } finally {
+        this.graph.getModel().endUpdate();
+      }
       new mxRubberband(this.graph);
       var keyHandler = new mxKeyHandler(this.graph);
       keyHandler.bindKey(46, function (evt) {
@@ -20307,13 +20307,16 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     drop: function drop(evt, x, y) {
       var data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
       var shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
+      var vertexName = JSON.parse(data).name; // se você estiver enviando um objeto JSON como data
 
       var parent = this.graph.getDefaultParent();
       this.graph.getModel().beginUpdate();
       try {
         var iconURL = this.getIconURLFromClassName(shapeType);
-        this.graph.insertVertex(parent, null, '', x, y, 60, 60, "shape=image;image=".concat(iconURL));
-        console.log(iconURL);
+        if (x !== undefined || y !== undefined) {
+          this.graph.insertVertex(parent, null, vertexName, x, y, 64, 64, "shape=image;image=".concat(iconURL));
+        }
+        console.log(x);
       } finally {
         this.graph.getModel().endUpdate();
       }
@@ -23264,7 +23267,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n}\n\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n}\n\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

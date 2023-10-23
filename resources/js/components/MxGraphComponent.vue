@@ -126,8 +126,8 @@ export default {
             mxEvent.addListener(container, 'drop', (evt) => {
                 const x = mxEvent.getClientX(evt);
                 const y = mxEvent.getClientY(evt);
-                const coord = mxUtils.convertPoint(container, x, y);
-                this.drop(evt, coord.x, coord.y);
+                const cord = mxUtils.convertPoint(container, x, y);
+                this.drop(evt, cord.x, cord.y);
             });
 
             container.setAttribute('draggable', 'true');
@@ -149,12 +149,15 @@ export default {
             this.graph.getModel().beginUpdate();
 
 
-           /* try {
-                this.graph.insertVertex(parent, null, "Start", 80, 150, 80, 30, 'iconStyle');
+            try {
+
+                const shapeType = 'Start';
+                const iconURL = this.getIconURLFromClassName(shapeType);
+                this.graph.insertVertex(parent, null, "Start", 80, 150, 64, 64, `shape=image;image=${iconURL}`);
 
             } finally {
                 this.graph.getModel().endUpdate();
-            }*/
+            }
 
             new mxRubberband(this.graph);
 
@@ -205,15 +208,17 @@ export default {
         drop(evt, x, y) {
             const data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
             const shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
+            const vertexName = JSON.parse(data).name; // se você estiver enviando um objeto JSON como data
 
             const parent = this.graph.getDefaultParent();
             this.graph.getModel().beginUpdate();
 
             try {
                 const iconURL = this.getIconURLFromClassName(shapeType);
-
-                this.graph.insertVertex(parent, null, '', x, y, 60, 60, `shape=image;image=${iconURL}`);
-                console.log(iconURL);
+                if(x !== undefined || y !== undefined) {
+                    this.graph.insertVertex(parent, null, vertexName, x, y, 64, 64, `shape=image;image=${iconURL}`);
+                }
+                console.log(x);
             } finally {
                 this.graph.getModel().endUpdate();
             }
@@ -222,6 +227,9 @@ export default {
 }
 </script>
 <style>
+/*.mxCellEditor .mxPlainTextEditor{
+
+}*/
 .graph-container {
     background-size: 15px 15px;
     background-image:
