@@ -208,7 +208,12 @@ export default {
                 'stop': '../images/icons/stop.svg',
                 'switch': '../images/icons/switch.svg',
                 'webhook': '../images/icons/webhook.svg',
-                'exception': '../images/icons/exception.svg'
+                'exception': '../images/icons/exception.svg',
+                'database': '../images/icons/database.svg',
+                'gmail-receive': '../images/icons/gmail-receive.svg',
+                'gmail-send': '../images/icons/gmail-send.svg',
+                'trello-add-card': '../images/icons/trello-add-card.svg',
+                'trello-remove-card': '../images/icons/trello-remove-card.svg'
             };
 
             return icons[className] || './images/icons/stop.svg';

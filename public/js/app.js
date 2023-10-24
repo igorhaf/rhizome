@@ -19752,47 +19752,47 @@ __webpack_require__.r(__webpack_exports__);
         expanded: false,
         children: [{
           id: 2,
-          name: "start",
+          name: "Start",
           type: "start",
           iconClass: "start"
         }, {
           id: 3,
-          name: "schedule",
+          name: "Schedule",
           type: "schedule",
           iconClass: "schedule"
         }, {
           id: 4,
-          name: "if",
+          name: "If",
           type: "if",
           iconClass: "if"
         }, {
           id: 5,
-          name: "switch",
+          name: "Switch",
           type: "switch",
           iconClass: "switch"
         }, {
           id: 6,
-          name: "sleep",
+          name: "Sleep",
           type: "sleep",
           iconClass: "sleep"
         }, {
           id: 7,
-          name: "start-time",
+          name: "Start Time",
           type: "start-time",
           iconClass: "start-time"
         }, {
           id: 8,
-          name: "webhook",
+          name: "Webhook",
           type: "webhook",
           iconClass: "webhook"
         }, {
           id: 9,
-          name: "exception",
+          name: "Exception",
           type: "exception",
           iconClass: "exception"
         }, {
           id: 10,
-          name: "stop",
+          name: "Stop",
           type: "stop",
           iconClass: "stop"
         }]
@@ -19802,25 +19802,33 @@ __webpack_require__.r(__webpack_exports__);
         expanded: false,
         children: [{
           id: 12,
-          name: "gmail",
+          name: "Gmail",
           expanded: false,
           children: [{
             id: 13,
-            name: "send mail"
+            name: "Send mail",
+            type: "gmail-send",
+            iconClass: "gmail-send"
           }, {
             id: 14,
-            name: "get mail"
+            name: "Get mail",
+            type: "gmail-receive",
+            iconClass: "gmail-receive"
           }]
         }, {
           id: 15,
-          name: "trello",
+          name: "Trello",
           expanded: false,
           children: [{
             id: 16,
-            name: "create card"
+            name: "Create card",
+            type: "trello-add-card",
+            iconClass: "trello-add-card"
           }, {
             id: 17,
-            name: "remove card"
+            name: "Remove card",
+            type: "trello-remove-card",
+            iconClass: "trello-remove-card"
           }]
         }]
       }, {
@@ -19829,7 +19837,9 @@ __webpack_require__.r(__webpack_exports__);
         expanded: false,
         children: [{
           id: 19,
-          name: "Database"
+          name: "Database",
+          type: "database",
+          iconClass: "database"
         }]
       }],
       objects: [{
@@ -20306,7 +20316,12 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
         'stop': '../images/icons/stop.svg',
         'switch': '../images/icons/switch.svg',
         'webhook': '../images/icons/webhook.svg',
-        'exception': '../images/icons/exception.svg'
+        'exception': '../images/icons/exception.svg',
+        'database': '../images/icons/database.svg',
+        'gmail-receive': '../images/icons/gmail-receive.svg',
+        'gmail-send': '../images/icons/gmail-send.svg',
+        'trello-add-card': '../images/icons/trello-add-card.svg',
+        'trello-remove-card': '../images/icons/trello-remove-card.svg'
       };
       return icons[className] || './images/icons/stop.svg';
     },

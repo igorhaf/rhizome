@@ -48,6 +48,27 @@
 .webhook{
     background-image: url('../images/icons/webhook.svg');
 }
+
 .exception{
     background-image: url('../images/icons/exception.svg');
+}
+
+.database{
+    background-image: url('../images/icons/database.svg');
+}
+
+.gmail-receive{
+    background-image: url('../images/icons/gmail-receive.svg');
+}
+
+.gmail-send{
+    background-image: url('../images/icons/gmail-send.svg');
+}
+
+.trello-add-card{
+    background-image: url('../images/icons/trello-add-card.svg');
+}
+
+.trello-remove-card{
+    background-image: url('../images/icons/trello-remove-card.svg');
 }

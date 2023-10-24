@@ -42,15 +42,60 @@ export default {
                     name: "Logic Layer",
                     expanded: false,
                     children: [
-                        { id: 2, name: "start", type: "start", iconClass: "start"  },
-                        { id: 3, name: "schedule", type: "schedule", iconClass: "schedule"  },
-                        { id: 4, name: "if", type: "if", iconClass: "if" },
-                        { id: 5, name: "switch", type: "switch", iconClass: "switch"  },
-                        { id: 6, name: "sleep", type: "sleep", iconClass: "sleep"  },
-                        { id: 7, name: "start-time", type: "start-time", iconClass: "start-time"  },
-                        { id: 8, name: "webhook", type: "webhook", iconClass: "webhook"  },
-                        { id: 9, name: "exception", type: "exception", iconClass: "exception" },
-                        { id: 10, name: "stop", type: "stop", iconClass: "stop"  },
+                        {
+                            id: 2,
+                            name: "Start",
+                            type: "start",
+                            iconClass: "start"
+                        },
+                        {
+                            id: 3,
+                            name: "Schedule",
+                            type: "schedule",
+                            iconClass: "schedule"
+                        },
+                        {
+                            id: 4,
+                            name: "If",
+                            type: "if",
+                            iconClass: "if"
+                        },
+                        {
+                            id: 5,
+                            name: "Switch",
+                            type: "switch",
+                            iconClass: "switch"
+                        },
+                        {
+                            id: 6,
+                            name: "Sleep",
+                            type: "sleep",
+                            iconClass: "sleep"
+                        },
+                        {
+                            id: 7,
+                            name: "Start Time",
+                            type: "start-time",
+                            iconClass: "start-time"
+                        },
+                        {
+                            id: 8,
+                            name: "Webhook",
+                            type: "webhook",
+                            iconClass: "webhook"
+                        },
+                        {
+                            id: 9,
+                            name: "Exception",
+                            type: "exception",
+                            iconClass: "exception"
+                        },
+                        {
+                            id: 10,
+                            name: "Stop",
+                            type: "stop",
+                            iconClass: "stop"
+                        },
                     ]
                 },
                 {
@@ -60,20 +105,40 @@ export default {
                     children: [
                         {
                             id: 12,
-                            name: "gmail",
+                            name: "Gmail",
                             expanded: false,
                             children: [
-                                { id: 13, name: "send mail" },
-                                { id: 14, name: "get mail" }
+                                {
+                                    id: 13,
+                                    name: "Send mail",
+                                    type: "gmail-send",
+                                    iconClass: "gmail-send"
+                                },
+                                {
+                                    id: 14,
+                                    name: "Get mail",
+                                    type: "gmail-receive",
+                                    iconClass: "gmail-receive"
+                                }
                             ]
                         },
                         {
                             id: 15,
-                            name: "trello",
+                            name: "Trello",
                             expanded: false,
                             children: [
-                                { id: 16, name: "create card" },
-                                { id: 17, name: "remove card" }
+                                {
+                                    id: 16,
+                                    name: "Create card",
+                                    type: "trello-add-card",
+                                    iconClass: "trello-add-card"
+                                },
+                                {
+                                    id: 17,
+                                    name: "Remove card",
+                                    type: "trello-remove-card",
+                                    iconClass: "trello-remove-card"
+                                }
                             ]
                         }
                     ]
@@ -86,6 +151,9 @@ export default {
                         {
                             id: 19,
                             name: "Database",
+                            type: "database",
+                            iconClass: "database"
+
                         }
                     ]
                 }
