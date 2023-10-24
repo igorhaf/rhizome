@@ -588,6 +588,9 @@ video {
 .mt-8 {
   margin-top: 2rem;
 }
+.mt-1 {
+  margin-top: 0.25rem;
+}
 .block {
   display: block;
 }
@@ -792,6 +795,9 @@ video {
 .p-6 {
   padding: 1.5rem;
 }
+.p-2 {
+  padding: 0.5rem;
+}
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -841,6 +847,9 @@ video {
 }
 .font-semibold {
   font-weight: 600;
+}
+.font-medium {
+  font-weight: 500;
 }
 .uppercase {
   text-transform: uppercase;
@@ -991,6 +1000,11 @@ video {
 .hover\:bg-gray-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-blue-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 
 .focus\:outline-none:focus {
