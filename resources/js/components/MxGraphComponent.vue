@@ -201,7 +201,6 @@ export default {
 
         },
         getIconURLFromClassName(className) {
-            // Isso é apenas um exemplo. Você deve ajustar de acordo com suas necessidades.
             const icons = {
                 'if': '../images/icons/if.svg',
                 'schedule': '../images/icons/schedule.svg',
@@ -222,16 +221,16 @@ export default {
             return icons[className] || './images/icons/stop.svg';
         },
         drop(evt, x, y) {
-            const data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
-            const shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
-            const vertexName = JSON.parse(data).name; // se você estiver enviando um objeto JSON como data
+            const data = evt.dataTransfer.getData('nodeData');
+            const shapeType = JSON.parse(data).iconClass;
+            const vertexName = JSON.parse(data).name;
 
             const parent = this.graph.getDefaultParent();
 
             let style = this.graph.getStylesheet().getDefaultVertexStyle();
             style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
             style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
-            style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+            style[mxConstants.STYLE_SPACING_BOTTOM] = 32;
             this.graph.getStylesheet().putDefaultVertexStyle(style);
 
             this.graph.getModel().beginUpdate();
@@ -241,7 +240,7 @@ export default {
                 if(x !== undefined || y !== undefined) {
                     this.graph.setHtmlLabels(true);
 
-                    this.graph.insertVertex(parent, null, vertexName, x, y, 48, 48, `shape=image;image=${iconURL}`);
+                    this.graph.insertVertex(parent, null, vertexName, x-24, y-24, 48, 48, `shape=image;image=${iconURL}`);
                 }
                 console.log(x);
             } finally {
