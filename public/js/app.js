@@ -20337,9 +20337,14 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     drop: function drop(evt, x, y) {
       var data = evt.dataTransfer.getData('nodeData'); // ou o formato que você está usando
       var shapeType = JSON.parse(data).iconClass; // se você estiver enviando um objeto JSON como data
-      var vertexName = "<div class=\"nb-icon-label\">".concat(JSON.parse(data).name, "</div>"); // se você estiver enviando um objeto JSON como data
+      var vertexName = JSON.parse(data).name; // se você estiver enviando um objeto JSON como data
 
       var parent = this.graph.getDefaultParent();
+      var style = this.graph.getStylesheet().getDefaultVertexStyle();
+      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+      style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
+      style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+      this.graph.getStylesheet().putDefaultVertexStyle(style);
       this.graph.getModel().beginUpdate();
       try {
         var iconURL = this.getIconURLFromClassName(shapeType);
