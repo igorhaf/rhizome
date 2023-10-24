@@ -150,12 +150,15 @@ export default {
 
 
             try {
-
+                let style = this.graph.getStylesheet().getDefaultVertexStyle();
+                style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+                style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
+                style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+                this.graph.getStylesheet().putDefaultVertexStyle(style);
                 const shapeType = 'start';
-                const vertexName = "<div class='nb-icon-label'>Start</div>";
+                const vertexName = "Start";
 
                 const iconURL = this.getIconURLFromClassName(shapeType);
-                this.graph.setHtmlLabels(true);
                 this.graph.insertVertex(parent, null, vertexName, 80, 150, 48, 48, `shape=image;image=${iconURL}`);
 
             } finally {
