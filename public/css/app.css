@@ -963,17 +963,17 @@ video {
 .webhook{
     background-image: url(/images/webhook.svg?3ee68c8837ea8047d04228271ce12763);
 }
-
+.exception{
+    background-image: url(/images/exception.svg?afd7899f22c7bd3c178d5d914e47a4c0);
+}
 .hover\:bg-gray-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
-
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
-
 @media (prefers-color-scheme: dark) {
 
   .dark\:border-gray-700 {
@@ -1006,7 +1006,6 @@ video {
     color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 }
-
 @media (min-width: 640px) {
 
   .sm\:ml-0 {
@@ -1054,7 +1053,6 @@ video {
     text-align: right;
   }
 }
-
 @media (min-width: 768px) {
 
   .md\:grid-cols-2 {
@@ -1069,7 +1067,6 @@ video {
     border-top-width: 0px;
   }
 }
-
 @media (min-width: 1024px) {
 
   .lg\:px-8 {

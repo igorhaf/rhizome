@@ -48,3 +48,6 @@
 .webhook{
     background-image: url('../images/icons/webhook.svg');
 }
+.exception{
+    background-image: url('../images/icons/exception.svg');
+}

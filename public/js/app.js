@@ -20305,7 +20305,8 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
         'start-time': '../images/icons/start-time.svg',
         'stop': '../images/icons/stop.svg',
         'switch': '../images/icons/switch.svg',
-        'webhook': '../images/icons/webhook.svg'
+        'webhook': '../images/icons/webhook.svg',
+        'exception': '../images/icons/exception.svg'
       };
       return icons[className] || './images/icons/stop.svg';
     },
