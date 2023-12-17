@@ -6,10 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Graph;
 class GraphController extends Controller
 {
-
     public function store(Request $request)
     {
-        // Obtendo o XML do request
         $xmlData = $request->get('data');
 
         $graph = new Graph();

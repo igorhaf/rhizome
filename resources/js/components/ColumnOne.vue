@@ -159,10 +159,10 @@ export default {
                 }
             ],
             objects: [{
-                    id: 1,
-                    name: "Frame 1",
-                    expanded: false,
-                },
+                id: 1,
+                name: "Frame 1",
+                expanded: false,
+            },
             ],
         };
     }

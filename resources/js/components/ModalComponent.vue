@@ -39,7 +39,6 @@ export default {
         setupSplit() {
             if (this.$refs.splitContainer) {
                 const splitPanes = this.$refs.splitContainer.querySelectorAll('.split-pane');
-                console.log(splitPanes);
                 if (splitPanes && splitPanes.length === 2) {
                     Split(Array.from(splitPanes), {
                         sizes: [50, 50],

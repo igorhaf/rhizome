@@ -5,6 +5,7 @@
                 class="border rounded-md p-2"
                 v-model="textValue"
                 @blur="handleBlur"
+                :placeholder="placeholder"
             />
         </form>
     </div>
@@ -14,13 +15,19 @@
 export default {
     data() {
         return {
-            textValue: ""
+            textValue: "",
         };
+    },
+    props: {
+        placeholder: {
+            type: String,
+            default: 'Placeholder padrão'
+        }
     },
     methods: {
         handleSubmit() {
             // Aqui vai sua lógica para tratar o envio do formulário
-            console.log(this.textValue);
+            //console.log(this.textValue);
         },
         handleBlur() {
             this.handleSubmit();

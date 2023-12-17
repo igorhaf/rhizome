@@ -11,7 +11,7 @@
 import { EventBus } from '../EventBus.js';
 import mxgraph from "mxgraph";
 import api from '../services/api';
-import { js2xml } from 'xml-js';
+var parseString = require('xml2js').parseString;
 
 const {
     mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec
@@ -35,11 +35,11 @@ export default {
             mxUtils.error("Browser não suportado!", 200, false);
             return;
         }
-
         this.initGraph();
         this.addClickEventListener();
         this.addDblClickListener();
         this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
+        this.graph.refresh();
     },
     beforeDestroy() {
         if (this.graph) {
@@ -48,11 +48,11 @@ export default {
     },
     methods: {
         created() {
-          EventBus.on('tabClosed', (tabIndex) => {
-            if (this.graph[tabIndex]) {
-              this.graph[tabIndex].destroy();
-            }
-          });
+            EventBus.on('tabClosed', (tabIndex) => {
+                if (this.graph[tabIndex]) {
+                    this.graph[tabIndex].destroy();
+                }
+            });
         },
         async sendGraphDataToAPI() {
             const encoder = new mxCodec();
@@ -63,27 +63,29 @@ export default {
 
             try {
                 await api.post('/graph-data', { data: xml });
-                console.log("Dados enviados com sucesso!");
+                //console.log("Dados enviados com sucesso!");
             } catch (error) {
-                console.error('Erro ao enviar os dados para a API:', error);
+                //console.error('Erro ao enviar os dados para a API:', error);
             }
         },
 
-        async loadGraphFromDatabase() {
-            const response = await api.get('/get-latest-diagram');
-            const xmlData = response.data;
-            let doc = mxUtils.parseXml(xmlData);
-            const codec = new mxCodec(doc);
-            codec.decode(doc.documentElement, this.graph.getModel());
-            this.graph.getModel().beginUpdate();
-            this.graph.getModel().endUpdate();
+        /*async loadGraphFromDatabase() {
+            try {
+                const response = await api.get('/get-latest-diagram');
+                //console.log(response.data);
+                if (response && response.data) {
+                    let doc = mxUtils.parseXml(response.data);
+                    let codec = new mxCodec(doc);
+                    codec.decode(doc.documentElement, this.graph.getModel());
+                }
+            } catch (error) {
+                //console.error('Erro ao carregar o diagrama:', error);
+            }
+        },*/
 
-        },
-
-        initGraph() {
+        async initGraph() {
             const container = this.$refs.graphContainer;
             this.graph = new mxGraph(container);
-
             this.graph.setCellsEditable(true);
             this.graph.setConnectable(true);
 
@@ -159,7 +161,26 @@ export default {
                 const vertexName = "Start";
 
                 const iconURL = this.getIconURLFromClassName(shapeType);
-                this.graph.insertVertex(parent, null, vertexName, 80, 150, 48, 48, `shape=image;image=${iconURL}`);
+                const response = await api.get('/get-latest-diagram');
+                const self = this;
+                parseString(response.data, function (err, result) {
+                    Object.values(result.mxGraphModel.root).forEach(val => {
+                        Object.entries(val.mxCell).forEach(entry => {
+                            const [key, value] = entry;
+                            if(key !== '0') {
+                                if(key !== '1') {
+                                    console.log(value.$.parent);
+
+                                    self.graph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
+                                }
+                            }
+
+                        });
+                        //console.log(val.mxCell[1].$);
+                    });
+                    //console.dir(result.mxGraphModel.root);
+                });
+
 
             } finally {
                 this.graph.getModel().endUpdate();
@@ -183,7 +204,10 @@ export default {
             this.graph.addListener(mxEvent.CLICK, (sender, evt) => {
                 const cell = evt.getProperty('cell');
                 if (cell && cell.value) {
+                    let regex = /\/([a-zA-Z0-9_]+)\.svg$/;
+                    let nodeType = cell.style.match(regex);
                     EventBus.emit('nodeSelected', cell.value);
+                    EventBus.emit('nodeType', nodeType[1]);
                 }
             });
         },
@@ -223,6 +247,7 @@ export default {
         drop(evt, x, y) {
             const data = evt.dataTransfer.getData('nodeData');
             const shapeType = JSON.parse(data).iconClass;
+
             const vertexName = JSON.parse(data).name;
 
             const parent = this.graph.getDefaultParent();
@@ -242,7 +267,6 @@ export default {
 
                     this.graph.insertVertex(parent, null, vertexName, x-24, y-24, 48, 48, `shape=image;image=${iconURL}`);
                 }
-                console.log(x);
             } finally {
                 this.graph.getModel().endUpdate();
             }

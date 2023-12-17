@@ -1,26 +1,31 @@
 <template>
     <div class="bg-white p-4 shadow-lg rounded">
-        <p v-if="nodeName">Nome do Objeto: {{ nodeName }}</p>
+        <p v-if="nodeName">Nome do Objeto: {{ nodeType }}</p>
         <p v-else>Coluna 3</p>
-        <TextboxComponent />
+        <StartTime />
     </div>
 </template>
 
 <script>
 import { EventBus } from '../EventBus.js';
-import TextboxComponent from "./TextboxComponent.vue";
+import StartTime from "./StartTime.vue";
 
 export default {
-    components: {TextboxComponent},
+    components: {StartTime},
     data() {
         return {
             nodeName: null,
+            nodeType: null
         };
     },
     mounted() {
         EventBus.on('nodeSelected', (name) => {
             this.nodeName = name;
         });
+        EventBus.on('nodeType', (type) => {
+            this.nodeType = type;
+        });
+
     }
 }
 </script>
