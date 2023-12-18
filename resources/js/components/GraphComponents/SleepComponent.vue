@@ -1,15 +1,15 @@
 <template>
-    <TextboxComponent placeholder="Start time"/>
+    <TextboxComponent placeholder="Start"/>
 </template>
 
 <script>
-import TextboxComponent from "./TextboxComponent.vue";
+import TextboxComponent from "../TextboxComponent.vue";
 
 export default {
     components: {TextboxComponent},
     data() {
         return {
-            startTime:"ssss"
+            start:"ssss"
         };
     },
 }

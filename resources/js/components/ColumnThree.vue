@@ -8,7 +8,7 @@
 
 <script>
 import { EventBus } from '../EventBus.js';
-import StartTime from "./StartTime.vue";
+import StartTime from "./GraphComponents/StartTimeComponent.vue";
 
 export default {
     components: {StartTime},

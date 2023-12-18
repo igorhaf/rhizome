@@ -14,7 +14,7 @@ import api from '../services/api';
 var parseString = require('xml2js').parseString;
 
 const {
-    mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec
+    mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec, mxGeometry, mxPoint, mxEdgeStyle
 } = mxgraph();
 
 export default {
@@ -120,10 +120,15 @@ export default {
             this.graph.pageVisible = false; // Evita que o mxGraph ajuste o tamanho do contêiner
             this.graph.setEnabled(true);
             this.graph.setCellsDeletable(true);
-            this.graph.stylesheet.getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
+            //this.graph.stylesheet.getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
             this.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
             this.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
             this.graph.setCellsResizable(false);
+
+            //const edgeStyle = this.graph.getStylesheet().getDefaultEdgeStyle();
+            //edgeStyle[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation; // Exemplo de estilo de aresta
+            //edgeStyle[mxConstants.STYLE_CURVED] = 1; // Curva as arestas
+            //this.graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
 
             mxEvent.addListener(container, 'drop', (evt) => {
                 const x = mxEvent.getClientX(evt);
@@ -156,6 +161,7 @@ export default {
                 style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
                 style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
                 style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+
                 this.graph.getStylesheet().putDefaultVertexStyle(style);
                 const shapeType = 'start';
                 const vertexName = "Start";
@@ -177,14 +183,18 @@ export default {
                                 }
                             }
                             if (value.$.edge === '1') {
-                                console.log(self.graph.model.getCell(value.$.source));
-                                self.graph.insertEdge(parent, value.$.id, '', self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
+                                const edge = self.graph.insertEdge(parent, value.$.id, '', self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
+                                if (value.Array && value.Array.mxPoint) {
+                                    let geometry = new mxGeometry();
+                                    geometry.relative = true;
+                                    edge.geometry = geometry;
+                                    geometry.points = value.Array.mxPoint.map(point => new mxPoint(point.$.x, point.$.y));
+                                    self.graph.model.setGeometry(edge, geometry);
+                                }
                             }
 
                         });
-                        //console.log(val.mxCell[1].$);
                     });
-                    //console.dir(result.mxGraphModel.root);
                 });
 
 
