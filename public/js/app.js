@@ -19748,7 +19748,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       logic: [{
         id: 1,
-        name: "Logic Layer",
+        name: "Basic Components",
         expanded: false,
         children: [{
           id: 2,
@@ -20291,11 +20291,17 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                     var _entry = _slicedToArray(entry, 2),
                       key = _entry[0],
                       value = _entry[1];
-                    if (key !== '0') {
-                      if (key !== '1') {
-                        console.log(value.$.parent);
-                        self.graph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
+                    if (value.$.vertex === '1') {
+                      if (key !== '0') {
+                        if (key !== '1') {
+                          console.log(value.$.parent);
+                          self.graph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
+                        }
                       }
+                    }
+                    if (value.$.edge === '1') {
+                      console.log(self.graph.model.getCell(value.$.source));
+                      self.graph.insertEdge(parent, value.$.id, '', self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
                     }
                   });
                   //console.log(val.mxCell[1].$);

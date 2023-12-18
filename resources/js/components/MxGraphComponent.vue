@@ -167,12 +167,18 @@ export default {
                     Object.values(result.mxGraphModel.root).forEach(val => {
                         Object.entries(val.mxCell).forEach(entry => {
                             const [key, value] = entry;
-                            if(key !== '0') {
-                                if(key !== '1') {
-                                    console.log(value.$.parent);
+                            if(value.$.vertex === '1') {
+                                if (key !== '0') {
+                                    if (key !== '1') {
+                                        console.log(value.$.parent);
 
-                                    self.graph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
+                                        self.graph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
+                                    }
                                 }
+                            }
+                            if (value.$.edge === '1') {
+                                console.log(self.graph.model.getCell(value.$.source));
+                                self.graph.insertEdge(parent, value.$.id, '', self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
                             }
 
                         });

@@ -39,7 +39,7 @@ export default {
             logic: [
                 {
                     id: 1,
-                    name: "Logic Layer",
+                    name: "Basic Components",
                     expanded: false,
                     children: [
                         {
