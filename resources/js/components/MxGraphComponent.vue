@@ -255,7 +255,9 @@ export default {
                 'gmail-receive': '../images/icons/gmail-receive.svg',
                 'gmail-send': '../images/icons/gmail-send.svg',
                 'trello-add-card': '../images/icons/trello-add-card.svg',
-                'trello-remove-card': '../images/icons/trello-remove-card.svg'
+                'trello-remove-card': '../images/icons/trello-remove-card.svg',
+                'link': '../images/icons/link.svg',
+                'api': '../images/icons/api.svg'
             };
 
             return icons[className] || './images/icons/stop.svg';

@@ -1,6 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=e60798088bffdab3452da4b3dc2e42ce",
-    "/css/app.css": "/css/app.css?id=4ce624a210c6ac53ed66747dae083b5f",
+    "/js/app.js": "/js/app.js?id=eb4e890411de156fe1938b6758703a39",
+    "/css/app.css": "/css/app.css?id=32c37ef91c1e059c6931a63524aaee57",
     "/images/database.svg": "/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190",
     "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
     "/images/gmail-receive.svg": "/images/gmail-receive.svg?id=8ad119a8beb4bae9d72de7c90c7bd3f9",
@@ -28,5 +28,9 @@
     "/images/switch.svg": "/images/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd",
     "/images/trello-add-card.svg": "/images/trello-add-card.svg?id=4312b3d246a50fa3cc0d7c9b08607911",
     "/images/trello-remove-card.svg": "/images/trello-remove-card.svg?id=86a89a76b621c33c2de3d5096ce8ab6c",
-    "/images/webhook.svg": "/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671"
+    "/images/webhook.svg": "/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671",
+    "/images/icons/api.svg": "/images/icons/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
+    "/images/icons/link.svg": "/images/icons/link.svg?id=f4593a44b5b57956131dd2d5ce3b0906",
+    "/images/api.svg": "/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
+    "/images/link.svg": "/images/link.svg?id=f4593a44b5b57956131dd2d5ce3b0906"
 }

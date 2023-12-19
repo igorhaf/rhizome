@@ -86,12 +86,24 @@ export default {
                         },
                         {
                             id: 9,
+                            name: "Api",
+                            type: "api",
+                            iconClass: "api"
+                        },
+                        {
+                            id: 10,
                             name: "Exception",
                             type: "exception",
                             iconClass: "exception"
                         },
                         {
-                            id: 10,
+                            id: 11,
+                            name: "Link",
+                            type: "link",
+                            iconClass: "link"
+                        },
+                        {
+                            id: 12,
                             name: "Stop",
                             type: "stop",
                             iconClass: "stop"
@@ -99,23 +111,23 @@ export default {
                     ]
                 },
                 {
-                    id: 11,
+                    id: 13,
                     name: "Third-party",
                     expanded: false,
                     children: [
                         {
-                            id: 12,
+                            id: 14,
                             name: "Gmail",
                             expanded: false,
                             children: [
                                 {
-                                    id: 13,
+                                    id: 15,
                                     name: "Send mail",
                                     type: "gmail-send",
                                     iconClass: "gmail-send"
                                 },
                                 {
-                                    id: 14,
+                                    id: 16,
                                     name: "Get mail",
                                     type: "gmail-receive",
                                     iconClass: "gmail-receive"
@@ -123,18 +135,18 @@ export default {
                             ]
                         },
                         {
-                            id: 15,
+                            id: 17,
                             name: "Trello",
                             expanded: false,
                             children: [
                                 {
-                                    id: 16,
+                                    id: 18,
                                     name: "Create card",
                                     type: "trello-add-card",
                                     iconClass: "trello-add-card"
                                 },
                                 {
-                                    id: 17,
+                                    id: 19,
                                     name: "Remove card",
                                     type: "trello-remove-card",
                                     iconClass: "trello-remove-card"
@@ -144,12 +156,12 @@ export default {
                     ]
                 },
                 {
-                    id: 18,
+                    id: 20,
                     name: "Miscellaneous",
                     expanded: false,
                     children: [
                         {
-                            id: 19,
+                            id: 21,
                             name: "Database",
                             type: "database",
                             iconClass: "database"

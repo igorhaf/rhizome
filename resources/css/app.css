@@ -72,3 +72,11 @@
 .trello-remove-card{
     background-image: url('../images/icons/trello-remove-card.svg');
 }
+
+.link{
+    background-image: url('../images/icons/link.svg');
+}
+
+.api{
+    background-image: url('../images/icons/api.svg');
+}
