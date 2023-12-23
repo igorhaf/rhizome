@@ -20346,7 +20346,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                       }
                     }
                     if (value.$.edge === '1') {
-                      var edge = self.graph.insertEdge(parent, value.$.id, '', self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
+                      var edge = self.graph.insertEdge(parent, value.$.id, value.$.value, self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
                       if (value.Array && value.Array.mxPoint) {
                         var geometry = new mxGeometry();
                         geometry.relative = true;

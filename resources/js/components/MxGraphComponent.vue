@@ -183,7 +183,7 @@ export default {
                                 }
                             }
                             if (value.$.edge === '1') {
-                                const edge = self.graph.insertEdge(parent, value.$.id, '', self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
+                                const edge = self.graph.insertEdge(parent, value.$.id, value.$.value, self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
                                 if (value.Array && value.Array.mxPoint) {
                                     let geometry = new mxGeometry();
                                     geometry.relative = true;
