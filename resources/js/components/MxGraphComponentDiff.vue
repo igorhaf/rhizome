@@ -32,16 +32,16 @@ export default {
     },
     async mounted() {
         this.$nextTick(() => {
-            if (!mxClient.isBrowserSupported()) {
-                mxUtils.error("Browser não suportado!", 200, false);
-                return;
-            }
-            this.initGraph();
-            this.addClickEventListener();
-            this.addDblClickListener();
-            this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
-            this.graph.refresh();
-            window.addEventListener('resize', this.handleResize);
+        if (!mxClient.isBrowserSupported()) {
+            mxUtils.error("Browser não suportado!", 200, false);
+            return;
+        }
+        this.initGraph();
+        this.addClickEventListener();
+        this.addDblClickListener();
+        this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
+        this.graph.refresh();
+         window.addEventListener('resize', this.handleResize);
         });
     },
     beforeDestroy() {
