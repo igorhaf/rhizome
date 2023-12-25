@@ -20196,34 +20196,25 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
   },
   mounted: function mounted() {
     var _this = this;
-    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            _this.$nextTick(function () {
-              if (!mxClient.isBrowserSupported()) {
-                mxUtils.error("Browser não suportado!", 200, false);
-                return;
-              }
-              _this.initGraph();
-              _this.addClickEventListener();
-              _this.addDblClickListener();
-              _this.graph.getModel().addListener(mxEvent.CHANGE, _this.sendGraphDataToAPI);
-              _this.graph.refresh();
-              window.addEventListener('resize', _this.handleResize);
-            });
-          case 1:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }))();
+    this.$nextTick(function () {
+      if (!mxClient.isBrowserSupported()) {
+        mxUtils.error("Browser não suportado!", 200, false);
+        return;
+      }
+      _this.initGraph();
+      _this.addClickEventListener();
+      _this.addDblClickListener();
+      _this.graph.getModel().addListener(mxEvent.CHANGE, _this.sendGraphDataToAPI);
+      _this.graph.refresh();
+
+      // Certifique-se de redimensionar o gráfico após a inicialização
+    });
+    // Ouvinte de eventos para redimensionamento da janela
   },
   beforeDestroy: function beforeDestroy() {
     if (this.graph) {
       this.graph.destroy();
     }
-    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
     created: function created() {
@@ -20236,31 +20227,31 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     },
     sendGraphDataToAPI: function sendGraphDataToAPI() {
       var _this3 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var encoder, result, xml;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
             case 0:
               encoder = new mxCodec();
               result = encoder.encode(_this3.graph.getModel());
               xml = mxUtils.getXml(result);
               _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('graphDataUpdated', xml);
-              _context2.prev = 4;
-              _context2.next = 7;
+              _context.prev = 4;
+              _context.next = 7;
               return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].post('/graph-data', {
                 data: xml
               });
             case 7:
-              _context2.next = 11;
+              _context.next = 11;
               break;
             case 9:
-              _context2.prev = 9;
-              _context2.t0 = _context2["catch"](4);
+              _context.prev = 9;
+              _context.t0 = _context["catch"](4);
             case 11:
             case "end":
-              return _context2.stop();
+              return _context.stop();
           }
-        }, _callee2, null, [[4, 9]]);
+        }, _callee, null, [[4, 9]]);
       }))();
     },
     /*async loadGraphFromDatabase() {
@@ -20278,10 +20269,10 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     },*/
     initGraph: function initGraph() {
       var _this4 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var container, style, initialWidth, initialHeight, parent, _style, shapeType, vertexName, iconURL, response, self, keyHandler;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
               container = _this4.$refs.graphContainer;
               _this4.graph = new mxGraph(container);
@@ -20345,7 +20336,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               new mxKeyHandler(_this4.graph);
               parent = _this4.graph.getDefaultParent();
               _this4.graph.getModel().beginUpdate();
-              _context3.prev = 35;
+              _context2.prev = 35;
               _style = _this4.graph.getStylesheet().getDefaultVertexStyle();
               _style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
               _style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
@@ -20355,10 +20346,10 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               shapeType = 'start';
               vertexName = "Start";
               iconURL = _this4.getIconURLFromClassName(shapeType);
-              _context3.next = 46;
+              _context2.next = 46;
               return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].get('/get-latest-diagram');
             case 46:
-              response = _context3.sent;
+              response = _context2.sent;
               self = _this4;
               parseString(response.data, function (err, result) {
                 Object.values(result.mxGraphModel.root).forEach(function (val) {
@@ -20390,9 +20381,9 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                 });
               });
             case 49:
-              _context3.prev = 49;
+              _context2.prev = 49;
               _this4.graph.getModel().endUpdate();
-              return _context3.finish(49);
+              return _context2.finish(49);
             case 52:
               new mxRubberband(_this4.graph);
               keyHandler = new mxKeyHandler(_this4.graph);
@@ -20401,12 +20392,11 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   _this4.graph.removeCells();
                 }
               });
-              _this4.handleResize();
-            case 56:
+            case 55:
             case "end":
-              return _context3.stop();
+              return _context2.stop();
           }
-        }, _callee3, null, [[35,, 49, 52]]);
+        }, _callee2, null, [[35,, 49, 52]]);
       }))();
     },
     addClickEventListener: function addClickEventListener() {
@@ -20473,25 +20463,6 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
         }
       } finally {
         this.graph.getModel().endUpdate();
-      }
-    },
-    handleResize: function handleResize() {
-      // Supondo que 'this.graph' é a instância do mxGraph
-      if (this.graph && this.$refs.graphContainer) {
-        var container = this.$refs.graphContainer;
-
-        // Obtém as novas dimensões do contêiner
-        var width = container.offsetWidth;
-        var height = container.offsetHeight;
-
-        // Atualiza o tamanho do gráfico para preencher o novo contêiner
-        this.graph.container.style.width = width + 'px';
-        this.graph.container.style.height = height + 'px';
-
-        // Finalmente, informa ao mxGraph sobre a mudança de tamanho
-        this.graph.view.updateViewSize();
-        this.graph.view.setTranslate(0, 0);
-        this.graph.sizeDidChange();
       }
     }
   }
@@ -21053,7 +21024,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_header_component), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_one, {
     "class": "flex-1 bg-gray-200"
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_two, {
-    "class": "flex-1 bg-gray-300"
+    "class": "flex-1 bg-gray-300 overflow-hidden"
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_three, {
     "class": "flex-1 bg-gray-200"
   })])], 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_footer_component)]);
@@ -23555,7 +23526,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n}\n\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n    width: auto !important;\n}\n\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

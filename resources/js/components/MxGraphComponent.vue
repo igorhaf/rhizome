@@ -30,7 +30,7 @@ export default {
             graph: null,
         };
     },
-    async mounted() {
+    mounted() {
         this.$nextTick(() => {
             if (!mxClient.isBrowserSupported()) {
                 mxUtils.error("Browser não suportado!", 200, false);
@@ -41,14 +41,15 @@ export default {
             this.addDblClickListener();
             this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
             this.graph.refresh();
-            window.addEventListener('resize', this.handleResize);
+
+            // Certifique-se de redimensionar o gráfico após a inicialização
         });
+        // Ouvinte de eventos para redimensionamento da janela
     },
     beforeDestroy() {
         if (this.graph) {
             this.graph.destroy();
         }
-        window.removeEventListener('resize', this.handleResize);
     },
     methods: {
         created() {
@@ -216,9 +217,6 @@ export default {
                     this.graph.removeCells();
                 }
             });
-
-
-            this.handleResize();
         },
         addClickEventListener() {
             this.graph.addListener(mxEvent.CLICK, (sender, evt) => {
@@ -293,25 +291,7 @@ export default {
                 this.graph.getModel().endUpdate();
             }
         },
-        handleResize() {
-            // Supondo que 'this.graph' é a instância do mxGraph
-            if (this.graph && this.$refs.graphContainer) {
-                const container = this.$refs.graphContainer;
 
-                // Obtém as novas dimensões do contêiner
-                const width = container.offsetWidth;
-                const height = container.offsetHeight;
-
-                // Atualiza o tamanho do gráfico para preencher o novo contêiner
-                this.graph.container.style.width = width + 'px';
-                this.graph.container.style.height = height + 'px';
-
-                // Finalmente, informa ao mxGraph sobre a mudança de tamanho
-                this.graph.view.updateViewSize();
-                this.graph.view.setTranslate(0, 0);
-                this.graph.sizeDidChange();
-            }
-        },
     }
 }
 </script>
@@ -327,6 +307,7 @@ export default {
     flex: 1;
     overflow: hidden;
     height: 100%;
+    width: auto !important;
 }
 
 .mxGraph {

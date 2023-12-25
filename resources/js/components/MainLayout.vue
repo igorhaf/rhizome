@@ -7,7 +7,7 @@
                 <column-one class="flex-1 bg-gray-200"></column-one>
             </div>
             <div class="split-pane">
-                <column-two class="flex-1 bg-gray-300"></column-two>
+                <column-two class="flex-1 bg-gray-300 overflow-hidden"></column-two>
             </div>
             <div class="split-pane">
                 <column-three class="flex-1 bg-gray-200"></column-three>
