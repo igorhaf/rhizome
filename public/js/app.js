@@ -21262,7 +21262,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.handleSubmit && $options.handleSubmit.apply($options, arguments);
     }, ["prevent"]))
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    "class": "border text font bg rounded-md p-2",
+    "class": "border text font bg p-0 form-input px-1 w-full",
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.textValue = $event;
     }),

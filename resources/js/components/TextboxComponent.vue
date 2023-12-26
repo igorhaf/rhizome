@@ -2,7 +2,7 @@
     <div @click="outsideClick" class="bg">
         <form @submit.prevent="handleSubmit">
             <input
-                class="border text font bg rounded-md p-2"
+                class="border text font bg p-0 form-input px-1 w-full"
                 v-model="textValue"
                 @blur="handleBlur"
                 :placeholder="placeholder"
