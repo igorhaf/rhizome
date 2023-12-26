@@ -75,12 +75,13 @@ export default {
 
 <style scoped>
 .tabs-container {
-  margin-top: 0px; /* Adjusted to match your design */
+  margin-top: 0; /* Adjusted to match your design */
+  overflow-x: hidden;
 }
 
 .tabs-wrapper {
   display: flex;
-  overflow-x: auto;
+
   background: #2B2F3A; /* Color of your tab background */
   padding: 0; /* Adjusted to match your design */
 }
@@ -133,10 +134,7 @@ export default {
   background: #373C49; /* Color of your add button */
   border-radius: 50%; /* To make it round */
   cursor: pointer;
-  margin-right: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-left: 5px;
+  margin: 5px 10px 5px 5px;
 }
 
 .add-tab:hover {

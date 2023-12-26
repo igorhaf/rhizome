@@ -47,7 +47,7 @@ export default {
                 const splitPanes = this.$refs.splitContainer.querySelectorAll('.split-pane');
                 if (splitPanes && splitPanes.length === 3) {
                     Split(Array.from(splitPanes), {
-                        sizes: [25, 50, 25], // Ajustado para ter proporções 25%, 50%, 25%
+                        sizes: [15, 70, 15], // Ajustado para ter proporções 25%, 50%, 25%
                         minSize: 0,
                         gutterSize: 8,
                         cursor: 'col-resize'
