@@ -1,8 +1,8 @@
 <template>
-    <div @click="outsideClick">
+    <div @click="outsideClick" class="bg">
         <form @submit.prevent="handleSubmit">
             <input
-                class="border rounded-md p-2"
+                class="border text font bg rounded-md p-2"
                 v-model="textValue"
                 @blur="handleBlur"
                 :placeholder="placeholder"
