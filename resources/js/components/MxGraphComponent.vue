@@ -166,6 +166,8 @@ export default {
                 style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
                 style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
                 style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+                style[mxConstants.STYLE_FONTCOLOR] = '#dee0e4';  // Branco
+
 
                 this.graph.getStylesheet().putDefaultVertexStyle(style);
                 const shapeType = 'start';
@@ -305,11 +307,15 @@ export default {
         linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);
     flex: 1;
+    background-color: #1e1f22;
     overflow: hidden;
     height: 100%;
     width: auto !important;
-}
 
+}
+.graph-container .mxPlainTextEditor{
+    color: #FFFFFF!important;
+}
 .mxGraph {
     height: 100%;
 }

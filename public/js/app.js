@@ -20341,14 +20341,15 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               _style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
               _style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
               _style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+              _style[mxConstants.STYLE_FONTCOLOR] = '#dee0e4'; // Branco
 
               _this4.graph.getStylesheet().putDefaultVertexStyle(_style);
               shapeType = 'start';
               vertexName = "Start";
               iconURL = _this4.getIconURLFromClassName(shapeType);
-              _context2.next = 46;
+              _context2.next = 47;
               return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].get('/get-latest-diagram');
-            case 46:
+            case 47:
               response = _context2.sent;
               self = _this4;
               parseString(response.data, function (err, result) {
@@ -20380,11 +20381,11 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   });
                 });
               });
-            case 49:
-              _context2.prev = 49;
+            case 50:
+              _context2.prev = 50;
               _this4.graph.getModel().endUpdate();
-              return _context2.finish(49);
-            case 52:
+              return _context2.finish(50);
+            case 53:
               new mxRubberband(_this4.graph);
               keyHandler = new mxKeyHandler(_this4.graph);
               keyHandler.bindKey(46, function (evt) {
@@ -20392,11 +20393,11 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   _this4.graph.removeCells();
                 }
               });
-            case 55:
+            case 56:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[35,, 49, 52]]);
+        }, _callee2, null, [[35,, 50, 53]]);
       }))();
     },
     addClickEventListener: function addClickEventListener() {
@@ -23529,7 +23530,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n    width: auto !important;\n}\n\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    background-color: #1e1f22;\n    overflow: hidden;\n    height: 100%;\n    width: auto !important;\n\n}\n.graph-container .mxPlainTextEditor{\n    color: #FFFFFF!important;\n}\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
