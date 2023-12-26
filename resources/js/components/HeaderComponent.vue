@@ -16,7 +16,7 @@
             </svg>
         </button>
 
-        <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+        <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-48 bg-white py-1 z-10">
             <a href="#" @click="showModal = true" class="block px-4 py-2 text-black hover:bg-gray-200">Integrações</a>
             <a href="#" class="block px-4 py-2 text-black hover:bg-gray-200">Item 2</a>
             <a href="#" class="block px-4 py-2 text-black hover:bg-gray-200">Item 3</a>

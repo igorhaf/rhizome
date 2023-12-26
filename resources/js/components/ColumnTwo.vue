@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white p-4 shadow-lg rounded">
+    <div class="bg-white p ">
         <TabsComponent :tabs="tabs" :activeTab="activeTab" @tabAdded="handleTabAdded" @tabChanged="handleTabChange" />
         <MxGraphComponent
             v-for="(tab, index) in tabs"

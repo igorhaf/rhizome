@@ -20759,10 +20759,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "bg-white p-4 shadow-lg rounded flex flex-col h-full space-y-4"
+  "class": "bg-white p rounded flex flex-col h-full space-y"
 };
 var _hoisted_2 = {
-  "class": "flex flex-col flex-1 bg p-4 rounded shadow"
+  "class": "flex flex-col flex-1 bg p-4"
 };
 var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "text font-semibold mb-4"
@@ -20777,10 +20777,10 @@ var _hoisted_5 = {
   "class": "min-w-max"
 };
 var _hoisted_6 = {
-  "class": "flex flex-col flex-1 bg-gray-100 p-4 rounded shadow"
+  "class": "flex flex-col flex-1 bg p-4"
 };
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
-  "class": "text-xl font-bold mb-4"
+  "class": "text font-semibold mb-4"
 }, "Objects", -1 /* HOISTED */);
 var _hoisted_8 = {
   "class": "flex-1 overflow-auto",
@@ -20817,7 +20817,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "bg-white p-4 shadow-lg rounded"
+  "class": "bg-white p-4"
 };
 var _hoisted_2 = {
   key: 0
@@ -20846,7 +20846,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "bg-white p-4 shadow-lg rounded"
+  "class": "bg-white p"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_TabsComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("TabsComponent");
@@ -20954,7 +20954,7 @@ var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 var _hoisted_4 = [_hoisted_3];
 var _hoisted_5 = {
   key: 0,
-  "class": "absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10"
+  "class": "absolute right-0 mt-2 w-48 bg-white py-1 z-10"
 };
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   href: "#",
@@ -21005,6 +21005,9 @@ var _hoisted_1 = {
 };
 var _hoisted_2 = {
   ref: "splitContainer",
+  style: {
+    "background-color": "#1e1f22"
+  },
   "class": "split-container flex-1 flex"
 };
 var _hoisted_3 = {
@@ -21054,7 +21057,7 @@ var _hoisted_2 = {
   "class": "modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
 };
 var _hoisted_3 = {
-  "class": "bg-white p-6 rounded shadow-lg flex max-w-xl w-full max-h-screen mt-20 mb-20 overflow-y-auto text-black"
+  "class": "bg-white p-6 flex max-w-xl w-full max-h-screen mt-20 mb-20 overflow-y-auto text-black"
 };
 var _hoisted_4 = {
   "class": "flex-1 border-r border-gray-300 p-4 split-pane"
@@ -21125,6 +21128,9 @@ var _hoisted_3 = {
   key: 0
 };
 var _hoisted_4 = ["onDragstart"];
+var _hoisted_5 = {
+  "class": "text"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_FolderOpenIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FolderOpenIcon");
   var _component_FolderIcon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FolderIcon");
@@ -21152,7 +21158,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       draggable: "true"
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_DocumentIcon, {
       "class": "w-5 h-5"
-    })], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(node.name), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_2), node.expanded && node.children ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_tree_view, {
+    })], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(node.name), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_2), node.expanded && node.children ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_tree_view, {
       key: 0,
       "tree-data": node.children
     }, null, 8 /* PROPS */, ["tree-data"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);

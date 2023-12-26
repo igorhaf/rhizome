@@ -1,9 +1,9 @@
 <!--ColumnOne.vue-->
 <template>
-    <div class="bg-white p-4  shadow-lg rounded flex flex-col h-full space-y-4">
+    <div class="bg-white p rounded flex flex-col h-full space-y">
 
         <!-- TreeView Card -->
-        <div class="flex flex-col flex-1 bg p-4 rounded shadow">
+        <div class="flex flex-col flex-1 bg p-4">
             <h2 class="text font-semibold mb-4">Components</h2>
             <div class="flex-1 overflow-auto" style="max-height: 45vh;">
                 <div class="min-w-max">
@@ -13,8 +13,8 @@
         </div>
 
         <!-- Objects Card -->
-        <div class="flex flex-col flex-1 bg-gray-100 p-4 rounded shadow">
-            <h2 class="text-xl font-bold mb-4">Objects</h2>
+        <div class="flex flex-col flex-1 bg p-4">
+            <h2 class="text font-semibold mb-4">Objects</h2>
             <div class="flex-1 overflow-auto" style="max-height: 45vh;">
                 <div class="min-w-max">
                     <objects :tree-data="objects"></objects>

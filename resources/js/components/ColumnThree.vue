@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white p-4 shadow-lg rounded">
+    <div class="bg-white p-4">
         <p v-if="nodeName">Nome do Objeto: {{ nodeType }}</p>
         <p v-else>Coluna 3</p>
         <StartTime />

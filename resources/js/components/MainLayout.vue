@@ -2,7 +2,7 @@
     <div class="h-screen flex flex-col">
         <header-component></header-component>
 
-        <div ref="splitContainer" class="split-container flex-1 flex">
+        <div ref="splitContainer" style="background-color: #1e1f22" class="split-container flex-1 flex">
             <div class="split-pane">
                 <column-one class="flex-1 bg-gray-200"></column-one>
             </div>
