@@ -21026,11 +21026,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_column_three = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("column-three");
   var _component_footer_component = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("footer-component");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_header_component), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_one, {
-    "class": "flex-1 bg-gray-200"
+    "class": "flex-1 bg-gray-200 h-full"
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_two, {
-    "class": "flex-grow bg-gray-300 overflow-hidden"
+    "class": "flex-grow bg-gray-300 overflow-hidden h-full"
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_three, {
-    "class": "flex-1 bg-gray-200"
+    "class": "flex-1 bg-gray-200 h-full"
   })])], 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_footer_component)]);
 }
 
@@ -23485,7 +23485,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n.split-container {\r\n    display: flex;\r\n    width: 100%; /* Garante que o container ocupe toda a largura */\r\n}\r\n\r\n.split-pane {\r\n    /* Removido flex: 1 para permitir controle mais preciso com Split.js */\r\n    min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */\r\n}\r\n\r\n.gutter {\r\n    cursor: col-resize !important;\r\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\r\n.split-container {\r\n    display: flex;\r\n    width: 100%; /* Garante que o container ocupe toda a largura */\r\n}\r\n\r\n.split-pane {\r\n  /* Removido flex: 1 para permitir controle mais preciso com Split.js */\r\n  min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */\r\n}\r\n\r\n.gutter {\r\n    cursor: col-resize !important;\r\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -23533,7 +23533,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    background-color: #1e1f22;\n    overflow: hidden;\n    height: 100%;\n    width: auto !important;\n\n}\n.graph-container .mxPlainTextEditor{\n    color: #FFFFFF!important;\n}\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    background-color: #1e1f22;\n    overflow: hidden;\n    height: 100% !important;\n    width: auto !important;\n\n}\n.graph-container .mxPlainTextEditor{\n    color: #FFFFFF!important;\n}\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -23581,7 +23581,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.tabs-container[data-v-67dd8b44] {\r\n  margin-top: 0; /* Adjusted to match your design */\r\n  overflow-x: hidden;\n}\n.tabs-wrapper[data-v-67dd8b44] {\r\n  display: flex;\r\n\r\n  background: #2B2F3A; /* Color of your tab background */\r\n  padding: 0; /* Adjusted to match your design */\n}\n.tab[data-v-67dd8b44] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  padding: 8px 16px; /* Adjusted to match your design */\r\n  margin-right: 0; /* Adjusted to match your design */\r\n  font-size: 12px; /* Adjusted to match your design */\r\n  color: white; /* Text color */\r\n  background: #3F4451; /* Non-active tab background */\r\n  border: none;\r\n  cursor: pointer;\r\n  position: relative;\n}\n.tab.active-tab[data-v-67dd8b44] {\r\n  background: #32363E; /* Active tab background */\n}\n.tab[data-v-67dd8b44]:not(.active-tab):hover {\r\n  background: #373C49; /* Hover state for non-active tabs */\n}\n.tab.active-tab[data-v-67dd8b44]::after {\r\n  content: '';\r\n  position: absolute;\r\n  left: 0;\r\n  bottom: 0; /* Coloca o pseudo-elemento na parte inferior da aba */\r\n  width: 100%;\r\n  height: 2px;\r\n  background-color: #4fa0f8; /* Cor do indicador */\n}\n.close-btn[data-v-67dd8b44] {\r\n  margin-left: 8px;\r\n  color: #F56565;\r\n  cursor: pointer;\n}\n.add-tab[data-v-67dd8b44] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 24px; /* Adjusted to match your design */\r\n  height: 24px; /* Adjusted to match your design */\r\n  font-size: 20px; /* Adjusted to match your design */\r\n  color: white; /* Text color */\r\n  background: #373C49; /* Color of your add button */\r\n  border-radius: 50%; /* To make it round */\r\n  cursor: pointer;\r\n  margin: 5px 10px 5px 5px;\n}\n.add-tab[data-v-67dd8b44]:hover {\r\n  background: #6DA0FE;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.tabs-container[data-v-67dd8b44] {\r\n  margin-top: 0; /* Adjusted to match your design */\r\n  overflow-x: hidden;\n}\n.tabs-wrapper[data-v-67dd8b44] {\r\n  display: flex;\r\n\r\n  background: #2B2F3A; /* Color of your tab background */\r\n  padding: 0; /* Adjusted to match your design */\n}\n.tab[data-v-67dd8b44] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  padding: 8px 16px; /* Adjusted to match your design */\r\n  margin-right: 0; /* Adjusted to match your design */\r\n  font-size: 12px; /* Adjusted to match your design */\r\n  color: white; /* Text color */\r\n  background: #3F4451; /* Non-active tab background */\r\n  border: none;\r\n  cursor: pointer;\r\n  position: relative;\n}\n.tab.active-tab[data-v-67dd8b44] {\r\n  background: #32363E; /* Active tab background */\n}\n.tab[data-v-67dd8b44]:not(.active-tab):hover {\r\n  background: #373C49; /* Hover state for non-active tabs */\n}\n.tab.active-tab[data-v-67dd8b44]::after {\r\n  content: '';\r\n  position: absolute;\r\n  left: 0;\r\n  bottom: 0; /* Coloca o pseudo-elemento na parte inferior da aba */\r\n  width: 100%;\r\n  height: 2px;\r\n  background-color: #4fa0f8; /* Cor do indicador */\n}\n.close-btn[data-v-67dd8b44] {\r\n  margin-left: 8px;\r\n  color: #F56565;\r\n  cursor: pointer;\r\n  font-size: x-small;\n}\n.add-tab[data-v-67dd8b44] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 24px; /* Adjusted to match your design */\r\n  height: 24px; /* Adjusted to match your design */\r\n  font-size: 20px; /* Adjusted to match your design */\r\n  color: white; /* Text color */\r\n  background: #373C49; /* Color of your add button */\r\n  border-radius: 50%; /* To make it round */\r\n  cursor: pointer;\r\n  margin: 5px 10px 5px 5px;\n}\n.add-tab[data-v-67dd8b44]:hover {\r\n  background: #6DA0FE;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

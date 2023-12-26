@@ -121,6 +121,7 @@ export default {
   margin-left: 8px;
   color: #F56565;
   cursor: pointer;
+  font-size: x-small;
 }
 
 .add-tab {

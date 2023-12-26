@@ -4,13 +4,13 @@
 
         <div ref="splitContainer" style="background-color: #1e1f22" class="split-container flex-1 flex">
             <div class="split-pane">
-                <column-one class="flex-1 bg-gray-200"></column-one>
+                <column-one class="flex-1 bg-gray-200 h-full"></column-one>
             </div>
             <div class="split-pane">
-                <column-two class="flex-grow bg-gray-300 overflow-hidden"></column-two>
+                <column-two class="flex-grow bg-gray-300 overflow-hidden h-full"></column-two>
             </div>
             <div class="split-pane">
-                <column-three class="flex-1 bg-gray-200"></column-three>
+                <column-three class="flex-1 bg-gray-200 h-full"></column-three>
             </div>
         </div>
 
@@ -68,8 +68,8 @@ export default {
 }
 
 .split-pane {
-    /* Removido flex: 1 para permitir controle mais preciso com Split.js */
-    min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */
+  /* Removido flex: 1 para permitir controle mais preciso com Split.js */
+  min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */
 }
 
 .gutter {

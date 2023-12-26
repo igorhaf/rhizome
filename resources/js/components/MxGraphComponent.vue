@@ -309,7 +309,7 @@ export default {
     flex: 1;
     background-color: #1e1f22;
     overflow: hidden;
-    height: 100%;
+    height: 100% !important;
     width: auto !important;
 
 }
