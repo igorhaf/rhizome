@@ -14,7 +14,7 @@
 
         <!-- Objects Card -->
         <div class="flex flex-col flex-1 bg p-4">
-            <h2 class="text font-semibold mb-4">Objects</h2>
+            <h2 class="text font-semibold mb-4">Project</h2>
             <div class="flex-1 overflow-auto" style="max-height: 45vh;">
                 <div class="min-w-max">
                     <objects :tree-data="objects"></objects>

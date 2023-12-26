@@ -20781,7 +20781,7 @@ var _hoisted_6 = {
 };
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "text font-semibold mb-4"
-}, "Objects", -1 /* HOISTED */);
+}, "Project", -1 /* HOISTED */);
 var _hoisted_8 = {
   "class": "flex-1 overflow-auto",
   style: {
@@ -20881,7 +20881,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "h-16 bg-black text-white py-4 mt-4 bottom-0 w-full"
+  "class": "h-16 bg-black text-white py-4 bottom-0 w-full"
 };
 function render(_ctx, _cache) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("footer", _hoisted_1, " Footer ");
@@ -21028,7 +21028,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_header_component), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_one, {
     "class": "flex-1 bg-gray-200"
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_two, {
-    "class": "flex-1 bg-gray-300 overflow-hidden"
+    "class": "flex-grow bg-gray-300 overflow-hidden"
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_column_three, {
     "class": "flex-1 bg-gray-200"
   })])], 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_footer_component)]);
@@ -21184,27 +21184,29 @@ var _withScopeId = function _withScopeId(n) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-67dd8b44"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
 };
 var _hoisted_1 = {
-  "class": "tabs-container mt-6"
+  "class": "tabs-container"
 };
 var _hoisted_2 = {
-  "class": "tabs-wrapper flex overflow-x-auto"
+  "class": "tabs-wrapper"
 };
 var _hoisted_3 = ["onClick", "onDblclick"];
 var _hoisted_4 = ["onUpdate:modelValue", "onBlur"];
 var _hoisted_5 = {
   key: 1
 };
-var _hoisted_6 = {
-  key: 2
-};
-var _hoisted_7 = ["onClick"];
+var _hoisted_6 = ["onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.tabs, function (tab, index) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $options.addTab && $options.addTab.apply($options, arguments);
+    }),
+    "class": "add-tab"
+  }, " + "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.tabs, function (tab, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: tab.id,
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
         'active-tab': $data.activeTab === index
-      }, "tab inline-flex flex-shrink-0 px-6 py-2 mr-1 rounded-t-lg cursor-pointer"]),
+      }, "tab"]),
       onClick: function onClick($event) {
         return $options.changeTab(index);
       },
@@ -21221,19 +21223,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       ref_for: true,
       ref: "tabInput",
-      "class": "border p-1 rounded"
-    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, tab.label]]) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(tab.label), 1 /* TEXT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      "class": "tab-input"
+    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, tab.label]]) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(tab.label), 1 /* TEXT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
       onClick: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
         return $options.closeTab(index);
       }, ["stop"]),
-      "class": "ml-2 text-red-500 cursor-pointer"
-    }, "X", 8 /* PROPS */, _hoisted_7)], 42 /* CLASS, PROPS, HYDRATE_EVENTS */, _hoisted_3);
-  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    onClick: _cache[0] || (_cache[0] = function () {
-      return $options.addTab && $options.addTab.apply($options, arguments);
-    }),
-    "class": "add-tab inline-flex flex-shrink-0 px-6 py-2 rounded-t-lg cursor-pointer bg-blue-500 text-white"
-  }, " + ")])]);
+      "class": "close-btn"
+    }, "X", 8 /* PROPS */, _hoisted_6)], 42 /* CLASS, PROPS, HYDRATE_EVENTS */, _hoisted_3);
+  }), 128 /* KEYED_FRAGMENT */))])]);
 }
 
 /***/ }),
@@ -23584,7 +23581,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.tab[data-v-67dd8b44] {\r\n    background-color: #E0E0E0;\n}\n.add-tab[data-v-67dd8b44]:hover {\r\n    background-color: #2563EB;\n}\n.active-tab[data-v-67dd8b44] {\r\n    background-color: #FFFFFF;\r\n    border: 1px solid #D1D5DB;\r\n    border-bottom: none;\n}\n.content[data-v-67dd8b44] {\r\n    border-top: none;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.tabs-container[data-v-67dd8b44] {\r\n  margin-top: 0px; /* Adjusted to match your design */\n}\n.tabs-wrapper[data-v-67dd8b44] {\r\n  display: flex;\r\n  overflow-x: auto;\r\n  background: #2B2F3A; /* Color of your tab background */\r\n  padding: 0; /* Adjusted to match your design */\n}\n.tab[data-v-67dd8b44] {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  padding: 8px 16px; /* Adjusted to match your design */\r\n  margin-right: 0; /* Adjusted to match your design */\r\n  font-size: 12px; /* Adjusted to match your design */\r\n  color: white; /* Text color */\r\n  background: #3F4451; /* Non-active tab background */\r\n  border: none;\r\n  cursor: pointer;\r\n  position: relative;\n}\n.tab.active-tab[data-v-67dd8b44] {\r\n  background: #32363E; /* Active tab background */\n}\n.tab[data-v-67dd8b44]:not(.active-tab):hover {\r\n  background: #373C49; /* Hover state for non-active tabs */\n}\n.tab.active-tab[data-v-67dd8b44]::after {\r\n  content: '';\r\n  position: absolute;\r\n  left: 0;\r\n  bottom: 0; /* Coloca o pseudo-elemento na parte inferior da aba */\r\n  width: 100%;\r\n  height: 2px;\r\n  background-color: #4fa0f8; /* Cor do indicador */\n}\n.close-btn[data-v-67dd8b44] {\r\n  margin-left: 8px;\r\n  color: #F56565;\r\n  cursor: pointer;\n}\n.add-tab[data-v-67dd8b44] {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 24px; /* Adjusted to match your design */\r\n  height: 24px; /* Adjusted to match your design */\r\n  font-size: 20px; /* Adjusted to match your design */\r\n  color: white; /* Text color */\r\n  background: #373C49; /* Color of your add button */\r\n  border-radius: 50%; /* To make it round */\r\n  cursor: pointer;\r\n  margin-right: 10px;\r\n  margin-top: 5px;\r\n  margin-bottom: 5px;\r\n  margin-left: 5px;\n}\n.add-tab[data-v-67dd8b44]:hover {\r\n  background: #6DA0FE;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

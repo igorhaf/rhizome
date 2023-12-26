@@ -1,22 +1,22 @@
 <!--TabsComponent.vue-->
 <template>
-    <div class="tabs-container mt-6">
-        <div class="tabs-wrapper flex overflow-x-auto">
-            <div v-for="(tab, index) in tabs" :key="tab.id"
-                 :class="{'active-tab': activeTab === index}"
-                 @click="changeTab(index)"
-                 @dblclick="enableEdit(tab)"
-                 class="tab inline-flex flex-shrink-0 px-6 py-2 mr-1 rounded-t-lg cursor-pointer">
-                <input v-if="tab.isEditing" v-model="tab.label" @blur="saveTabName(tab)" ref="tabInput" class="border p-1 rounded"/>
-                <span v-else>{{ tab.label }}</span>
-                <span v-else>{{ tab.label }}</span>
-                <span @click.stop="closeTab(index)" class="ml-2 text-red-500 cursor-pointer">X</span>
-            </div>
-            <div @click="addTab" class="add-tab inline-flex flex-shrink-0 px-6 py-2 rounded-t-lg cursor-pointer bg-blue-500 text-white">
-                +
-            </div>
-        </div>
+  <div class="tabs-container">
+    <div class="tabs-wrapper">
+      <div @click="addTab" class="add-tab">
+        +
+      </div>
+      <div v-for="(tab, index) in tabs" :key="tab.id"
+           :class="{'active-tab': activeTab === index}"
+           @click="changeTab(index)"
+           @dblclick="enableEdit(tab)"
+           class="tab">
+        <input v-if="tab.isEditing" v-model="tab.label" @blur="saveTabName(tab)" ref="tabInput" class="tab-input"/>
+        <span v-else>{{ tab.label }}</span>
+        <span @click.stop="closeTab(index)" class="close-btn">X</span>
+      </div>
+
     </div>
+  </div>
 </template>
 
 <script>
@@ -74,21 +74,72 @@ export default {
 </script>
 
 <style scoped>
+.tabs-container {
+  margin-top: 0px; /* Adjusted to match your design */
+}
+
+.tabs-wrapper {
+  display: flex;
+  overflow-x: auto;
+  background: #2B2F3A; /* Color of your tab background */
+  padding: 0; /* Adjusted to match your design */
+}
+
 .tab {
-    background-color: #E0E0E0;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px; /* Adjusted to match your design */
+  margin-right: 0; /* Adjusted to match your design */
+  font-size: 12px; /* Adjusted to match your design */
+  color: white; /* Text color */
+  background: #3F4451; /* Non-active tab background */
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab.active-tab {
+  background: #32363E; /* Active tab background */
+}
+
+.tab:not(.active-tab):hover {
+  background: #373C49; /* Hover state for non-active tabs */
+}
+
+.tab.active-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0; /* Coloca o pseudo-elemento na parte inferior da aba */
+  width: 100%;
+  height: 2px;
+  background-color: #4fa0f8; /* Cor do indicador */
+}
+
+.close-btn {
+  margin-left: 8px;
+  color: #F56565;
+  cursor: pointer;
+}
+
+.add-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; /* Adjusted to match your design */
+  height: 24px; /* Adjusted to match your design */
+  font-size: 20px; /* Adjusted to match your design */
+  color: white; /* Text color */
+  background: #373C49; /* Color of your add button */
+  border-radius: 50%; /* To make it round */
+  cursor: pointer;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
 }
 
 .add-tab:hover {
-    background-color: #2563EB;
-}
-
-.active-tab {
-    background-color: #FFFFFF;
-    border: 1px solid #D1D5DB;
-    border-bottom: none;
-}
-
-.content {
-    border-top: none;
+  background: #6DA0FE;
 }
 </style>
