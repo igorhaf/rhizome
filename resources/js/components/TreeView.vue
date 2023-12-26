@@ -12,7 +12,9 @@
                   <div :class="['nb-icons', node.iconClass]" @dragstart="startDrag($event, node)" draggable="true"></div>
                 </template>
               </span>
+                <span class="text">
                 {{ node.name }}
+                    </span>
             </div>
             <tree-view v-if="node.expanded && node.children" :tree-data="node.children" />
         </li>
