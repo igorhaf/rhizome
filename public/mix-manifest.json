@@ -1,6 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=337e8396fbade7ba8e88a6305290d758",
-    "/css/app.css": "/css/app.css?id=1500641e8c6e22bafa2310ea346423b9",
+    "/js/app.js": "/js/app.js?id=19526c9bfc365b1ca3685619d61b55f6",
+    "/css/app.css": "/css/app.css?id=f02d9dd953df5957d83fa5ce5ee6de3b",
     "/images/api.svg": "/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
     "/images/database.svg": "/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190",
     "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
@@ -32,5 +32,14 @@
     "/images/switch.svg": "/images/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd",
     "/images/trello-add-card.svg": "/images/trello-add-card.svg?id=4312b3d246a50fa3cc0d7c9b08607911",
     "/images/trello-remove-card.svg": "/images/trello-remove-card.svg?id=86a89a76b621c33c2de3d5096ce8ab6c",
-    "/images/webhook.svg": "/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671"
+    "/images/webhook.svg": "/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671",
+    "/images/icons/point-1.1s-200px (1).svg": "/images/icons/point-1.1s-200px (1).svg?id=dfcc65850d3eb4d174f77b705d27c223",
+    "/images/icons/point-1.1s-200px (1).svg:Zone.Identifier": "/images/icons/point-1.1s-200px (1).svg:Zone.Identifier?id=efa32e449fc113aae68805b26f051ac5",
+    "/images/icons/point-1.1s-200px.svg": "/images/icons/point-1.1s-200px.svg?id=389272f28629151469b165621ffb4913",
+    "/images/icons/point-1.1s-200px.svg:Zone.Identifier": "/images/icons/point-1.1s-200px.svg:Zone.Identifier?id=efa32e449fc113aae68805b26f051ac5",
+    "/images/icons/point-ok.svg": "/images/icons/point-ok.svg?id=389272f28629151469b165621ffb4913",
+    "/images/icons/point-green.svg": "/images/icons/point-green.svg?id=389272f28629151469b165621ffb4913",
+    "/images/icons/point-red.svg": "/images/icons/point-red.svg?id=dfcc65850d3eb4d174f77b705d27c223",
+    "/images/point-red.svg": "/images/point-red.svg?id=dfcc65850d3eb4d174f77b705d27c223",
+    "/images/point-green.svg": "/images/point-green.svg?id=389272f28629151469b165621ffb4913"
 }

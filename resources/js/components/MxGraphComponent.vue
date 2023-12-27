@@ -39,6 +39,7 @@ export default {
             this.initGraph();
             this.addClickEventListener();
             this.addDblClickListener();
+            //this.addConsoleEventListener()
             this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
             this.graph.refresh();
 
@@ -91,6 +92,10 @@ export default {
         async initGraph() {
             const container = this.$refs.graphContainer;
             this.graph = new mxGraph(container);
+            mxUtils.alert = function(message) {
+              console.log("Emitindo evento de erro:", message);
+              EventBus.emit('errorOccurred', message);
+            };
             this.graph.setCellsEditable(true);
             this.graph.setConnectable(true);
 
@@ -231,6 +236,25 @@ export default {
                 }
             });
         },
+
+      addConsoleEventListener() {
+        this.graph.connectionHandler.addListener(mxEvent.CONNECT, (sender, evt) => {
+          let edge = evt.getProperty('cell');
+
+          let source = this.graph.getModel().getTerminal(edge, true);
+          let target = this.graph.getModel().getTerminal(edge, false);
+          let edges = this.graph.getModel().getEdgesBetween(source, target, false);
+
+          if (edges != null) {
+            console.log(edges)
+            mxUtils.alert('Nodes connected !');
+            evt.consume();
+          }else{
+            console.log(edges)
+            mxUtils.alert('Nodes already !');
+          }
+        });
+      },
         addDblClickListener() {
             this.graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
                 const cell = evt.getProperty('cell');
