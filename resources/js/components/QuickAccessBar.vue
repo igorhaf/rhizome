@@ -1,6 +1,7 @@
 <template>
   <div class="quick-access-bar">
-    dgfsdf
+    <div class="qm-icons components"></div>
+    <div class="qm-icons frames"></div>
   </div>
 </template>
 

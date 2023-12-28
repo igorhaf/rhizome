@@ -1,6 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=6f8b701d87ab0ed6fb707a7fad875e9c",
-    "/css/app.css": "/css/app.css?id=d706dbadc7c61c401d788a150c15dbbb",
+    "/js/app.js": "/js/app.js?id=2d08ae385bbca14fef04d87ea2c10de2",
+    "/css/app.css": "/css/app.css?id=d53c3cc53aa30013731ab0c209ca9abe",
     "/images/api.svg": "/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
     "/images/database.svg": "/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190",
     "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
@@ -44,5 +44,7 @@
     "/images/point-green.svg": "/images/point-green.svg?id=389272f28629151469b165621ffb4913",
     "/images/icons/components.svg": "/images/icons/components.svg?id=824df853abc10564c141f91d1e7f0458",
     "/images/icons/Ativo 72.svg": "/images/icons/Ativo 72.svg?id=c3e00e949ea2c47b5f85ac5cb3abc0fc",
-    "/images/icons/frames.svg": "/images/icons/frames.svg?id=c3e00e949ea2c47b5f85ac5cb3abc0fc"
+    "/images/icons/frames.svg": "/images/icons/frames.svg?id=d67a586c766c71e3c87463fb5d1fe4d9",
+    "/images/components.svg": "/images/components.svg?id=824df853abc10564c141f91d1e7f0458",
+    "/images/frames.svg": "/images/frames.svg?id=d67a586c766c71e3c87463fb5d1fe4d9"
 }

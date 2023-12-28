@@ -101,3 +101,24 @@ body {
 .api{
     background-image: url('../images/icons/api.svg');
 }
+
+.qm-icons{
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #e5e7eb;
+
+}
+
+.components{
+    background-image: url('../images/icons/components.svg');
+
+}
+
+.frames{
+    background-image: url('../images/icons/frames.svg');
+    width: 26px;
+}
