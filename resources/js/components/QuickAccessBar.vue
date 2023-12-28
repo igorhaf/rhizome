@@ -1,5 +1,5 @@
 <template>
-  <div class="quick-access-bar">
+  <div class="quick-access-bar w-1/6">
     <div class="qm-icons components"></div>
     <div class="qm-icons frames"></div>
   </div>
@@ -13,4 +13,7 @@ export default {
 </script>
 
 <style>
+.quick-access-bar{
+  min-width: 200px;
+}
 </style>
