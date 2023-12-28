@@ -1,38 +1,49 @@
 <!--ColumnOne.vue-->
 <template>
-    <div class="bg-white p rounded flex flex-col h-full space-y">
+  <div class="flex h-full"> <!-- Container flexível para toda a altura -->
 
-        <!-- TreeView Card -->
-        <div class="flex flex-col flex-1 bg p-4">
-            <h2 class="text font-semibold mb-4">Components</h2>
-            <div class="flex-1 overflow-auto" style="max-height: 45vh;">
-                <div class="min-w-max">
-                    <tree-view :tree-data="logic"></tree-view>
-                </div>
-            </div>
-        </div>
-
-        <!-- Objects Card -->
-        <div class="flex flex-col flex-1 bg p-4">
-            <h2 class="text font-semibold mb-4">Project</h2>
-            <div class="flex-1 overflow-auto" style="max-height: 45vh;">
-                <div class="min-w-max">
-                    <objects :tree-data="objects"></objects>
-                </div>
-            </div>
-        </div>
+    <!-- Quick Access Bar -->
+    <div class="w-1/6 bg"> <!-- Ajuste a largura conforme necessário -->
+      <quick-access-bar></quick-access-bar>
     </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="flex-1 bg p-4 flex flex-col space-y-4"> <!-- Flexível, ocupando o espaço restante -->
+
+      <!-- Componentes -->
+      <div class="flex flex-col h-1/2"> <!-- Ajuste de altura 1/2 -->
+        <h2 class="text font-semibold mb-4">Components</h2>
+        <div class="flex-1 overflow-auto">
+          <div class="min-w-max">
+            <tree-view :tree-data="logic"></tree-view>
+          </div>
+        </div>
+      </div>
+
+      <!-- Objetos -->
+      <div class="flex flex-col h-1/2"> <!-- Ajuste de altura 1/2 -->
+        <h2 class="text font-semibold mb-4">Project</h2>
+        <div class="flex-1 overflow-auto">
+          <div class="min-w-max">
+            <objects :tree-data="objects"></objects>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </template>
 
 
 <script>
 import TreeView from './TreeView.vue';
 import Objects from './Objects.vue';
-
+import QuickAccessBar from "./QuickAccessBar.vue";
 export default {
     components: {
         Objects,
-        TreeView
+        TreeView,
+        QuickAccessBar
     },
     data() {
         return {

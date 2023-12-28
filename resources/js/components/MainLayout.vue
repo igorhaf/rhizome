@@ -2,16 +2,18 @@
     <div class="h-screen flex flex-col">
         <header-component></header-component>
 
-        <div ref="splitContainer" style="background-color: #1e1f22" class="split-container flex-1 flex">
-            <div class="split-pane">
-                <column-one class="flex-1 h-full"></column-one>
-            </div>
-            <div class="split-pane">
-                <column-two class="flex-grow overflow-hidden h-full"></column-two>
-            </div>
-            <div class="split-pane">
-                <column-three class="flex-1  h-full"></column-three>
-            </div>
+            <div ref="splitContainer" style="background-color: #1e1f22" class="split-container flex-1 flex">
+                <div class="split-pane">
+
+                    <column-one class="flex-1 h-full"></column-one>
+
+                </div>
+                <div class="split-pane">
+                    <column-two class="flex-grow overflow-hidden h-full"></column-two>
+                </div>
+                <div class="split-pane">
+                    <column-three class="flex-1  h-full"></column-three>
+                </div>
         </div>
 
         <footer-component></footer-component>
@@ -24,6 +26,7 @@ import FooterComponent from "./FooterComponent.vue";
 import ColumnOne from "./ColumnOne.vue";
 import ColumnTwo from "./ColumnTwo.vue";
 import ColumnThree from "./ColumnThree.vue";
+
 import Split from "split.js";
 
 export default {
@@ -32,7 +35,7 @@ export default {
         FooterComponent,
         ColumnOne,
         ColumnTwo,
-        ColumnThree
+        ColumnThree,
     },
     mounted() {
         this.$nextTick(() => {
