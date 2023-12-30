@@ -3,17 +3,17 @@
   <div class="flex h-full"> <!-- Container flexível para toda a altura -->
 
     <!-- Quick Access Bar -->
-    <div class="w-1/6 bg"> <!-- Ajuste a largura conforme necessário -->
+    <div class="bg w-10 flex-shrink-0"> <!-- Ajuste a largura conforme necessário -->
       <quick-access-bar></quick-access-bar>
     </div>
 
     <!-- Conteúdo Principal -->
-    <div class="flex-1 bg p-4 flex flex-col space-y-4"> <!-- Flexível, ocupando o espaço restante -->
+    <div class="flex-1 bg p-4 flex flex-col space-y-4 overflow-scroll"> <!-- Flexível, ocupando o espaço restante -->
 
       <!-- Componentes -->
-      <div class="flex flex-col h-1/2"> <!-- Ajuste de altura 1/2 -->
+      <div v-if="currentComponent === 'treeView'" class="flex flex-col h-1/2 overflow-scroll"> <!-- Ajuste de altura 1/2 -->
         <h2 class="text font-semibold mb-4">Components</h2>
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1">
           <div class="min-w-max">
             <tree-view :tree-data="logic"></tree-view>
           </div>
@@ -21,9 +21,9 @@
       </div>
 
       <!-- Objetos -->
-      <div class="flex flex-col h-1/2"> <!-- Ajuste de altura 1/2 -->
+      <div v-if="currentComponent === 'project'" class="flex flex-col h-1/2 overflow-scroll"> <!-- Ajuste de altura 1/2 -->
         <h2 class="text font-semibold mb-4">Project</h2>
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1">
           <div class="min-w-max">
             <objects :tree-data="objects"></objects>
           </div>
@@ -39,14 +39,28 @@
 import TreeView from './TreeView.vue';
 import Objects from './Objects.vue';
 import QuickAccessBar from "./QuickAccessBar.vue";
+import { EventBus } from '../EventBus.js';
+
 export default {
     components: {
         Objects,
         TreeView,
         QuickAccessBar
     },
+    created() {
+      EventBus.on('change-component', this.updateComponent);
+    },
+    beforeDestroy() {
+      EventBus.off('change-component', this.updateComponent);
+    },
+    methods: {
+      updateComponent(componentName) {
+        this.currentComponent = componentName;
+      }
+    },
     data() {
         return {
+            currentComponent: 'treeView',
             logic: [
                 {
                     id: 1,

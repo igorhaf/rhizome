@@ -23,6 +23,10 @@ body {
     scrollbar-width: thin;
 }
 
+::-webkit-scrollbar-corner {
+    background-color: rgb(43 45 48 / var(--tw-bg-opacity)); /* Ajuste para a cor de fundo correspondente */
+}
+
 .nb-icons{
     width: 14px;
     height: 14px;

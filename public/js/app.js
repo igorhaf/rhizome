@@ -19738,6 +19738,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TreeView_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TreeView.vue */ "./resources/js/components/TreeView.vue");
 /* harmony import */ var _Objects_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Objects.vue */ "./resources/js/components/Objects.vue");
 /* harmony import */ var _QuickAccessBar_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./QuickAccessBar.vue */ "./resources/js/components/QuickAccessBar.vue");
+/* harmony import */ var _EventBus_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../EventBus.js */ "./resources/js/EventBus.js");
+
 
 
 
@@ -19747,8 +19749,20 @@ __webpack_require__.r(__webpack_exports__);
     TreeView: _TreeView_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     QuickAccessBar: _QuickAccessBar_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
+  created: function created() {
+    _EventBus_js__WEBPACK_IMPORTED_MODULE_3__.EventBus.on('change-component', this.updateComponent);
+  },
+  beforeDestroy: function beforeDestroy() {
+    _EventBus_js__WEBPACK_IMPORTED_MODULE_3__.EventBus.off('change-component', this.updateComponent);
+  },
+  methods: {
+    updateComponent: function updateComponent(componentName) {
+      this.currentComponent = componentName;
+    }
+  },
   data: function data() {
     return {
+      currentComponent: 'treeView',
       logic: [{
         id: 1,
         name: "Basic Components",
@@ -20120,7 +20134,7 @@ __webpack_require__.r(__webpack_exports__);
         var splitPanes = this.$refs.splitContainer.querySelectorAll('.split-pane');
         if (splitPanes && splitPanes.length === 3) {
           (0,split_js__WEBPACK_IMPORTED_MODULE_5__["default"])(Array.from(splitPanes), {
-            sizes: [15, 70, 15],
+            sizes: [20, 65, 15],
             // Ajustado para ter proporções 25%, 50%, 25%
             minSize: 0,
             gutterSize: 8,
@@ -20611,9 +20625,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _EventBus_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../EventBus.js */ "./resources/js/EventBus.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'QuickAccessBar'
-  // Seu código de script vai aqui
+  methods: {
+    showComponent: function showComponent(componentName) {
+      _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('change-component', componentName);
+    }
+  }
 });
 
 /***/ }),
@@ -20855,31 +20874,33 @@ var _hoisted_1 = {
   "class": "flex h-full"
 };
 var _hoisted_2 = {
-  "class": "w-1/6 bg"
+  "class": "bg w-10 flex-shrink-0"
 };
 var _hoisted_3 = {
-  "class": "flex-1 bg p-4 flex flex-col space-y-4"
+  "class": "flex-1 bg p-4 flex flex-col space-y-4 overflow-scroll"
 };
 var _hoisted_4 = {
-  "class": "flex flex-col h-1/2"
+  key: 0,
+  "class": "flex flex-col h-1/2 overflow-scroll"
 };
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "text font-semibold mb-4"
 }, "Components", -1 /* HOISTED */);
 var _hoisted_6 = {
-  "class": "flex-1 overflow-auto"
+  "class": "flex-1"
 };
 var _hoisted_7 = {
   "class": "min-w-max"
 };
 var _hoisted_8 = {
-  "class": "flex flex-col h-1/2"
+  key: 1,
+  "class": "flex flex-col h-1/2 overflow-scroll"
 };
 var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "text font-semibold mb-4"
 }, "Project", -1 /* HOISTED */);
 var _hoisted_10 = {
-  "class": "flex-1 overflow-auto"
+  "class": "flex-1"
 };
 var _hoisted_11 = {
   "class": "min-w-max"
@@ -20888,11 +20909,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_quick_access_bar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("quick-access-bar");
   var _component_tree_view = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("tree-view");
   var _component_objects = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("objects");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Container flexível para toda a altura "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Quick Access Bar "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste a largura conforme necessário "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_quick_access_bar)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Conteúdo Principal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Flexível, ocupando o espaço restante "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Componentes "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_tree_view, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Container flexível para toda a altura "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Quick Access Bar "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste a largura conforme necessário "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_quick_access_bar)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Conteúdo Principal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Flexível, ocupando o espaço restante "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Componentes "), $data.currentComponent === 'treeView' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_tree_view, {
     "tree-data": $data.logic
-  }, null, 8 /* PROPS */, ["tree-data"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Objetos "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_objects, {
+  }, null, 8 /* PROPS */, ["tree-data"])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Objetos "), $data.currentComponent === 'project' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_objects, {
     "tree-data": $data.objects
-  }, null, 8 /* PROPS */, ["tree-data"])])])])])]);
+  }, null, 8 /* PROPS */, ["tree-data"])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
 
 /***/ }),
@@ -21304,15 +21325,18 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = {
   "class": "quick-access-bar w-1/6"
 };
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "qm-icons components"
-}, null, -1 /* HOISTED */);
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "qm-icons frames"
-}, null, -1 /* HOISTED */);
-var _hoisted_4 = [_hoisted_2, _hoisted_3];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _hoisted_4);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    onClick: _cache[0] || (_cache[0] = function ($event) {
+      return $options.showComponent('treeView');
+    }),
+    "class": "qm-icons components"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    onClick: _cache[1] || (_cache[1] = function ($event) {
+      return $options.showComponent('project');
+    }),
+    "class": "qm-icons frames"
+  })]);
 }
 
 /***/ }),

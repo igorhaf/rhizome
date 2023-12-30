@@ -1,15 +1,20 @@
 <template>
   <div class="quick-access-bar w-1/6">
-    <div class="qm-icons components"></div>
-    <div class="qm-icons frames"></div>
+    <div @click="showComponent('treeView')" class="qm-icons components"></div>
+    <div @click="showComponent('project')" class="qm-icons frames"></div>
   </div>
 </template>
 
 <script>
+import { EventBus } from '../EventBus.js';
+
 export default {
-  name: 'QuickAccessBar',
-  // Seu código de script vai aqui
-}
+  methods: {
+    showComponent(componentName) {
+      EventBus.emit('change-component', componentName);
+    }
+  }
+};
 </script>
 
 <style>
