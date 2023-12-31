@@ -20877,15 +20877,22 @@ var _hoisted_2 = {
   "class": "bg w-10 flex-shrink-0"
 };
 var _hoisted_3 = {
-  "class": "flex-1 bg p-4 flex flex-col space-y-4 overflow-scroll"
+  "class": "flex-1 bg flex flex-col space-y-4 overflow-auto"
 };
 var _hoisted_4 = {
   key: 0,
-  "class": "flex flex-col h-1/2 overflow-scroll"
+  "class": "text font-semibold p-4",
+  style: {
+    "padding-bottom": "0px"
+  }
 };
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
-  "class": "text font-semibold mb-4"
-}, "Components", -1 /* HOISTED */);
+var _hoisted_5 = {
+  key: 1,
+  "class": "flex flex-col h-full overflow-auto",
+  style: {
+    "padding-bottom": "0px"
+  }
+};
 var _hoisted_6 = {
   "class": "flex-1"
 };
@@ -20893,12 +20900,19 @@ var _hoisted_7 = {
   "class": "min-w-max"
 };
 var _hoisted_8 = {
-  key: 1,
-  "class": "flex flex-col h-1/2 overflow-scroll"
+  key: 2,
+  "class": "text font-semibold p-4",
+  style: {
+    "padding-bottom": "0px"
+  }
 };
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
-  "class": "text font-semibold mb-4"
-}, "Project", -1 /* HOISTED */);
+var _hoisted_9 = {
+  key: 3,
+  "class": "flex flex-col h-full overflow-auto",
+  style: {
+    "padding-bottom": "0px"
+  }
+};
 var _hoisted_10 = {
   "class": "flex-1"
 };
@@ -20909,9 +20923,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_quick_access_bar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("quick-access-bar");
   var _component_tree_view = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("tree-view");
   var _component_objects = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("objects");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Container flexível para toda a altura "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Quick Access Bar "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste a largura conforme necessário "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_quick_access_bar)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Conteúdo Principal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Flexível, ocupando o espaço restante "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Componentes "), $data.currentComponent === 'treeView' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_tree_view, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Container flexível para toda a altura "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Quick Access Bar "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste a largura conforme necessário "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_quick_access_bar)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Conteúdo Principal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Flexível, ocupando o espaço restante "), $data.currentComponent === 'treeView' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h2", _hoisted_4, "Components")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Componentes "), $data.currentComponent === 'treeView' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_tree_view, {
     "tree-data": $data.logic
-  }, null, 8 /* PROPS */, ["tree-data"])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Objetos "), $data.currentComponent === 'project' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_objects, {
+  }, null, 8 /* PROPS */, ["tree-data"])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.currentComponent === 'project' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h2", _hoisted_8, "Project")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Objetos "), $data.currentComponent === 'project' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Ajuste de altura 1/2 "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_objects, {
     "tree-data": $data.objects
   }, null, 8 /* PROPS */, ["tree-data"])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
@@ -21143,14 +21157,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "h-screen flex flex-col"
+  "class": "h-full flex flex-col"
 };
 var _hoisted_2 = {
   ref: "splitContainer",
   style: {
     "background-color": "#1e1f22"
   },
-  "class": "split-container flex-1 flex"
+  "class": "overflow-hidden split-container flex-1 flex"
 };
 var _hoisted_3 = {
   "class": "split-pane"

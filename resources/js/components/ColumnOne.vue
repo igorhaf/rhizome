@@ -8,21 +8,21 @@
     </div>
 
     <!-- Conteúdo Principal -->
-    <div class="flex-1 bg p-4 flex flex-col space-y-4 overflow-scroll"> <!-- Flexível, ocupando o espaço restante -->
-
+    <div  class="flex-1 bg  flex flex-col space-y-4 overflow-auto"> <!-- Flexível, ocupando o espaço restante -->
+      <h2 v-if="currentComponent === 'treeView'" class="text font-semibold p-4" style="padding-bottom:0px">Components</h2>
       <!-- Componentes -->
-      <div v-if="currentComponent === 'treeView'" class="flex flex-col h-1/2 overflow-scroll"> <!-- Ajuste de altura 1/2 -->
-        <h2 class="text font-semibold mb-4">Components</h2>
+      <div v-if="currentComponent === 'treeView'" class="flex flex-col h-full overflow-auto" style="padding-bottom: 0px;"> <!-- Ajuste de altura 1/2 -->
+
         <div class="flex-1">
           <div class="min-w-max">
             <tree-view :tree-data="logic"></tree-view>
           </div>
         </div>
       </div>
-
+      <h2 v-if="currentComponent === 'project'" class="text font-semibold p-4" style="padding-bottom:0px">Project</h2>
       <!-- Objetos -->
-      <div v-if="currentComponent === 'project'" class="flex flex-col h-1/2 overflow-scroll"> <!-- Ajuste de altura 1/2 -->
-        <h2 class="text font-semibold mb-4">Project</h2>
+      <div v-if="currentComponent === 'project'" class="flex flex-col h-full overflow-auto" style="padding-bottom: 0px;"> <!-- Ajuste de altura 1/2 -->
+
         <div class="flex-1">
           <div class="min-w-max">
             <objects :tree-data="objects"></objects>
