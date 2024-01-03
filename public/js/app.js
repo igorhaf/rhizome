@@ -20350,6 +20350,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               };
               _this4.graph.setCellsEditable(true);
               _this4.graph.setConnectable(true);
+              _this4.addConsoleEventListener();
               _this4.graph.setMultigraph(false); // Evita múltiplas arestas entre dois vértices
               _this4.graph.setAllowDanglingEdges(false); // Evita que arestas fiquem penduradas
               _this4.graph.getModel().addListener(mxEvent.AFTER_ADD, function () {
@@ -20408,7 +20409,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               new mxKeyHandler(_this4.graph);
               parent = _this4.graph.getDefaultParent();
               _this4.graph.getModel().beginUpdate();
-              _context2.prev = 36;
+              _context2.prev = 37;
               _style = _this4.graph.getStylesheet().getDefaultVertexStyle();
               _style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
               _style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
@@ -20419,9 +20420,9 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
               shapeType = 'start';
               vertexName = "Start";
               iconURL = _this4.getIconURLFromClassName(shapeType);
-              _context2.next = 48;
+              _context2.next = 49;
               return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].get('/get-latest-diagram');
-            case 48:
+            case 49:
               response = _context2.sent;
               self = _this4;
               parseString(response.data, function (err, result) {
@@ -20453,11 +20454,11 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   });
                 });
               });
-            case 51:
-              _context2.prev = 51;
+            case 52:
+              _context2.prev = 52;
               _this4.graph.getModel().endUpdate();
-              return _context2.finish(51);
-            case 54:
+              return _context2.finish(52);
+            case 55:
               new mxRubberband(_this4.graph);
               keyHandler = new mxKeyHandler(_this4.graph);
               keyHandler.bindKey(46, function (evt) {
@@ -20465,11 +20466,11 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   _this4.graph.removeCells();
                 }
               });
-            case 57:
+            case 58:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[36,, 51, 54]]);
+        }, _callee2, null, [[37,, 52, 55]]);
       }))();
     },
     addClickEventListener: function addClickEventListener() {
@@ -20485,20 +20486,83 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
     },
     addConsoleEventListener: function addConsoleEventListener() {
       var _this5 = this;
-      this.graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
-        var edge = evt.getProperty('cell');
-        var source = _this5.graph.getModel().getTerminal(edge, true);
-        var target = _this5.graph.getModel().getTerminal(edge, false);
-        var edges = _this5.graph.getModel().getEdgesBetween(source, target, false);
-        if (edges != null) {
-          console.log(edges);
+      mxUtils.alert = function (message) {
+        console.log("Alert from mxGraph:", message);
+      };
+      this.graph.addListener(mxEvent.CELL_CONNECTED, /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(sender, evt) {
+          var edge, source, target, isSource, existingConnections, i, src, trg;
+          return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+            while (1) switch (_context3.prev = _context3.next) {
+              case 0:
+                edge = evt.getProperty('edge');
+                source = _this5.graph.getModel().getTerminal(edge, true);
+                target = _this5.graph.getModel().getTerminal(edge, false);
+                isSource = evt.getProperty('source');
+                if (!(!edge || !source || !target)) {
+                  _context3.next = 6;
+                  break;
+                }
+                return _context3.abrupt("return");
+              case 6:
+                // Verifica se já existe uma aresta na direção oposta
+                existingConnections = _this5.graph.getModel().getEdgesBetween(target, source);
+                i = 0;
+              case 8:
+                if (!(i < existingConnections.length)) {
+                  _context3.next = 24;
+                  break;
+                }
+                src = _this5.graph.getModel().getTerminal(existingConnections[i], true);
+                trg = _this5.graph.getModel().getTerminal(existingConnections[i], false);
+                if (!(src.id === target.id && trg.id === source.id)) {
+                  _context3.next = 21;
+                  break;
+                }
+                // Se uma conexão inversa já existe
+                _this5.graph.getModel().beginUpdate();
+                _context3.prev = 13;
+                _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
+                target.removeEdge(edge, true);
+                return _context3.abrupt("break", 24);
+              case 17:
+                _context3.prev = 17;
+                _this5.graph.getModel().endUpdate();
+                return _context3.finish(17);
+              case 20:
+                return _context3.abrupt("break", 24);
+              case 21:
+                i++;
+                _context3.next = 8;
+                break;
+              case 24:
+              case "end":
+                return _context3.stop();
+            }
+          }, _callee3, null, [[13,, 17, 20]]);
+        }));
+        return function (_x, _x2) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+      mxUtils.alert = function (message) {
+        console.log("Emitindo evento de erro:", message);
+        _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', message);
+      };
+      /*this.graph.connectionHandler.addListener(mxEvent.CONNECT, (sender, evt) => {
+        let edge = evt.getProperty('cell');
+          let source = this.graph.getModel().getTerminal(edge, true);
+        let target = this.graph.getModel().getTerminal(edge, false);
+        let edges = this.graph.getModel().getEdgesBetween(source, target, false);
+          if (edges != null) {
+          console.log(edges)
           mxUtils.alert('Nodes connected !');
           evt.consume();
-        } else {
-          console.log(edges);
+        }else{
+          console.log(edges)
           mxUtils.alert('Nodes already !');
         }
-      });
+      });*/
     },
     addDblClickListener: function addDblClickListener() {
       var _this6 = this;
@@ -23746,7 +23810,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    background-color: #1e1f22;\n    overflow: hidden;\n    height: 100% !important;\n    width: auto !important;\n\n}\n.graph-container .mxPlainTextEditor{\n    color: #FFFFFF!important;\n}\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\r\n/*.mxCellEditor .mxPlainTextEditor{\r\n\r\n}*/\r\n.graph-container {\r\n    background-size: 15px 15px;\r\n    background-image:\r\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\r\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\r\n    flex: 1;\r\n    background-color: #1e1f22;\r\n    overflow: hidden;\r\n    height: 100% !important;\r\n    width: auto !important;\r\n\r\n}\r\n.graph-container .mxPlainTextEditor{\r\n    color: #FFFFFF!important;\r\n}\r\n.mxGraph {\r\n    height: 100%;\r\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

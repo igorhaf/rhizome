@@ -98,7 +98,7 @@ export default {
             };
             this.graph.setCellsEditable(true);
             this.graph.setConnectable(true);
-
+          this.addConsoleEventListener();
             this.graph.setMultigraph(false);  // Evita múltiplas arestas entre dois vértices
             this.graph.setAllowDanglingEdges(false);  // Evita que arestas fiquem penduradas
             this.graph.getModel().addListener(mxEvent.AFTER_ADD, () => {
@@ -238,7 +238,48 @@ export default {
         },
 
       addConsoleEventListener() {
-        this.graph.connectionHandler.addListener(mxEvent.CONNECT, (sender, evt) => {
+        mxUtils.alert = function(message) {
+          console.log("Alert from mxGraph:", message);
+        };
+
+        this.graph.addListener(mxEvent.CELL_CONNECTED, async (sender, evt) => {
+          const edge = evt.getProperty('edge');
+
+          const source = this.graph.getModel().getTerminal(edge, true);
+          const target = this.graph.getModel().getTerminal(edge, false);
+          const isSource = evt.getProperty('source');
+
+          if (!edge || !source || !target) {
+            return; // Se não for uma aresta válida ou não tiver terminais, ignora
+          }
+
+          // Verifica se já existe uma aresta na direção oposta
+          let existingConnections = this.graph.getModel().getEdgesBetween(target, source);
+
+          for (let i = 0; i < existingConnections.length; i++) {
+            let src = this.graph.getModel().getTerminal(existingConnections[i], true);
+            let trg = this.graph.getModel().getTerminal(existingConnections[i], false);
+
+            if (src.id === target.id && trg.id === source.id) {
+              // Se uma conexão inversa já existe
+              this.graph.getModel().beginUpdate();
+              try {
+                EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
+                target.removeEdge(edge, true);
+                break;
+
+              } finally {
+                this.graph.getModel().endUpdate();
+              }
+              break;
+            }
+          }
+        });
+        mxUtils.alert = function(message) {
+          console.log("Emitindo evento de erro:", message);
+          EventBus.emit('errorOccurred', message);
+        };
+        /*this.graph.connectionHandler.addListener(mxEvent.CONNECT, (sender, evt) => {
           let edge = evt.getProperty('cell');
 
           let source = this.graph.getModel().getTerminal(edge, true);
@@ -253,7 +294,7 @@ export default {
             console.log(edges)
             mxUtils.alert('Nodes already !');
           }
-        });
+        });*/
       },
         addDblClickListener() {
             this.graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
