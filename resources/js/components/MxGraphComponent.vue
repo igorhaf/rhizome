@@ -259,13 +259,7 @@ export default {
           for (let i = 0; i < existingConnections.length; i++) {
             let src = this.graph.getModel().getTerminal(existingConnections[i], true);
             let trg = this.graph.getModel().getTerminal(existingConnections[i], false);
-            let regex = /\/([a-zA-Z0-9_]+)\.svg$/;
-            let nodeTypeSource = edge.source.style.match(regex);
-            let nodeTypeTarget = edge.source.style.match(regex);
-            if(nodeTypeSource[1] === nodeTypeTarget[1]){
-              EventBus.emit('errorOccurred', 'Conexões entre dois elementos do tipo start, não é permitida');
-              target.removeEdge(edge, true);
-            }
+
             if (src.id === target.id && trg.id === source.id) {
               // Se uma conexão inversa já existe
               this.graph.getModel().beginUpdate();
@@ -338,33 +332,46 @@ export default {
 
             return icons[className] || './images/icons/stop.svg';
         },
-        drop(evt, x, y) {
-            const data = evt.dataTransfer.getData('nodeData');
-            const shapeType = JSON.parse(data).iconClass;
+      drop(evt, x, y) {
+        const data = evt.dataTransfer.getData('nodeData');
+        const shapeType = JSON.parse(data).iconClass;
+        const vertexName = JSON.parse(data).name;
 
-            const vertexName = JSON.parse(data).name;
+        const parent = this.graph.getDefaultParent();
 
-            const parent = this.graph.getDefaultParent();
+        this.graph.getModel().beginUpdate();
+        try {
+          const iconURL = this.getIconURLFromClassName(shapeType);
+          // Utiliza a expressão regular para determinar se o ícone é do tipo 'start'
+          const regex = /\/([a-zA-Z0-9_-]+)\.svg$/;
+          const shapeMatch = iconURL.match(regex);
+          const type = shapeMatch ? shapeMatch[1] : null;
 
-            let style = this.graph.getStylesheet().getDefaultVertexStyle();
-            style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-            style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
-            style[mxConstants.STYLE_SPACING_BOTTOM] = 32;
-            this.graph.getStylesheet().putDefaultVertexStyle(style);
+          if (type === 'start') {
+            // Verifica se já existe um vértice do tipo 'start'
+            const existingVertices = this.graph.getChildVertices(parent);
+            const startVertexExists = existingVertices.some(vertex => {
+              const style = vertex.getStyle();
+              const match = style && style.match(regex);
+              return match && match[1] === 'start';
+            });
 
-            this.graph.getModel().beginUpdate();
-
-            try {
-                const iconURL = this.getIconURLFromClassName(shapeType);
-                if(x !== undefined || y !== undefined) {
-                    this.graph.setHtmlLabels(true);
-
-                    this.graph.insertVertex(parent, null, vertexName, x-24, y-24, 48, 48, `shape=image;image=${iconURL}`);
-                }
-            } finally {
-                this.graph.getModel().endUpdate();
+            if (startVertexExists) {
+              // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
+              EventBus.emit('errorOccurred', 'Dois vertices do tipo start, não podem coexistir no maesmo frame.');
+              return; // Interrompe a execução do método
             }
-        },
+          }
+
+          // Se não for do tipo 'start' ou se não houver nenhum 'start', adiciona o novo vértice
+          if (x !== undefined && y !== undefined) {
+            this.graph.setHtmlLabels(true);
+            this.graph.insertVertex(parent, null, vertexName, x - 24, y - 24, 48, 48, `shape=image;image=${iconURL}`);
+          }
+        } finally {
+          this.graph.getModel().endUpdate();
+        }
+      },
 
     }
 }
