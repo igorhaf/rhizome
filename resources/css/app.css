@@ -126,3 +126,19 @@ body {
     background-image: url('../images/icons/frames.svg');
     width: 26px;
 }
+
+.integrations{
+    background-image: url('../images/icons/integrations.svg');
+    width: 26px;
+}
+
+.play{
+    background-image: url('../images/icons/play.svg');
+    width: 26px;
+}
+
+.config{
+    background-image: url('../images/icons/config.svg');
+    width: 26px;
+}
+

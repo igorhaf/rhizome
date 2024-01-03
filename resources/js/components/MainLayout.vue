@@ -1,7 +1,5 @@
 <template>
     <div class="h-full flex flex-col">
-        <header-component></header-component>
-
             <div ref="splitContainer" style="background-color: #1e1f22" class=" overflow-hidden split-container flex-1 flex">
                 <div class="split-pane">
 
@@ -21,7 +19,6 @@
 </template>
 
 <script>
-import HeaderComponent from "./HeaderComponent.vue";
 import FooterComponent from "./FooterComponent.vue";
 import ColumnOne from "./ColumnOne.vue";
 import ColumnTwo from "./ColumnTwo.vue";
@@ -31,7 +28,6 @@ import Split from "split.js";
 
 export default {
     components: {
-        HeaderComponent,
         FooterComponent,
         ColumnOne,
         ColumnTwo,
