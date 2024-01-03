@@ -20393,7 +20393,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       };
       this.graph.addListener(mxEvent.CELL_CONNECTED, /*#__PURE__*/function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(sender, evt) {
-          var edge, source, target, isSource, existingConnections, i, src, trg;
+          var edge, source, target, isSource, existingConnections, i, src, trg, regex, nodeTypeSource, nodeTypeTarget;
           return _regeneratorRuntime().wrap(function _callee3$(_context3) {
             while (1) switch (_context3.prev = _context3.next) {
               case 0:
@@ -20412,36 +20412,43 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                 i = 0;
               case 8:
                 if (!(i < existingConnections.length)) {
-                  _context3.next = 24;
+                  _context3.next = 28;
                   break;
                 }
                 src = _this5.graph.getModel().getTerminal(existingConnections[i], true);
                 trg = _this5.graph.getModel().getTerminal(existingConnections[i], false);
+                regex = /\/([a-zA-Z0-9_]+)\.svg$/;
+                nodeTypeSource = edge.source.style.match(regex);
+                nodeTypeTarget = edge.source.style.match(regex);
+                if (nodeTypeSource[1] === nodeTypeTarget[1]) {
+                  _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'Conexões entre dois elementos do tipo start, não é permitida');
+                  target.removeEdge(edge, true);
+                }
                 if (!(src.id === target.id && trg.id === source.id)) {
-                  _context3.next = 21;
+                  _context3.next = 25;
                   break;
                 }
                 // Se uma conexão inversa já existe
                 _this5.graph.getModel().beginUpdate();
-                _context3.prev = 13;
+                _context3.prev = 17;
                 _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
                 target.removeEdge(edge, true);
-                return _context3.abrupt("break", 24);
-              case 17:
-                _context3.prev = 17;
-                _this5.graph.getModel().endUpdate();
-                return _context3.finish(17);
-              case 20:
-                return _context3.abrupt("break", 24);
+                return _context3.abrupt("break", 28);
               case 21:
+                _context3.prev = 21;
+                _this5.graph.getModel().endUpdate();
+                return _context3.finish(21);
+              case 24:
+                return _context3.abrupt("break", 28);
+              case 25:
                 i++;
                 _context3.next = 8;
                 break;
-              case 24:
+              case 28:
               case "end":
                 return _context3.stop();
             }
-          }, _callee3, null, [[13,, 17, 20]]);
+          }, _callee3, null, [[17,, 21, 24]]);
         }));
         return function (_x, _x2) {
           return _ref.apply(this, arguments);

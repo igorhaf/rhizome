@@ -2,9 +2,7 @@
     <div class="h-full flex flex-col">
             <div ref="splitContainer" style="background-color: #1e1f22" class=" overflow-hidden split-container flex-1 flex">
                 <div class="split-pane">
-
                     <column-one class="flex-1 h-full"></column-one>
-
                 </div>
                 <div class="split-pane">
                     <column-two class="flex-grow overflow-hidden h-full"></column-two>

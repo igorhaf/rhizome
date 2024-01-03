@@ -259,13 +259,20 @@ export default {
           for (let i = 0; i < existingConnections.length; i++) {
             let src = this.graph.getModel().getTerminal(existingConnections[i], true);
             let trg = this.graph.getModel().getTerminal(existingConnections[i], false);
-
+            let regex = /\/([a-zA-Z0-9_]+)\.svg$/;
+            let nodeTypeSource = edge.source.style.match(regex);
+            let nodeTypeTarget = edge.source.style.match(regex);
+            if(nodeTypeSource[1] === nodeTypeTarget[1]){
+              EventBus.emit('errorOccurred', 'Conexões entre dois elementos do tipo start, não é permitida');
+              target.removeEdge(edge, true);
+            }
             if (src.id === target.id && trg.id === source.id) {
               // Se uma conexão inversa já existe
               this.graph.getModel().beginUpdate();
               try {
                 EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
                 target.removeEdge(edge, true);
+
                 break;
 
               } finally {
