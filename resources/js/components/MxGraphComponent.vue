@@ -280,22 +280,6 @@ export default {
           console.log("Emitindo evento de erro:", message);
           EventBus.emit('errorOccurred', message);
         };
-        /*this.graph.connectionHandler.addListener(mxEvent.CONNECT, (sender, evt) => {
-          let edge = evt.getProperty('cell');
-
-          let source = this.graph.getModel().getTerminal(edge, true);
-          let target = this.graph.getModel().getTerminal(edge, false);
-          let edges = this.graph.getModel().getEdgesBetween(source, target, false);
-
-          if (edges != null) {
-            console.log(edges)
-            mxUtils.alert('Nodes connected !');
-            evt.consume();
-          }else{
-            console.log(edges)
-            mxUtils.alert('Nodes already !');
-          }
-        });*/
       },
         addDblClickListener() {
             this.graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
@@ -377,9 +361,7 @@ export default {
 }
 </script>
 <style>
-/*.mxCellEditor .mxPlainTextEditor{
 
-}*/
 .graph-container {
     background-size: 15px 15px;
     background-image:

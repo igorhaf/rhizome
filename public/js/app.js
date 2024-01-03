@@ -20451,20 +20451,6 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
         console.log("Emitindo evento de erro:", message);
         _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', message);
       };
-      /*this.graph.connectionHandler.addListener(mxEvent.CONNECT, (sender, evt) => {
-        let edge = evt.getProperty('cell');
-          let source = this.graph.getModel().getTerminal(edge, true);
-        let target = this.graph.getModel().getTerminal(edge, false);
-        let edges = this.graph.getModel().getEdgesBetween(source, target, false);
-          if (edges != null) {
-          console.log(edges)
-          mxUtils.alert('Nodes connected !');
-          evt.consume();
-        }else{
-          console.log(edges)
-          mxUtils.alert('Nodes already !');
-        }
-      });*/
     },
     addDblClickListener: function addDblClickListener() {
       var _this6 = this;
@@ -23481,7 +23467,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/*.mxCellEditor .mxPlainTextEditor{\r\n\r\n}*/\r\n.graph-container {\r\n    background-size: 15px 15px;\r\n    background-image:\r\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\r\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\r\n    flex: 1;\r\n    background-color: #1e1f22;\r\n    overflow: hidden;\r\n    height: 100% !important;\r\n    width: auto !important;\r\n\r\n}\r\n.graph-container .mxPlainTextEditor{\r\n    color: #FFFFFF!important;\r\n}\r\n.mxGraph {\r\n    height: 100%;\r\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\r\n\r\n.graph-container {\r\n    background-size: 15px 15px;\r\n    background-image:\r\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\r\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\r\n    flex: 1;\r\n    background-color: #1e1f22;\r\n    overflow: hidden;\r\n    height: 100% !important;\r\n    width: auto !important;\r\n\r\n}\r\n.graph-container .mxPlainTextEditor{\r\n    color: #FFFFFF!important;\r\n}\r\n.mxGraph {\r\n    height: 100%;\r\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
