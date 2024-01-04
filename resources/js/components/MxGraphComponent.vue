@@ -232,7 +232,7 @@ export default {
                     let regex = /\/([a-zA-Z0-9_]+)\.svg$/;
                     let nodeType = cell.style.match(regex);
                     EventBus.emit('nodeSelected', cell.value);
-                    //EventBus.emit('nodeType', nodeType[1]);
+                    EventBus.emit('nodeType', nodeType[1]);
                 }
             });
         },
