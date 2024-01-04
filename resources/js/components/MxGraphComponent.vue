@@ -247,10 +247,42 @@ export default {
 
           const source = this.graph.getModel().getTerminal(edge, true);
           const target = this.graph.getModel().getTerminal(edge, false);
-          const isSource = evt.getProperty('source');
 
           if (!edge || !source || !target) {
             return; // Se não for uma aresta válida ou não tiver terminais, ignora
+          }
+
+          const regex = /shape=image;image=.*\/([a-zA-Z0-9_-]+)\.svg/;
+          const sourceMatch = source.getStyle().match(regex);
+          const targetMatch = target.getStyle().match(regex);
+          const sourceType = sourceMatch ? sourceMatch[1] : null;
+          const targetType = targetMatch ? targetMatch[1] : null;
+
+          if (sourceType === 'start') {
+            const edges = this.graph.getModel().getEdges(source);
+            const outgoingEdges = edges.filter(e => e.source === source && e.target !== source);
+            if (outgoingEdges.length > 1) {
+              // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
+              this.graph.getModel().beginUpdate();
+              try {
+                EventBus.emit('errorOccurred', 'O "start" não pode ter mais de uma conexão saindo.');
+                target.removeEdge(edge, true);
+              } finally {
+                this.graph.getModel().endUpdate();
+              }
+              return;
+            }
+          }
+
+          if (targetType === 'start') {
+            this.graph.getModel().beginUpdate();
+            try {
+              EventBus.emit('errorOccurred', 'O "start" não pode ser o alvo de uma conexão.');
+              target.removeEdge(edge, true);
+            } finally {
+              this.graph.getModel().endUpdate();
+            }
+            return;
           }
 
           // Verifica se já existe uma aresta na direção oposta
