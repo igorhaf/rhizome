@@ -307,6 +307,36 @@ export default {
               break;
             }
           }
+
+          if (sourceType !== 'start') {
+            let sourceParent = source;
+            let parentType = sourceType;
+            let parentFound = false;
+
+            // Rastrear o parentesco até encontrar um "start" ou não houver mais arestas
+            while (parentType !== 'start' && !parentFound) {
+              const sourceEdges = this.graph.getModel().getEdges(sourceParent).filter(e => e.target === sourceParent);
+              if (sourceEdges.length > 0) {
+                sourceParent = this.graph.getModel().getTerminal(sourceEdges[0], true);
+                const parentMatch = sourceParent.getStyle().match(regex);
+                parentType = parentMatch ? parentMatch[1] : null;
+              } else {
+                parentFound = true;
+              }
+            }
+
+            // Se não encontrou um "start" no parentesco, remover a aresta
+            if (parentType !== 'start') {
+              this.graph.getModel().beginUpdate();
+              try {
+                EventBus.emit('errorOccurred', 'Conexões devem seguir o fluxo a partir de "start".');
+                target.removeEdge(edge, true);
+              } finally {
+                this.graph.getModel().endUpdate();
+              }
+              return;
+            }
+          }
         });
         mxUtils.alert = function(message) {
           console.log("Emitindo evento de erro:", message);

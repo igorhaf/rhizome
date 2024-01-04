@@ -20393,7 +20393,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       };
       this.graph.addListener(mxEvent.CELL_CONNECTED, /*#__PURE__*/function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(sender, evt) {
-          var edge, source, target, regex, sourceMatch, targetMatch, sourceType, targetType, edges, outgoingEdges, existingConnections, i, src, trg;
+          var edge, source, target, regex, sourceMatch, targetMatch, sourceType, targetType, edges, outgoingEdges, existingConnections, i, src, trg, sourceParent, parentType, parentFound, sourceEdges, parentMatch;
           return _regeneratorRuntime().wrap(function _callee3$(_context3) {
             while (1) switch (_context3.prev = _context3.next) {
               case 0:
@@ -20477,6 +20477,40 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                 _context3.next = 23;
                 break;
               case 39:
+                if (!(sourceType !== 'start')) {
+                  _context3.next = 48;
+                  break;
+                }
+                sourceParent = source;
+                parentType = sourceType;
+                parentFound = false; // Rastrear o parentesco até encontrar um "start" ou não houver mais arestas
+                while (parentType !== 'start' && !parentFound) {
+                  sourceEdges = _this5.graph.getModel().getEdges(sourceParent).filter(function (e) {
+                    return e.target === sourceParent;
+                  });
+                  if (sourceEdges.length > 0) {
+                    sourceParent = _this5.graph.getModel().getTerminal(sourceEdges[0], true);
+                    parentMatch = sourceParent.getStyle().match(regex);
+                    parentType = parentMatch ? parentMatch[1] : null;
+                  } else {
+                    parentFound = true;
+                  }
+                }
+
+                // Se não encontrou um "start" no parentesco, remover a aresta
+                if (!(parentType !== 'start')) {
+                  _context3.next = 48;
+                  break;
+                }
+                _this5.graph.getModel().beginUpdate();
+                try {
+                  _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'Conexões devem seguir o fluxo a partir de "start".');
+                  target.removeEdge(edge, true);
+                } finally {
+                  _this5.graph.getModel().endUpdate();
+                }
+                return _context3.abrupt("return");
+              case 48:
               case "end":
                 return _context3.stop();
             }
