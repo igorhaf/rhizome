@@ -20382,7 +20382,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
           var regex = /\/([a-zA-Z0-9_]+)\.svg$/;
           var nodeType = cell.style.match(regex);
           _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('nodeSelected', cell.value);
-          _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('nodeType', nodeType[1]);
+          //EventBus.emit('nodeType', nodeType[1]);
         }
       });
     },
