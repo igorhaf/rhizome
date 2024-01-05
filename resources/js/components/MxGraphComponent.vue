@@ -258,21 +258,23 @@ export default {
           const sourceType = sourceMatch ? sourceMatch[1] : null;
           const targetType = targetMatch ? targetMatch[1] : null;
 
-          if (sourceType === 'start') {
-            const edges = this.graph.getModel().getEdges(source);
-            const outgoingEdges = edges.filter(e => e.source === source && e.target !== source);
-            if (outgoingEdges.length > 1) {
-              // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
-              this.graph.getModel().beginUpdate();
-              try {
-                EventBus.emit('errorOccurred', 'O "start" não pode ter mais de uma conexão saindo.');
-                target.removeEdge(edge, true);
-              } finally {
-                this.graph.getModel().endUpdate();
+          if (sourceType !== 'if'){
+            if (sourceType !== 'switch'){
+              const edges = this.graph.getModel().getEdges(source);
+              const outgoingEdges = edges.filter(e => e.source === source && e.target !== source);
+                if (outgoingEdges.length > 1) {
+                  // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
+                  this.graph.getModel().beginUpdate();
+                  try {
+                    EventBus.emit('errorOccurred', 'O "'+sourceType+'" não pode ter mais de uma conexão saindo.');
+                    target.removeEdge(edge, true);
+                  } finally {
+                    this.graph.getModel().endUpdate();
+                  }
+                  return;
+                }
               }
-              return;
             }
-          }
 
           if (targetType === 'start') {
             this.graph.getModel().beginUpdate();

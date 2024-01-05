@@ -20411,8 +20411,12 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                 targetMatch = target.getStyle().match(regex);
                 sourceType = sourceMatch ? sourceMatch[1] : null;
                 targetType = targetMatch ? targetMatch[1] : null;
-                if (!(sourceType === 'start')) {
-                  _context3.next = 17;
+                if (!(sourceType !== 'if')) {
+                  _context3.next = 18;
+                  break;
+                }
+                if (!(sourceType !== 'switch')) {
+                  _context3.next = 18;
                   break;
                 }
                 edges = _this5.graph.getModel().getEdges(source);
@@ -20420,21 +20424,21 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   return e.source === source && e.target !== source;
                 });
                 if (!(outgoingEdges.length > 1)) {
-                  _context3.next = 17;
+                  _context3.next = 18;
                   break;
                 }
                 // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
                 _this5.graph.getModel().beginUpdate();
                 try {
-                  _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'O "start" não pode ter mais de uma conexão saindo.');
+                  _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'O "' + sourceType + '" não pode ter mais de uma conexão saindo.');
                   target.removeEdge(edge, true);
                 } finally {
                   _this5.graph.getModel().endUpdate();
                 }
                 return _context3.abrupt("return");
-              case 17:
+              case 18:
                 if (!(targetType === 'start')) {
-                  _context3.next = 21;
+                  _context3.next = 22;
                   break;
                 }
                 _this5.graph.getModel().beginUpdate();
@@ -20445,64 +20449,64 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                   _this5.graph.getModel().endUpdate();
                 }
                 return _context3.abrupt("return");
-              case 21:
+              case 22:
                 // Verifica se já existe uma aresta na direção oposta
                 existingConnections = _this5.graph.getModel().getEdgesBetween(target, source);
                 i = 0;
-              case 23:
+              case 24:
                 if (!(i < existingConnections.length)) {
-                  _context3.next = 39;
+                  _context3.next = 40;
                   break;
                 }
                 src = _this5.graph.getModel().getTerminal(existingConnections[i], true);
                 trg = _this5.graph.getModel().getTerminal(existingConnections[i], false);
                 if (!(src.id === target.id && trg.id === source.id)) {
-                  _context3.next = 36;
+                  _context3.next = 37;
                   break;
                 }
                 // Se uma conexão inversa já existe
                 _this5.graph.getModel().beginUpdate();
-                _context3.prev = 28;
+                _context3.prev = 29;
                 _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
                 target.removeEdge(edge, true);
-                return _context3.abrupt("break", 39);
-              case 32:
-                _context3.prev = 32;
+                return _context3.abrupt("break", 40);
+              case 33:
+                _context3.prev = 33;
                 _this5.graph.getModel().endUpdate();
-                return _context3.finish(32);
-              case 35:
-                return _context3.abrupt("break", 39);
+                return _context3.finish(33);
               case 36:
+                return _context3.abrupt("break", 40);
+              case 37:
                 i++;
-                _context3.next = 23;
+                _context3.next = 24;
                 break;
-              case 39:
+              case 40:
                 if (!(sourceType !== 'start')) {
-                  _context3.next = 63;
+                  _context3.next = 64;
                   break;
                 }
                 currentSource = source; // Começa com a fonte atual
                 foundStart = false; // Flag para indicar se encontrou um 'start'
                 // Loop para subir a cadeia de ancestrais
-              case 42:
+              case 43:
                 if (!(!foundStart && currentSource)) {
-                  _context3.next = 62;
+                  _context3.next = 63;
                   break;
                 }
                 _edges = _this5.graph.getModel().getIncomingEdges(currentSource);
                 if (!(_edges.length > 0)) {
-                  _context3.next = 59;
+                  _context3.next = 60;
                   break;
                 }
                 // Assume que cada vértice tem apenas uma aresta entrante
                 nextSource = _this5.graph.getModel().getTerminal(_edges[0], true);
                 if (!nextSource) {
-                  _context3.next = 56;
+                  _context3.next = 57;
                   break;
                 }
                 style = nextSource.getStyle();
                 if (!style) {
-                  _context3.next = 53;
+                  _context3.next = 54;
                   break;
                 }
                 match = style.match(regex);
@@ -20511,34 +20515,34 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                 } else {
                   currentSource = nextSource; // Atualiza a fonte atual e continua o loop
                 }
-                _context3.next = 54;
+                _context3.next = 55;
                 break;
-              case 53:
-                return _context3.abrupt("break", 62);
               case 54:
-                _context3.next = 57;
+                return _context3.abrupt("break", 63);
+              case 55:
+                _context3.next = 58;
                 break;
-              case 56:
-                return _context3.abrupt("break", 62);
               case 57:
-                _context3.next = 60;
+                return _context3.abrupt("break", 63);
+              case 58:
+                _context3.next = 61;
                 break;
-              case 59:
-                return _context3.abrupt("break", 62);
               case 60:
-                _context3.next = 42;
+                return _context3.abrupt("break", 63);
+              case 61:
+                _context3.next = 43;
                 break;
-              case 62:
+              case 63:
                 if (!_this5.followsStartFlow(target) || !_this5.followsStartFlow(source)) {
                   target.removeEdge(edge, true);
                   mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
                   evt.consume();
                 }
-              case 63:
+              case 64:
               case "end":
                 return _context3.stop();
             }
-          }, _callee3, null, [[28,, 32, 35]]);
+          }, _callee3, null, [[29,, 33, 36]]);
         }));
         return function (_x, _x2) {
           return _ref.apply(this, arguments);
