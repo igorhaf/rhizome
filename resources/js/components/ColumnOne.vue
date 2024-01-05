@@ -100,8 +100,8 @@ export default {
                         {
                             id: 7,
                             name: "Start Time",
-                            type: "start-time",
-                            iconClass: "start-time"
+                            type: "starttime",
+                            iconClass: "starttime"
                         },
                         {
                             id: 8,

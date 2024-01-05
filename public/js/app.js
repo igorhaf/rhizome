@@ -19795,8 +19795,8 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           id: 7,
           name: "Start Time",
-          type: "start-time",
-          iconClass: "start-time"
+          type: "starttime",
+          iconClass: "starttime"
         }, {
           id: 8,
           name: "Webhook",
@@ -20594,7 +20594,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
         'schedule': '../images/icons/schedule.svg',
         'sleep': '../images/icons/sleep.svg',
         'start': '../images/icons/start.svg',
-        'start-time': '../images/icons/start-time.svg',
+        'starttime': '../images/icons/starttime.svg',
         'stop': '../images/icons/stop.svg',
         'switch': '../images/icons/switch.svg',
         'webhook': '../images/icons/webhook.svg',

@@ -394,7 +394,7 @@ export default {
                 'schedule': '../images/icons/schedule.svg',
                 'sleep': '../images/icons/sleep.svg',
                 'start': '../images/icons/start.svg',
-                'start-time': '../images/icons/start-time.svg',
+                'starttime': '../images/icons/starttime.svg',
                 'stop': '../images/icons/stop.svg',
                 'switch': '../images/icons/switch.svg',
                 'webhook': '../images/icons/webhook.svg',

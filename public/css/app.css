@@ -784,9 +784,6 @@ select {
 .top-0 {
   top: 0px;
 }
-.z-10 {
-  z-index: 10;
-}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -824,9 +821,6 @@ select {
 .mt-8 {
   margin-top: 2rem;
 }
-.block {
-  display: block;
-}
 .flex {
   display: flex;
 }
@@ -838,9 +832,6 @@ select {
 }
 .h-16 {
   height: 4rem;
-}
-.h-4 {
-  height: 1rem;
 }
 .h-5 {
   height: 1.25rem;
@@ -869,14 +860,8 @@ select {
 .w-10 {
   width: 2.5rem;
 }
-.w-48 {
-  width: 12rem;
-}
 .w-5 {
   width: 1.25rem;
-}
-.w-6 {
-  width: 1.5rem;
 }
 .w-8 {
   width: 2rem;
@@ -917,9 +902,6 @@ select {
 }
 .items-center {
   align-items: center;
-}
-.justify-end {
-  justify-content: flex-end;
 }
 .justify-center {
   justify-content: center;
@@ -983,10 +965,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
-.bg-blue-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
-}
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1021,14 +999,6 @@ select {
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
-.py-1 {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 }
 .py-4 {
   padding-top: 1rem;
@@ -1104,10 +1074,6 @@ select {
 .text-gray-900 {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
-}
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 .text-yellow-400 {
   --tw-text-opacity: 1;
@@ -1189,8 +1155,8 @@ body {
     background-image: url(/images/start.svg?d306028ccad0b3019a1923183e86e2bf);
 }
 
-.start-time{
-    background-image: url(/images/start-time.svg?05dfb53c651e099eb7462961efab788a);
+.starttime{
+    background-image: url(/images/starttime.svg?05dfb53c651e099eb7462961efab788a);
 }
 
 .stop{
@@ -1271,16 +1237,6 @@ body {
 .config{
     background-image: url(/images/config.svg?827baafeb407c2e775d6f9338971a0a8);
     width: 26px;
-}
-
-.hover\:bg-gray-200:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
-}
-
-.focus\:outline-none:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: dark) {

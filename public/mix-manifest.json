@@ -1,6 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=88c5272a7cf70ca157bbe082230143b7",
-    "/css/app.css": "/css/app.css?id=61c145ab11fddd77689f989e936bed4b",
+    "/js/app.js": "/js/app.js?id=9bcc419be4665fb134c13ec499b8f339",
+    "/css/app.css": "/css/app.css?id=34b42c9d91193f79d1f802537a520c69",
     "/images/api.svg": "/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
     "/images/database.svg": "/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190",
     "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
@@ -52,5 +52,7 @@
     "/images/icons/play.svg": "/images/icons/play.svg?id=548574e4bc24094d8234a5257ecf0be1",
     "/images/play.svg": "/images/play.svg?id=548574e4bc24094d8234a5257ecf0be1",
     "/images/icons/config.svg": "/images/icons/config.svg?id=da2d6f542ec529715f4525b78e5d46e5",
-    "/images/config.svg": "/images/config.svg?id=da2d6f542ec529715f4525b78e5d46e5"
+    "/images/config.svg": "/images/config.svg?id=da2d6f542ec529715f4525b78e5d46e5",
+    "/images/icons/starttime.svg": "/images/icons/starttime.svg?id=b23b13e544cdce36f697868cb10e1a84",
+    "/images/starttime.svg": "/images/starttime.svg?id=b23b13e544cdce36f697868cb10e1a84"
 }
