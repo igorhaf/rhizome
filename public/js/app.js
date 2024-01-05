@@ -20393,7 +20393,7 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
       };
       this.graph.addListener(mxEvent.CELL_CONNECTED, /*#__PURE__*/function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(sender, evt) {
-          var edge, source, target, regex, sourceMatch, targetMatch, sourceType, targetType, edges, outgoingEdges, existingConnections, i, src, trg, sourceParent, parentType, parentFound, sourceEdges, parentMatch;
+          var edge, source, target, regex, sourceMatch, targetMatch, sourceType, targetType, edges, outgoingEdges, existingConnections, i, src, trg, currentSource, foundStart, _edges, nextSource, style, match;
           return _regeneratorRuntime().wrap(function _callee3$(_context3) {
             while (1) switch (_context3.prev = _context3.next) {
               case 0:
@@ -20478,39 +20478,63 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
                 break;
               case 39:
                 if (!(sourceType !== 'start')) {
-                  _context3.next = 48;
+                  _context3.next = 63;
                   break;
                 }
-                sourceParent = source;
-                parentType = sourceType;
-                parentFound = false; // Rastrear o parentesco até encontrar um "start" ou não houver mais arestas
-                while (parentType !== 'start' && !parentFound) {
-                  sourceEdges = _this5.graph.getModel().getEdges(sourceParent).filter(function (e) {
-                    return e.target === sourceParent;
-                  });
-                  if (sourceEdges.length > 0) {
-                    sourceParent = _this5.graph.getModel().getTerminal(sourceEdges[0], true);
-                    parentMatch = sourceParent.getStyle().match(regex);
-                    parentType = parentMatch ? parentMatch[1] : null;
-                  } else {
-                    parentFound = true;
-                  }
-                }
-
-                // Se não encontrou um "start" no parentesco, remover a aresta
-                if (!(parentType !== 'start')) {
-                  _context3.next = 48;
+                currentSource = source; // Começa com a fonte atual
+                foundStart = false; // Flag para indicar se encontrou um 'start'
+                // Loop para subir a cadeia de ancestrais
+              case 42:
+                if (!(!foundStart && currentSource)) {
+                  _context3.next = 62;
                   break;
                 }
-                _this5.graph.getModel().beginUpdate();
-                try {
-                  _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', 'Conexões devem seguir o fluxo a partir de "start".');
+                _edges = _this5.graph.getModel().getIncomingEdges(currentSource);
+                if (!(_edges.length > 0)) {
+                  _context3.next = 59;
+                  break;
+                }
+                // Assume que cada vértice tem apenas uma aresta entrante
+                nextSource = _this5.graph.getModel().getTerminal(_edges[0], true);
+                if (!nextSource) {
+                  _context3.next = 56;
+                  break;
+                }
+                style = nextSource.getStyle();
+                if (!style) {
+                  _context3.next = 53;
+                  break;
+                }
+                match = style.match(regex);
+                if (match && match[1] === 'start') {
+                  foundStart = true; // Encontrou um ancestral do tipo 'start'
+                } else {
+                  currentSource = nextSource; // Atualiza a fonte atual e continua o loop
+                }
+                _context3.next = 54;
+                break;
+              case 53:
+                return _context3.abrupt("break", 62);
+              case 54:
+                _context3.next = 57;
+                break;
+              case 56:
+                return _context3.abrupt("break", 62);
+              case 57:
+                _context3.next = 60;
+                break;
+              case 59:
+                return _context3.abrupt("break", 62);
+              case 60:
+                _context3.next = 42;
+                break;
+              case 62:
+                if (!_this5.followsStartFlow(target) || !_this5.followsStartFlow(source)) {
                   target.removeEdge(edge, true);
-                } finally {
-                  _this5.graph.getModel().endUpdate();
+                  mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
+                  evt.consume();
                 }
-                return _context3.abrupt("return");
-              case 48:
+              case 63:
               case "end":
                 return _context3.stop();
             }
@@ -20524,6 +20548,28 @@ var _mxgraph = mxgraph__WEBPACK_IMPORTED_MODULE_1___default()(),
         console.log("Emitindo evento de erro:", message);
         _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('errorOccurred', message);
       };
+    },
+    followsStartFlow: function followsStartFlow(vertex) {
+      if (!vertex) return false;
+
+      // Verifica se o vértice é do tipo 'start' através do seu estilo
+      var style = vertex.getStyle();
+      var regex = /shape=image;image=.*\/start\.svg/;
+      if (style && regex.test(style)) {
+        return true; // O vértice atual é 'start'
+      }
+
+      // Rastreia o caminho de entrada até encontrar um 'start'
+      var incomingEdges = this.graph.getModel().getIncomingEdges(vertex);
+      for (var i = 0; i < incomingEdges.length; i++) {
+        var source = this.graph.getModel().getTerminal(incomingEdges[i], true);
+        if (source && this.followsStartFlow(source)) {
+          return true; // Caminho válido encontrado
+        }
+      }
+
+      // Não encontrou um caminho válido até 'start'
+      return false;
     },
     addDblClickListener: function addDblClickListener() {
       var _this6 = this;

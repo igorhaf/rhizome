@@ -285,6 +285,7 @@ export default {
             return;
           }
 
+
           // Verifica se já existe uma aresta na direção oposta
           let existingConnections = this.graph.getModel().getEdgesBetween(target, source);
 
@@ -309,32 +310,39 @@ export default {
           }
 
           if (sourceType !== 'start') {
-            let sourceParent = source;
-            let parentType = sourceType;
-            let parentFound = false;
+            let currentSource = source; // Começa com a fonte atual
+            let foundStart = false; // Flag para indicar se encontrou um 'start'
 
-            // Rastrear o parentesco até encontrar um "start" ou não houver mais arestas
-            while (parentType !== 'start' && !parentFound) {
-              const sourceEdges = this.graph.getModel().getEdges(sourceParent).filter(e => e.target === sourceParent);
-              if (sourceEdges.length > 0) {
-                sourceParent = this.graph.getModel().getTerminal(sourceEdges[0], true);
-                const parentMatch = sourceParent.getStyle().match(regex);
-                parentType = parentMatch ? parentMatch[1] : null;
+            // Loop para subir a cadeia de ancestrais
+            while (!foundStart && currentSource) {
+              let edges = this.graph.getModel().getIncomingEdges(currentSource);
+              if (edges.length > 0) {
+                // Assume que cada vértice tem apenas uma aresta entrante
+                let nextSource = this.graph.getModel().getTerminal(edges[0], true);
+                if (nextSource) {
+                  let style = nextSource.getStyle();
+                  if (style) {
+                    let match = style.match(regex);
+                    if (match && match[1] === 'start') {
+                      foundStart = true; // Encontrou um ancestral do tipo 'start'
+                    } else {
+                      currentSource = nextSource; // Atualiza a fonte atual e continua o loop
+                    }
+                  } else {
+                    break; // Sai do loop se o estilo não for definido
+                  }
+                } else {
+                  break; // Sai do loop se não houver mais fontes
+                }
               } else {
-                parentFound = true;
+                break; // Sai do loop se não houver arestas entrantes
               }
             }
 
-            // Se não encontrou um "start" no parentesco, remover a aresta
-            if (parentType !== 'start') {
-              this.graph.getModel().beginUpdate();
-              try {
-                EventBus.emit('errorOccurred', 'Conexões devem seguir o fluxo a partir de "start".');
-                target.removeEdge(edge, true);
-              } finally {
-                this.graph.getModel().endUpdate();
-              }
-              return;
+            if (!this.followsStartFlow(target) || !this.followsStartFlow(source)) {
+              target.removeEdge(edge, true);
+              mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
+              evt.consume();
             }
           }
         });
@@ -342,6 +350,28 @@ export default {
           console.log("Emitindo evento de erro:", message);
           EventBus.emit('errorOccurred', message);
         };
+      },
+      followsStartFlow(vertex) {
+        if (!vertex) return false;
+
+        // Verifica se o vértice é do tipo 'start' através do seu estilo
+        const style = vertex.getStyle();
+        const regex = /shape=image;image=.*\/start\.svg/;
+        if (style && regex.test(style)) {
+          return true; // O vértice atual é 'start'
+        }
+
+        // Rastreia o caminho de entrada até encontrar um 'start'
+        let incomingEdges = this.graph.getModel().getIncomingEdges(vertex);
+        for (let i = 0; i < incomingEdges.length; i++) {
+          let source = this.graph.getModel().getTerminal(incomingEdges[i], true);
+          if (source && this.followsStartFlow(source)) {
+            return true; // Caminho válido encontrado
+          }
+        }
+
+        // Não encontrou um caminho válido até 'start'
+        return false;
       },
         addDblClickListener() {
             this.graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
