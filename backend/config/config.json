@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "nexabuild",
+    "password": "nexabuild",
+    "database": "nexabuild",
+    "host": "postgres",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "nexabuild",
+    "password": "nexabuild",
+    "database": "nexabuild",
+    "host": "postgres",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "nexabuild",
+    "password": "nexabuild",
+    "database": "nexabuild",
+    "host": "postgres",
+    "dialect": "postgres"
+  }
+}
