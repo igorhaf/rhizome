@@ -28,6 +28,22 @@ export default {
     data() {
         return {
             graph: null,
+            ifIcon: require('@/assets/images/icons/if.svg'),
+            scheduleIcon: require('@/assets/images/icons/schedule.svg'),
+            sleepIcon: require('@/assets/images/icons/sleep.svg'),
+            startIcon: require('@/assets/images/icons/start.svg'),
+            starttimeIcon: require('@/assets/images/icons/starttime.svg'),
+            stopIcon: require('@/assets/images/icons/stop.svg'),
+            switchIcon: require('@/assets/images/icons/switch.svg'),
+            webhookIcon: require('@/assets/images/icons/webhook.svg'),
+            exceptionIcon: require('@/assets/images/icons/exception.svg'),
+            databaseIcon: require('@/assets/images/icons/database.svg'),
+            gmailReceiveIcon: require('@/assets/images/icons/gmail-receive.svg'),
+            gmailSendIcon: require('@/assets/images/icons/gmail-send.svg'),
+            trelloAddCardIcon: require('@/assets/images/icons/trello-add-card.svg'),
+            trelloRemoveCardIcon: require('@/assets/images/icons/trello-remove-card.svg'),
+            linkIcon: require('@/assets/images/icons/link.svg'),
+            apiIcon: require('@/assets/images/icons/api.svg'),
         };
     },
     mounted() {
@@ -390,25 +406,25 @@ export default {
         },
         getIconURLFromClassName(className) {
             const icons = {
-                'if': '../../assets/images/icons/if.svg',
-                'schedule': '../assets/images/icons/schedule.svg',
-                'sleep': '../assets/images/icons/sleep.svg',
-                'start': '../assets/images/icons/start.svg',
-                'starttime': '../assets/images/icons/starttime.svg',
-                'stop': '../assets/images/icons/stop.svg',
-                'switch': '../assets/images/icons/switch.svg',
-                'webhook': '../assets/images/icons/webhook.svg',
-                'exception': '../assets/images/icons/exception.svg',
-                'database': '../assets/images/icons/database.svg',
-                'gmail-receive': '../assets/images/icons/gmail-receive.svg',
-                'gmail-send': '../assets/images/icons/gmail-send.svg',
-                'trello-add-card': '../assets/images/icons/trello-add-card.svg',
-                'trello-remove-card': '../assets/images/icons/trello-remove-card.svg',
-                'link': '../assets/images/icons/link.svg',
-                'api': '../assets/images/icons/api.svg'
+                'if': this.ifIcon,
+                'schedule': this.scheduleIcon,
+                'sleep': this.sleepIcon,
+                'start': this.startIcon,
+                'starttime': this.starttimeIcon,
+                'stop': this.stopIcon,
+                'switch': this.switchIcon,
+                'webhook': this.webhookIcon,
+                'exception': this.exceptionIcon,
+                'database': this.databaseIcon,
+                'gmail-receive': this.gmailReceiveIcon,
+                'gmail-send': this.gmailSendIcon,
+                'trello-add-card': this.trelloAddCardIcon,
+                'trello-remove-card': this.trelloRemoveCardIcon,
+                'link': this.linkIcon,
+                'api': this.apiIcon,
             };
 
-            return icons[className] || './images/icons/stop.svg';
+            return icons[className] || 'icons/stop.svg';
         },
       drop(evt, x, y) {
         const data = evt.dataTransfer.getData('nodeData');
