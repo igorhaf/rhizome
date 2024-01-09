@@ -11,9 +11,9 @@ const GraphController = {
     },
     async getGraph(req, res) {
         try {
-            const graph = await Graph.findByPk(req.params.id);
-            if (graph) {
-                return res.status(200).json(graph);
+            const lastGraph = await Graph.findOne({ order: [['createdAt', 'DESC']] });
+            if (lastGraph) {
+                return res.status(200).json(lastGraph);
             }
             return res.status(404).json({ error: 'Graph not found' });
         } catch (error) {
