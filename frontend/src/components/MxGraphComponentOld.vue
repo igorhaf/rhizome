@@ -28,22 +28,6 @@ export default {
     data() {
         return {
             graph: null,
-            ifIcon: require('@/assets/images/icons/if.svg'),
-            scheduleIcon: require('@/assets/images/icons/schedule.svg'),
-            sleepIcon: require('@/assets/images/icons/sleep.svg'),
-            startIcon: require('@/assets/images/icons/start.svg'),
-            starttimeIcon: require('@/assets/images/icons/starttime.svg'),
-            stopIcon: require('@/assets/images/icons/stop.svg'),
-            switchIcon: require('@/assets/images/icons/switch.svg'),
-            webhookIcon: require('@/assets/images/icons/webhook.svg'),
-            exceptionIcon: require('@/assets/images/icons/exception.svg'),
-            databaseIcon: require('@/assets/images/icons/database.svg'),
-            gmailReceiveIcon: require('@/assets/images/icons/gmail-receive.svg'),
-            gmailSendIcon: require('@/assets/images/icons/gmail-send.svg'),
-            trelloAddCardIcon: require('@/assets/images/icons/trello-add-card.svg'),
-            trelloRemoveCardIcon: require('@/assets/images/icons/trello-remove-card.svg'),
-            linkIcon: require('@/assets/images/icons/link.svg'),
-            apiIcon: require('@/assets/images/icons/api.svg'),
         };
     },
     mounted() {
@@ -109,8 +93,8 @@ export default {
             const container = this.$refs.graphContainer;
             this.graph = new mxGraph(container);
             mxUtils.alert = function(message) {
-              console.log("Emitindo evento de erro:", message);
-              EventBus.emit('errorOccurred', message);
+                console.log("Emitindo evento de erro:", message);
+                EventBus.emit('errorOccurred', message);
             };
             this.graph.setCellsEditable(true);
             this.graph.setConnectable(true);
@@ -197,7 +181,7 @@ export default {
                 const iconURL = this.getIconURLFromClassName(shapeType);
                 const response = await api.get('/get-latest-diagram');
                 const self = this;
-                parseString(response.data.data, function (err, result) {
+                parseString(response.data, function (err, result) {
                     Object.values(result.mxGraphModel.root).forEach(val => {
                         Object.entries(val.mxCell).forEach(entry => {
                             const [key, value] = entry;
@@ -253,144 +237,144 @@ export default {
             });
         },
 
-      addConsoleEventListener() {
-        mxUtils.alert = function(message) {
-          console.log("Alert from mxGraph:", message);
-        };
+        addConsoleEventListener() {
+            mxUtils.alert = function(message) {
+                console.log("Alert from mxGraph:", message);
+            };
 
-        this.graph.addListener(mxEvent.CELL_CONNECTED, async (sender, evt) => {
-          const edge = evt.getProperty('edge');
+            this.graph.addListener(mxEvent.CELL_CONNECTED, async (sender, evt) => {
+                const edge = evt.getProperty('edge');
 
-          const source = this.graph.getModel().getTerminal(edge, true);
-          const target = this.graph.getModel().getTerminal(edge, false);
+                const source = this.graph.getModel().getTerminal(edge, true);
+                const target = this.graph.getModel().getTerminal(edge, false);
 
-          if (!edge || !source || !target) {
-            return; // Se não for uma aresta válida ou não tiver terminais, ignora
-          }
-
-          const regex = /shape=image;image=.*\/([a-zA-Z0-9_-]+)\.svg/;
-          const sourceMatch = source.getStyle().match(regex);
-          const targetMatch = target.getStyle().match(regex);
-          const sourceType = sourceMatch ? sourceMatch[1] : null;
-          const targetType = targetMatch ? targetMatch[1] : null;
-
-          if (sourceType !== 'if'){
-            if (sourceType !== 'switch'){
-              const edges = this.graph.getModel().getEdges(source);
-              const outgoingEdges = edges.filter(e => e.source === source && e.target !== source);
-                if (outgoingEdges.length > 1) {
-                  // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
-                  this.graph.getModel().beginUpdate();
-                  try {
-                    EventBus.emit('errorOccurred', 'O "'+sourceType+'" não pode ter mais de uma conexão saindo.');
-                    target.removeEdge(edge, true);
-                  } finally {
-                    this.graph.getModel().endUpdate();
-                  }
-                  return;
+                if (!edge || !source || !target) {
+                    return; // Se não for uma aresta válida ou não tiver terminais, ignora
                 }
-              }
-            }
 
-          if (targetType === 'start') {
-            this.graph.getModel().beginUpdate();
-            try {
-              EventBus.emit('errorOccurred', 'O "start" não pode ser o alvo de uma conexão.');
-              target.removeEdge(edge, true);
-            } finally {
-              this.graph.getModel().endUpdate();
-            }
-            return;
-          }
+                const regex = /shape=image;image=.*\/([a-zA-Z0-9_-]+)\.svg/;
+                const sourceMatch = source.getStyle().match(regex);
+                const targetMatch = target.getStyle().match(regex);
+                const sourceType = sourceMatch ? sourceMatch[1] : null;
+                const targetType = targetMatch ? targetMatch[1] : null;
 
-
-          // Verifica se já existe uma aresta na direção oposta
-          let existingConnections = this.graph.getModel().getEdgesBetween(target, source);
-
-          for (let i = 0; i < existingConnections.length; i++) {
-            let src = this.graph.getModel().getTerminal(existingConnections[i], true);
-            let trg = this.graph.getModel().getTerminal(existingConnections[i], false);
-
-            if (src.id === target.id && trg.id === source.id) {
-              // Se uma conexão inversa já existe
-              this.graph.getModel().beginUpdate();
-              try {
-                EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
-                target.removeEdge(edge, true);
-
-                break;
-
-              } finally {
-                this.graph.getModel().endUpdate();
-              }
-              break;
-            }
-          }
-
-          if (sourceType !== 'start') {
-            let currentSource = source; // Começa com a fonte atual
-            let foundStart = false; // Flag para indicar se encontrou um 'start'
-
-            // Loop para subir a cadeia de ancestrais
-            while (!foundStart && currentSource) {
-              let edges = this.graph.getModel().getIncomingEdges(currentSource);
-              if (edges.length > 0) {
-                // Assume que cada vértice tem apenas uma aresta entrante
-                let nextSource = this.graph.getModel().getTerminal(edges[0], true);
-                if (nextSource) {
-                  let style = nextSource.getStyle();
-                  if (style) {
-                    let match = style.match(regex);
-                    if (match && match[1] === 'start') {
-                      foundStart = true; // Encontrou um ancestral do tipo 'start'
-                    } else {
-                      currentSource = nextSource; // Atualiza a fonte atual e continua o loop
+                if (sourceType !== 'if'){
+                    if (sourceType !== 'switch'){
+                        const edges = this.graph.getModel().getEdges(source);
+                        const outgoingEdges = edges.filter(e => e.source === source && e.target !== source);
+                        if (outgoingEdges.length > 1) {
+                            // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
+                            this.graph.getModel().beginUpdate();
+                            try {
+                                EventBus.emit('errorOccurred', 'O "'+sourceType+'" não pode ter mais de uma conexão saindo.');
+                                target.removeEdge(edge, true);
+                            } finally {
+                                this.graph.getModel().endUpdate();
+                            }
+                            return;
+                        }
                     }
-                  } else {
-                    break; // Sai do loop se o estilo não for definido
-                  }
-                } else {
-                  break; // Sai do loop se não houver mais fontes
                 }
-              } else {
-                break; // Sai do loop se não houver arestas entrantes
-              }
+
+                if (targetType === 'start') {
+                    this.graph.getModel().beginUpdate();
+                    try {
+                        EventBus.emit('errorOccurred', 'O "start" não pode ser o alvo de uma conexão.');
+                        target.removeEdge(edge, true);
+                    } finally {
+                        this.graph.getModel().endUpdate();
+                    }
+                    return;
+                }
+
+
+                // Verifica se já existe uma aresta na direção oposta
+                let existingConnections = this.graph.getModel().getEdgesBetween(target, source);
+
+                for (let i = 0; i < existingConnections.length; i++) {
+                    let src = this.graph.getModel().getTerminal(existingConnections[i], true);
+                    let trg = this.graph.getModel().getTerminal(existingConnections[i], false);
+
+                    if (src.id === target.id && trg.id === source.id) {
+                        // Se uma conexão inversa já existe
+                        this.graph.getModel().beginUpdate();
+                        try {
+                            EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
+                            target.removeEdge(edge, true);
+
+                            break;
+
+                        } finally {
+                            this.graph.getModel().endUpdate();
+                        }
+                        break;
+                    }
+                }
+
+                if (sourceType !== 'start') {
+                    let currentSource = source; // Começa com a fonte atual
+                    let foundStart = false; // Flag para indicar se encontrou um 'start'
+
+                    // Loop para subir a cadeia de ancestrais
+                    while (!foundStart && currentSource) {
+                        let edges = this.graph.getModel().getIncomingEdges(currentSource);
+                        if (edges.length > 0) {
+                            // Assume que cada vértice tem apenas uma aresta entrante
+                            let nextSource = this.graph.getModel().getTerminal(edges[0], true);
+                            if (nextSource) {
+                                let style = nextSource.getStyle();
+                                if (style) {
+                                    let match = style.match(regex);
+                                    if (match && match[1] === 'start') {
+                                        foundStart = true; // Encontrou um ancestral do tipo 'start'
+                                    } else {
+                                        currentSource = nextSource; // Atualiza a fonte atual e continua o loop
+                                    }
+                                } else {
+                                    break; // Sai do loop se o estilo não for definido
+                                }
+                            } else {
+                                break; // Sai do loop se não houver mais fontes
+                            }
+                        } else {
+                            break; // Sai do loop se não houver arestas entrantes
+                        }
+                    }
+
+                    if (!this.followsStartFlow(target) || !this.followsStartFlow(source)) {
+                        target.removeEdge(edge, true);
+                        mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
+                        evt.consume();
+                    }
+                }
+            });
+            mxUtils.alert = function(message) {
+                console.log("Emitindo evento de erro:", message);
+                EventBus.emit('errorOccurred', message);
+            };
+        },
+        followsStartFlow(vertex) {
+            if (!vertex) return false;
+
+            // Verifica se o vértice é do tipo 'start' através do seu estilo
+            const style = vertex.getStyle();
+            const regex = /shape=image;image=.*\/start\.svg/;
+            if (style && regex.test(style)) {
+                return true; // O vértice atual é 'start'
             }
 
-            if (!this.followsStartFlow(target) || !this.followsStartFlow(source)) {
-              target.removeEdge(edge, true);
-              mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
-              evt.consume();
+            // Rastreia o caminho de entrada até encontrar um 'start'
+            let incomingEdges = this.graph.getModel().getIncomingEdges(vertex);
+            for (let i = 0; i < incomingEdges.length; i++) {
+                let source = this.graph.getModel().getTerminal(incomingEdges[i], true);
+                if (source && this.followsStartFlow(source)) {
+                    return true; // Caminho válido encontrado
+                }
             }
-          }
-        });
-        mxUtils.alert = function(message) {
-          console.log("Emitindo evento de erro:", message);
-          EventBus.emit('errorOccurred', message);
-        };
-      },
-      followsStartFlow(vertex) {
-        if (!vertex) return false;
 
-        // Verifica se o vértice é do tipo 'start' através do seu estilo
-        const style = vertex.getStyle();
-        const regex = /shape=image;image=.*\/start\.svg/;
-        if (style && regex.test(style)) {
-          return true; // O vértice atual é 'start'
-        }
-
-        // Rastreia o caminho de entrada até encontrar um 'start'
-        let incomingEdges = this.graph.getModel().getIncomingEdges(vertex);
-        for (let i = 0; i < incomingEdges.length; i++) {
-          let source = this.graph.getModel().getTerminal(incomingEdges[i], true);
-          if (source && this.followsStartFlow(source)) {
-            return true; // Caminho válido encontrado
-          }
-        }
-
-        // Não encontrou um caminho válido até 'start'
-        return false;
-      },
+            // Não encontrou um caminho válido até 'start'
+            return false;
+        },
         addDblClickListener() {
             this.graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
                 const cell = evt.getProperty('cell');
@@ -406,66 +390,66 @@ export default {
         },
         getIconURLFromClassName(className) {
             const icons = {
-                'if': this.ifIcon,
-                'schedule': this.scheduleIcon,
-                'sleep': this.sleepIcon,
-                'start': this.startIcon,
-                'starttime': this.starttimeIcon,
-                'stop': this.stopIcon,
-                'switch': this.switchIcon,
-                'webhook': this.webhookIcon,
-                'exception': this.exceptionIcon,
-                'database': this.databaseIcon,
-                'gmail-receive': this.gmailReceiveIcon,
-                'gmail-send': this.gmailSendIcon,
-                'trello-add-card': this.trelloAddCardIcon,
-                'trello-remove-card': this.trelloRemoveCardIcon,
-                'link': this.linkIcon,
-                'api': this.apiIcon,
+                'if': '../images/icons/if.svg',
+                'schedule': '../images/icons/schedule.svg',
+                'sleep': '../images/icons/sleep.svg',
+                'start': '../images/icons/start.svg',
+                'starttime': '../images/icons/starttime.svg',
+                'stop': '../images/icons/stop.svg',
+                'switch': '../images/icons/switch.svg',
+                'webhook': '../images/icons/webhook.svg',
+                'exception': '../images/icons/exception.svg',
+                'database': '../images/icons/database.svg',
+                'gmail-receive': '../images/icons/gmail-receive.svg',
+                'gmail-send': '../images/icons/gmail-send.svg',
+                'trello-add-card': '../images/icons/trello-add-card.svg',
+                'trello-remove-card': '../images/icons/trello-remove-card.svg',
+                'link': '../images/icons/link.svg',
+                'api': '../images/icons/api.svg'
             };
 
-            return icons[className] || this.stopIcon;
+            return icons[className] || './images/icons/stop.svg';
         },
-      drop(evt, x, y) {
-        const data = evt.dataTransfer.getData('nodeData');
-        const shapeType = JSON.parse(data).iconClass;
-        const vertexName = JSON.parse(data).name;
+        drop(evt, x, y) {
+            const data = evt.dataTransfer.getData('nodeData');
+            const shapeType = JSON.parse(data).iconClass;
+            const vertexName = JSON.parse(data).name;
 
-        const parent = this.graph.getDefaultParent();
+            const parent = this.graph.getDefaultParent();
 
-        this.graph.getModel().beginUpdate();
-        try {
-          const iconURL = this.getIconURLFromClassName(shapeType);
-          // Utiliza a expressão regular para determinar se o ícone é do tipo 'start'
-          const regex = /\/([a-zA-Z0-9_-]+)\.svg$/;
-          const shapeMatch = iconURL.match(regex);
-          const type = shapeMatch ? shapeMatch[1] : null;
+            this.graph.getModel().beginUpdate();
+            try {
+                const iconURL = this.getIconURLFromClassName(shapeType);
+                // Utiliza a expressão regular para determinar se o ícone é do tipo 'start'
+                const regex = /\/([a-zA-Z0-9_-]+)\.svg$/;
+                const shapeMatch = iconURL.match(regex);
+                const type = shapeMatch ? shapeMatch[1] : null;
 
-          if (type === 'start') {
-            // Verifica se já existe um vértice do tipo 'start'
-            const existingVertices = this.graph.getChildVertices(parent);
-            const startVertexExists = existingVertices.some(vertex => {
-              const style = vertex.getStyle();
-              const match = style && style.match(regex);
-              return match && match[1] === 'start';
-            });
+                if (type === 'start') {
+                    // Verifica se já existe um vértice do tipo 'start'
+                    const existingVertices = this.graph.getChildVertices(parent);
+                    const startVertexExists = existingVertices.some(vertex => {
+                        const style = vertex.getStyle();
+                        const match = style && style.match(regex);
+                        return match && match[1] === 'start';
+                    });
 
-            if (startVertexExists) {
-              // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
-              EventBus.emit('errorOccurred', 'Dois vertices do tipo start, não podem coexistir no maesmo frame.');
-              return; // Interrompe a execução do método
+                    if (startVertexExists) {
+                        // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
+                        EventBus.emit('errorOccurred', 'Dois vertices do tipo start, não podem coexistir no maesmo frame.');
+                        return; // Interrompe a execução do método
+                    }
+                }
+
+                // Se não for do tipo 'start' ou se não houver nenhum 'start', adiciona o novo vértice
+                if (x !== undefined && y !== undefined) {
+                    this.graph.setHtmlLabels(true);
+                    this.graph.insertVertex(parent, null, vertexName, x - 24, y - 24, 48, 48, `shape=image;image=${iconURL}`);
+                }
+            } finally {
+                this.graph.getModel().endUpdate();
             }
-          }
-
-          // Se não for do tipo 'start' ou se não houver nenhum 'start', adiciona o novo vértice
-          if (x !== undefined && y !== undefined) {
-            this.graph.setHtmlLabels(true);
-            this.graph.insertVertex(parent, null, vertexName, x - 24, y - 24, 48, 48, `shape=image;image=${iconURL}`);
-          }
-        } finally {
-          this.graph.getModel().endUpdate();
-        }
-      },
+        },
 
     }
 }
