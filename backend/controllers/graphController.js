@@ -14,6 +14,7 @@ exports.getGraph = async (req, res) => {
 
 exports.createGraph = async (req, res) => {
     try {
+        console.log(req.body);
         const graph = await Graph.create(req.body);
         return res.status(201).json(graph);
     } catch (error) {
