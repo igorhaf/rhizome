@@ -424,7 +424,7 @@ export default {
                 'api': this.apiIcon,
             };
 
-            return icons[className] || 'icons/stop.svg';
+            return icons[className] || this.stopIcon;
         },
       drop(evt, x, y) {
         const data = evt.dataTransfer.getData('nodeData');

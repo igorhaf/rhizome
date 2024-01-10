@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = new Sequelize(process.env.DATABASE_URL); // Utilize variáveis de ambiente para configurar
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('./index'); // Ajuste o caminho para o arquivo index.js
 
 class Graph extends Model {}
 

@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost/api', // Substitua pela URL base da sua API Laravel
+    baseURL: 'http://localhost:3000/api', // Substitua pela URL base da sua API Laravel
     timeout: 10000, // Define um timeout
     headers: {
         'Content-Type': 'application/json',

@@ -1,13 +1,13 @@
 version: '3'
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    depends_on:
-      - postgres
-    environment:
-      - DATABASE_URL=postgres://nexabuild:nexabuild@postgres:5432/nexabuild
+  #app:
+  #  build: .
+  #  ports:
+  #   - "3000:3000"
+  #depends_on:
+  # - postgres
+  #environment:
+  #- DATABASE_URL=postgres://nexabuild:nexabuild@postgres:5432/nexabuild
 
   postgres:
     image: postgres

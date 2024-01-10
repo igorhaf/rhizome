@@ -1,17 +1,19 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
+const port = 3000;
 
-app.use(bodyParser.json());
+app.use(cors());
+
+const { Sequelize } = require('sequelize');
+const config = require('./config/config.json');
+
 const userRoutes = require('./routes/api');
 app.use('/api', userRoutes);
-app.get('/', (req, res) => {
-    res.status(200).send('Hello World!');
-});
+app.get('/', (req, res) => res.send('Olá, Mundo!'));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-});
+const sequelize = new Sequelize(config.development);
 
-module.exports = app;
+app.listen(port, () => {
+    console.log(`Aplicação Express rodando na porta ${port}`);
+});
