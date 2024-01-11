@@ -81,6 +81,14 @@
     background-image: url('../assets/images/icons/api.svg');
 }
 
+.bash{
+    background-image: url('../assets/images/icons/bash.svg');
+}
+
+.javascript{
+    background-image: url('../assets/images/icons/javascript.svg');
+}
+
 .qm-icons{
     width: 32px;
     height: 32px;

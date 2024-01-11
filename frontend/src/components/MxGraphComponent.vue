@@ -44,6 +44,8 @@ export default {
             trelloRemoveCardIcon: require('@/assets/images/icons/trello-remove-card.svg'),
             linkIcon: require('@/assets/images/icons/link.svg'),
             apiIcon: require('@/assets/images/icons/api.svg'),
+            bashIcon: require('@/assets/images/icons/bash.svg'),
+            javascriptIcon: require('@/assets/images/icons/javascript.svg'),
         };
     },
     mounted() {
@@ -424,6 +426,8 @@ export default {
                 'trello-remove-card': this.trelloRemoveCardIcon,
                 'link': this.linkIcon,
                 'api': this.apiIcon,
+                'javascript': this.javascriptIcon,
+                'bash': this.bashIcon,
             };
 
             return icons[className] || this.stopIcon;

@@ -133,11 +133,32 @@ export default {
                             type: "stop",
                             iconClass: "stop"
                         },
+                        {
+                            id: 13,
+                            name: "Database",
+                            type: "database",
+                            iconClass: "database"
+
+                        },
+                        {
+                            id: 30,
+                            name: "Javascript",
+                            type: "javascript",
+                            iconClass: "javascript"
+
+                        },
+                        {
+                            id: 50,
+                            name: "Bash",
+                            type: "bash",
+                            iconClass: "bash"
+
+                        }
                     ]
                 },
                 {
-                    id: 13,
-                    name: "Third-party",
+                    id: 14,
+                    name: "Presets",
                     expanded: false,
                     children: [
                         {
@@ -177,20 +198,6 @@ export default {
                                     iconClass: "trello-remove-card"
                                 }
                             ]
-                        }
-                    ]
-                },
-                {
-                    id: 20,
-                    name: "Miscellaneous",
-                    expanded: false,
-                    children: [
-                        {
-                            id: 21,
-                            name: "Database",
-                            type: "database",
-                            iconClass: "database"
-
                         }
                     ]
                 }
