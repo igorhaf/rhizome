@@ -244,8 +244,9 @@ export default {
         addClickEventListener() {
             this.graph.addListener(mxEvent.CLICK, (sender, evt) => {
                 const cell = evt.getProperty('cell');
+                //console.log(cell.style);
                 if (cell && cell.value) {
-                    let regex = /\/([a-zA-Z0-9_]+)\.svg$/;
+                    let regex = /shape=image;image=\/img\/([^.]+)\..*\.svg/;
                     let nodeType = cell.style.match(regex);
                     EventBus.emit('nodeSelected', cell.value);
                     EventBus.emit('nodeType', nodeType[1]);
@@ -268,7 +269,7 @@ export default {
             return; // Se não for uma aresta válida ou não tiver terminais, ignora
           }
 
-          const regex = /shape=image;image=.*\/([a-zA-Z0-9_-]+)\.svg/;
+          const regex = /shape=image;image=\/img\/([^.]+)\..*\.svg/;
           const sourceMatch = source.getStyle().match(regex);
           const targetMatch = target.getStyle().match(regex);
           const sourceType = sourceMatch ? sourceMatch[1] : null;
@@ -374,7 +375,8 @@ export default {
 
         // Verifica se o vértice é do tipo 'start' através do seu estilo
         const style = vertex.getStyle();
-        const regex = /shape=image;image=.*\/start\.svg/;
+        const regex = /shape=image;image=\/img\/start\.[^.]+\.svg/;
+        console.log(regex.test(style));
         if (style && regex.test(style)) {
           return true; // O vértice atual é 'start'
         }
@@ -436,9 +438,11 @@ export default {
         this.graph.getModel().beginUpdate();
         try {
           const iconURL = this.getIconURLFromClassName(shapeType);
+          console.log(iconURL);
           // Utiliza a expressão regular para determinar se o ícone é do tipo 'start'
-          const regex = /\/([a-zA-Z0-9_-]+)\.svg$/;
+          const regex = /\/img\/([^.]+)\..*\.svg/;
           const shapeMatch = iconURL.match(regex);
+          console.log(shapeMatch);
           const type = shapeMatch ? shapeMatch[1] : null;
 
           if (type === 'start') {
