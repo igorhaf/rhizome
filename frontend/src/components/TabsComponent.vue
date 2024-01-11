@@ -55,7 +55,7 @@ export default {
         enableEdit(tab) {
             tab.isEditing = true;
             this.$nextTick(() => {
-                this.$refs.tabInput.focus();
+                this.$refs.tabInput[0].focus();
             });
         },
         saveTabName(tab) {
