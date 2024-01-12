@@ -7,32 +7,30 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@heroicons/vue": "^1.0.6",
+    "codemirror": ">=5.64.0 <6",
+    "codemirror-editor-vue3": "^2.4.1",
     "core-js": "^3.8.3",
+    "mitt": "^3.0.1",
+    "mxgraph": "^4.2.2",
+    "split.js": "^1.6.5",
+    "stream": "0.0.2",
+    "timers": "^0.1.1",
     "vue": "^3.2.36",
-
-      "@heroicons/vue": "^1.0.6",
-      "mitt": "^3.0.1",
-      "mxgraph": "^4.2.2",
-      "split.js": "^1.6.5",
-      "stream": "0.0.2",
-      "timers": "^0.1.1",
-      "vuex": "^4.1.0",
-      "xml-js": "^1.6.11",
-      "xml2js": "^0.6.2"
+    "vuex": "^4.1.0",
+    "xml-js": "^1.6.11",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "autoprefixer": "^10.4.16",
+    "axios": "^0.21.4",
+    "lodash": "^4.17.19",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
-
-      "@tailwindcss/forms": "^0.5.7",
-      "axios": "^0.21.4",
-      "lodash": "^4.17.19",
-      "vue-loader": "^17.3.0"
-
-
+    "vue-loader": "^17.3.0"
   },
   "browserslist": [
     "> 1%",

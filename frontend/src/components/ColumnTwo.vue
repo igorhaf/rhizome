@@ -1,6 +1,8 @@
 <template>
     <div class="bg-white p ">
         <TabsComponent :tabs="tabs" :activeTab="activeTab" @tabAdded="handleTabAdded" @tabChanged="handleTabChange" />
+        <javascript-editor />
+        <sql-editor />
         <MxGraphComponent
             v-for="(tab, index) in tabs"
             :key="tab.id"
@@ -12,8 +14,10 @@
 
 <script>
 import MxGraphComponent from './MxGraphComponent.vue';
+import JavascriptEditor from "@/components/JavascriptEditor.vue";
 import TabsComponent from "./TabsComponent.vue";
 import { EventBus } from '../EventBus.js';
+import SqlEditor from "@/components/SqlEditor.vue";
 
 export default {
     data() {
@@ -51,7 +55,9 @@ export default {
     },
     components: {
         MxGraphComponent,
-        TabsComponent
+        TabsComponent,
+        JavascriptEditor,
+        SqlEditor
     }
 }
 </script>
