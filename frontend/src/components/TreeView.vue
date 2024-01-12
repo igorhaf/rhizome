@@ -5,8 +5,8 @@
             <div class="flex items-center space-x-2" @click="toggle(node)">
               <span>
                 <template v-if="node.children && node.children.length">
-                  <FolderOpenIcon v-if="node.expanded" class="w-5 h-5 text-yellow-400"/>
-                  <FolderIcon v-else class="w-5 h-5 text-yellow-400"/>
+                  <FolderOpenIcon v-if="node.expanded" class="w-6 h-6 text-yellow-400"/>
+                  <FolderIcon v-else class="w-6 h-6 text-yellow-400"/>
                 </template>
                 <template v-else>
                   <div :class="['nb-icons', node.iconClass]" @dragstart="startDrag($event, node)" draggable="true"></div>
