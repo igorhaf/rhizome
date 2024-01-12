@@ -306,6 +306,28 @@ export default {
             return;
           }
 
+            if (sourceType === 'stop') {
+                this.graph.getModel().beginUpdate();
+                try {
+                    EventBus.emit('errorOccurred', 'O "stop" não pode ser fonte de uma conexão.');
+                    target.removeEdge(edge, true);
+                } finally {
+                    this.graph.getModel().endUpdate();
+                }
+                return;
+            }
+
+            if (sourceType === 'exception') {
+                this.graph.getModel().beginUpdate();
+                try {
+                    EventBus.emit('errorOccurred', 'O "exception" não pode ser fonte de uma conexão.');
+                    target.removeEdge(edge, true);
+                } finally {
+                    this.graph.getModel().endUpdate();
+                }
+                return;
+            }
+
 
           // Verifica se já existe uma aresta na direção oposta
           let existingConnections = this.graph.getModel().getEdgesBetween(target, source);
