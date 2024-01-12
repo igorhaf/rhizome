@@ -64,8 +64,8 @@ export default {
             logic: [
                 {
                     id: 1,
-                    name: "Basic Components",
-                    expanded: false,
+                    name: "Core",
+                    expanded: true,
                     children: [
                         {
                             id: 2,
