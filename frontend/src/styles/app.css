@@ -119,7 +119,8 @@
 
 .play{
     background-image: url('../assets/images/icons/play.svg');
-    width: 26px;
+    width: 30px;
+    left:2px;
 }
 
 .config{
