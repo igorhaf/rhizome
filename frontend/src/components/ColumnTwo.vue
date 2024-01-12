@@ -2,7 +2,8 @@
     <div class="bg-white p ">
         <TabsComponent :tabs="tabs" :activeTab="activeTab" @tabAdded="handleTabAdded" @tabChanged="handleTabChange" />
 <!--        <javascript-editor />
-        <sql-editor />-->
+        <sql-editor />
+        <bash-editor></bash-editor>-->
         <MxGraphComponent
             v-for="(tab, index) in tabs"
             :key="tab.id"
@@ -18,6 +19,7 @@ import JavascriptEditor from "@/components/JavascriptEditor.vue";
 import TabsComponent from "./TabsComponent.vue";
 import { EventBus } from '../EventBus.js';
 import SqlEditor from "@/components/SqlEditor.vue";
+import BashEditor from "@/components/BashEditor.vue";
 
 export default {
     data() {
@@ -54,6 +56,7 @@ export default {
         }
     },
     components: {
+        BashEditor,
         MxGraphComponent,
         TabsComponent,
         JavascriptEditor,
