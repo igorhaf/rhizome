@@ -1,8 +1,8 @@
 <template>
     <div class="bg-white p ">
         <TabsComponent :tabs="tabs" :activeTab="activeTab" @tabAdded="handleTabAdded" @tabChanged="handleTabChange" />
-        <javascript-editor />
-        <sql-editor />
+<!--        <javascript-editor />
+        <sql-editor />-->
         <MxGraphComponent
             v-for="(tab, index) in tabs"
             :key="tab.id"

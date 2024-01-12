@@ -53,8 +53,8 @@
     background-image: url('../assets/images/icons/exception.svg');
 }
 
-.database{
-    background-image: url('../assets/images/icons/database.svg');
+.query{
+    background-image: url('../assets/images/icons/query.svg');
 }
 
 .gmail-receive{
@@ -88,6 +88,8 @@
 .javascript{
     background-image: url('../assets/images/icons/javascript.svg');
 }
+
+
 
 .qm-icons{
     width: 32px;
@@ -125,3 +127,7 @@
     width: 26px;
 }
 
+.database{
+    background-image: url('../assets/images/icons/database.svg');
+    width: 26px;
+}

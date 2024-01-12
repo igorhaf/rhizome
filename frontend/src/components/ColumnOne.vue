@@ -135,9 +135,9 @@ export default {
                         },
                         {
                             id: 13,
-                            name: "Database",
-                            type: "database",
-                            iconClass: "database"
+                            name: "Query",
+                            type: "query",
+                            iconClass: "query"
 
                         },
                         {
