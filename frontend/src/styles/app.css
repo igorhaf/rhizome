@@ -131,3 +131,16 @@
     background-image: url('../assets/images/icons/database.svg');
     width: 24px;
 }
+
+
+.logo{
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-left: 8px;
+    margin-bottom: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #e5e7eb;
+    background-image: url('../assets/images/icons/logo.svg');
+}
