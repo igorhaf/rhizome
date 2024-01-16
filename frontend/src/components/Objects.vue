@@ -14,8 +14,8 @@
                     <DocumentIcon class="w-5 h-5"/>
                 </span>
                 <span class="text">
-                {{ node.name }}
-                    </span>
+                    {{ node.name }}
+                </span>
             </div>
             <tree-view v-if="node.expanded && node.children" :tree-data="node.children" />
         </li>
