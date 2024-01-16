@@ -10,7 +10,6 @@
                 :globalSearch="true"
                 theme="nocturnal"
                 :sort-options="{ enabled: true, initialSortBy: { field: 'name', type: 'asc' }}"
-
             >
                 <template v-slot:table-row="props">
                   <span v-if="props.column.field === 'age'" class="table-database">

@@ -21,7 +21,7 @@
 
 <script>
 import {DocumentIcon, FolderIcon, FolderOpenIcon} from "@heroicons/vue/solid";
-import {EventBus} from "../EventBus";
+import {EventBus} from "@/EventBus";
 export default {
     props: ['tabs', 'activeTab'],
 
