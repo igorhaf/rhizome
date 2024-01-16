@@ -125,20 +125,21 @@ export default {
 }
 
 .add-tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px; /* Adjusted to match your design */
-  height: 24px; /* Adjusted to match your design */
-  font-size: 20px; /* Adjusted to match your design */
-  color: white; /* Text color */
-  background: #373C49; /* Color of your add button */
-  border-radius: 50%; /* To make it round */
-  cursor: pointer;
-  margin: 5px 10px 5px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; /* Adjusted to match your design */
+    height: 24px; /* Adjusted to match your design */
+    font-size: 20px; /* Adjusted to match your design */
+    color: white; /* Text color */
+    background: #373C49; /* Color of your add button */
+    border-radius: 50%; /* To make it round */
+    cursor: pointer;
+    margin: 5px 10px 5px 5px;
 }
 
 .add-tab:hover {
-  background: #6DA0FE;
+    background: #6DA0FE;
 }
+
 </style>
