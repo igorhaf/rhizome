@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { EventBus } from '../EventBus.js';
+import { EventBus } from '@/EventBus';
 import mxgraph from "mxgraph";
 import api from '../services/api';
 var parseString = require('xml2js').parseString;
@@ -93,20 +93,6 @@ export default {
             }
         },
 
-        /*async loadGraphFromDatabase() {
-            try {
-                const response = await api.get('/get-latest-diagram');
-                //console.log(response.data);
-                if (response && response.data) {
-                    let doc = mxUtils.parseXml(response.data);
-                    let codec = new mxCodec(doc);
-                    codec.decode(doc.documentElement, this.graph.getModel());
-                }
-            } catch (error) {
-                //console.error('Erro ao carregar o diagrama:', error);
-            }
-        },*/
-
         async initGraph() {
             const container = this.$refs.graphContainer;
             this.graph = new mxGraph(container);
@@ -125,10 +111,7 @@ export default {
 
             // Define o estilo da aresta
             const style = this.graph.getStylesheet().getDefaultVertexStyle();
-            /*style[mxConstants.STYLE_ROUNDED] = true;
-            style[mxConstants.STYLE_STROKEWIDTH] = 2;
-            style[mxConstants.STYLE_STROKECOLOR] = '#000000';  // Define a cor da linha
-            style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;*/
+
 
             style[mxConstants.STYLE_EXIT_X] = 1.0;  // Ponto de saída no meio do vértice
             style[mxConstants.STYLE_EXIT_Y] = 0.5;  // Ponto de saída na parte inferior do vértice
@@ -152,11 +135,6 @@ export default {
             this.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
             this.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
             this.graph.setCellsResizable(false);
-
-            //const edgeStyle = this.graph.getStylesheet().getDefaultEdgeStyle();
-            //edgeStyle[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation; // Exemplo de estilo de aresta
-            //edgeStyle[mxConstants.STYLE_CURVED] = 1; // Curva as arestas
-            //this.graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
 
             mxEvent.addListener(container, 'drop', (evt) => {
                 const x = mxEvent.getClientX(evt);
@@ -246,7 +224,6 @@ export default {
         addClickEventListener() {
             this.graph.addListener(mxEvent.CLICK, (sender, evt) => {
                 const cell = evt.getProperty('cell');
-                //console.log(cell.style);
                 if (cell && cell.value) {
                     let regex = /shape=image;image=\/img\/([^.]+)\..*\.svg/;
                     let nodeType = cell.style.match(regex);
