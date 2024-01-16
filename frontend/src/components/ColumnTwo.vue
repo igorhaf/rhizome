@@ -1,7 +1,8 @@
 <template>
     <div class="bg-white p ">
         <TabsComponent :tabs="tabs" :activeTab="activeTab" @tabAdded="handleTabAdded" @tabChanged="handleTabChange" />
-<!--        <javascript-editor />
+<!--        <database />
+        <javascript-editor />
         <sql-editor />
         <bash-editor></bash-editor>-->
         <MxGraphComponent
@@ -20,6 +21,7 @@ import TabsComponent from "./TabsComponent.vue";
 import { EventBus } from '../EventBus.js';
 import SqlEditor from "@/components/SqlEditor.vue";
 import BashEditor from "@/components/BashEditor.vue";
+import Database from "@/components/Database.vue";
 
 export default {
     data() {
@@ -56,6 +58,7 @@ export default {
         }
     },
     components: {
+        Database,
         BashEditor,
         MxGraphComponent,
         TabsComponent,

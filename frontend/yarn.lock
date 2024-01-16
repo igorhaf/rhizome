@@ -2660,7 +2660,7 @@ csstype@^3.1.3:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
-date-fns@^2.17.0:
+date-fns@^2.25.0:
   version "2.30.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
@@ -5766,12 +5766,12 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-vue-good-table@^2.21.11:
-  version "2.21.11"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.11.tgz#0d92a36f4119bc91825009780c09df38d27b5a4b"
-  integrity sha512-OpVPdxbBTahtfq1aXxEa5P1CMy1wiLcBg4mo7k6Qs537l9v8KVrvF+fXqbnxqNrAfmd1Mw9LidcjgTErjmVU8g==
+vue-good-table-next@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-good-table-next/-/vue-good-table-next-0.2.1.tgz#af0815d0ee5b179fa1f73e4408022250cba952d1"
+  integrity sha512-Zri8pQtUdb698FA+KSSOW4rxLthuJw8QUdWDdmArUPyxjVFH0wpXbK32r9RgPkHFMMPVUSsqchCqE2wE1tI0qg==
   dependencies:
-    date-fns "^2.17.0"
+    date-fns "^2.25.0"
     lodash.isequal "^4.5.0"
 
 vue-hot-reload-api@^2.3.0:
