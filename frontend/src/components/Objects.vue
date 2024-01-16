@@ -21,7 +21,7 @@
 
 <script>
 import { FolderIcon, FolderOpenIcon, DocumentIcon } from '@heroicons/vue/solid';
-import { EventBus } from '../EventBus.js';
+import { EventBus } from '@/EventBus';
 export default {
     data() {
         return {
