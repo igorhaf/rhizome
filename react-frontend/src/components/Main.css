@@ -1,0 +1,12 @@
+.split-container {
+    display: flex;
+    width: 100%;
+}
+
+.split-pane {
+    min-width: 0;
+}
+
+.gutter {
+    cursor: col-resize !important;
+}

@@ -1,0 +1,160 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.nb-icons{
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    margin-right: 4px;
+    background-repeat: no-repeat;
+}
+
+.nb-icon-label{
+    position: relative;
+    top: 32px;
+}
+
+.if{
+    background-image: url('../assets/images/icons/if.svg');
+}
+
+.schedule{
+
+    background-image: url('../assets/images/icons/schedule.svg');
+
+}
+
+.sleep{
+    background-image: url('../assets/images/icons/sleep.svg');
+}
+
+.start{
+    background-image: url('../assets/images/icons/start.svg');
+}
+
+.starttime{
+    background-image: url('../assets/images/icons/starttime.svg');
+}
+
+.stop{
+    background-image: url('../assets/images/icons/stop.svg');
+}
+
+.switch{
+    background-image: url('../assets/images/icons/switch.svg');
+}
+
+.webhook{
+    background-image: url('../assets/images/icons/webhook.svg');
+}
+
+.exception{
+    background-image: url('../assets/images/icons/exception.svg');
+}
+
+.query{
+    background-image: url('../assets/images/icons/query.svg');
+}
+
+.gmail-receive{
+    background-image: url('../assets/images/icons/gmail-receive.svg');
+}
+
+.gmail-send{
+    background-image: url('../assets/images/icons/gmail-send.svg');
+}
+
+.trello-add-card{
+    background-image: url('../assets/images/icons/trello-add-card.svg');
+}
+
+.trello-remove-card{
+    background-image: url('../assets/images/icons/trello-remove-card.svg');
+}
+
+.link{
+    background-image: url('../assets/images/icons/link.svg');
+}
+
+.api{
+    background-image: url('../assets/images/icons/api.svg');
+}
+
+.bash{
+    background-image: url('../assets/images/icons/bash.svg');
+}
+
+.javascript{
+    background-image: url('../assets/images/icons/javascript.svg');
+}
+
+
+
+.qm-icons{
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #e5e7eb;
+
+}
+
+.components{
+    background-image: url('../assets/images/icons/components.svg');
+    width: 28px;
+}
+
+.frames{
+    background-image: url('../assets/images/icons/frames.svg');
+    width: 25px;
+}
+
+.integrations{
+    background-image: url('../assets/images/icons/integrations.svg');
+    width: 26px;
+}
+
+.play{
+    background-image: url('../assets/images/icons/play.svg');
+    width: 26px;
+}
+
+.config{
+    background-image: url('../assets/images/icons/config.svg');
+    width: 26px;
+}
+
+.database{
+    background-image: url('../assets/images/icons/database.svg');
+    width: 24px;
+}
+
+
+.logo{
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-left: 8px;
+    margin-bottom: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #e5e7eb;
+    background-image: url('../assets/images/icons/logo.svg');
+}
+

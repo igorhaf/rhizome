@@ -8,6 +8,7 @@ app.use(cors());
 const { Sequelize } = require('sequelize');
 const config = require('./config/config.json');
 
+
 const userRoutes = require('./routes/api');
 app.use('/api', userRoutes);
 app.get('/', (req, res) => res.send('Olá, Mundo!'));

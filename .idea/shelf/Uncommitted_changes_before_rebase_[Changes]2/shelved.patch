@@ -1,0 +1,277 @@
+Index: resources/js/components/MxGraphComponent.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/js/components/MxGraphComponent.vue b/resources/js/components/MxGraphComponent.vue
+deleted file mode 100644
+--- a/resources/js/components/MxGraphComponent.vue	(revision e9e476273336cf11111e6c6c7fcf059d1d5e2a43)
++++ /dev/null	(revision e9e476273336cf11111e6c6c7fcf059d1d5e2a43)
+@@ -1,158 +0,0 @@
+-<template>
+-    <div ref="graphContainer"
+-         class="graph-container"
+-         @drop="drop"
+-         @dragover.prevent>
+-    </div>
+-</template>
+-
+-<script>
+-import { EventBus } from '../EventBus.js';
+-import mxgraph from "mxgraph";
+-import api from '../services/api';
+-var parseString = require('xml2js').parseString;
+-
+-const {
+-    mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec, mxGeometry, mxPoint, mxEdgeStyle
+-} = mxgraph();
+-
+-export default {
+-    name: "MxGraphComponent",
+-    props: {
+-        graphContent: {
+-            type: Object,
+-            default: null
+-        }
+-    },
+-    data() {
+-        return {
+-            graph: null,
+-        };
+-    },
+-    mounted() {
+-        this.$nextTick(() => {
+-            if (!mxClient.isBrowserSupported()) {
+-                mxUtils.error("Browser não suportado!", 200, false);
+-                return;
+-            }
+-            this.initGraph();
+-            this.addEventListeners();
+-            this.graph.getModel().addListener(mxEvent.CHANGE, this.sendGraphDataToAPI);
+-            window.addEventListener('resize', this.handleResize);
+-            this.graph.refresh();
+-        });
+-    },
+-    beforeDestroy() {
+-        if (this.graph) {
+-            this.graph.destroy();
+-        }
+-        window.removeEventListener('resize', this.handleResize);
+-    },
+-    methods: {
+-        created() {
+-            EventBus.on('tabClosed', (tabIndex) => {
+-                if (this.graph[tabIndex]) {
+-                    this.graph[tabIndex].destroy();
+-                }
+-            });
+-        },
+-        async sendGraphDataToAPI() {
+-            const encoder = new mxCodec();
+-            const result = encoder.encode(this.graph.getModel());
+-            const xml = mxUtils.getXml(result);
+-
+-            EventBus.emit('graphDataUpdated', xml);
+-
+-            try {
+-                await api.post('/graph-data', { data: xml });
+-            } catch (error) {
+-                console.error('Erro ao enviar os dados para a API:', error);
+-            }
+-        },
+-        async initGraph() {
+-            const container = this.$refs.graphContainer;
+-            this.graph = new mxGraph(container);
+-            // Configurações adicionais do mxGraph...
+-            this.configureStyles();
+-            this.configureGraph();
+-            this.loadGraphFromAPI();
+-            new mxRubberband(this.graph);
+-            new mxKeyHandler(this.graph);
+-        },
+-        configureStyles() {
+-            let style = this.graph.getStylesheet().getDefaultVertexStyle();
+-            style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+-            style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
+-            style[mxConstants.STYLE_SPACING_BOTTOM] = 32;
+-            this.graph.getStylesheet().putDefaultVertexStyle(style);
+-        },
+-        configureGraph() {
+-            this.graph.setCellsEditable(true);
+-            this.graph.setConnectable(true);
+-            this.graph.setMultigraph(false);
+-            this.graph.setAllowDanglingEdges(false);
+-            this.graph.setPanning(true);
+-            this.graph.panningHandler.useLeftButtonForPanning = true;
+-            this.graph.panningHandler.border = 0;
+-            this.graph.gridSize = 10;
+-            this.graph.scrollbars = false;
+-            this.graph.pageVisible = false;
+-            this.graph.setEnabled(true);
+-            this.graph.setCellsDeletable(true);
+-            this.graph.setCellsResizable(false);
+-            this.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
+-            this.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
+-        },
+-        async loadGraphFromAPI() {
+-            try {
+-                const response = await api.get('/get-latest-diagram');
+-                parseString(response.data, (err, result) => {
+-                    this.graph.getModel().beginUpdate();
+-                    try {
+-                        // Processa e adiciona células ao gráfico...
+-                    } finally {
+-                        this.graph.getModel().endUpdate();
+-                    }
+-                });
+-            } catch (error) {
+-                console.error('Erro ao carregar o diagrama:', error);
+-            }
+-        },
+-        handleResize() {
+-            if (this.graph && this.$refs.graphContainer) {
+-                const container = this.$refs.graphContainer;
+-                const width = container.offsetWidth;
+-                const height = container.offsetHeight;
+-
+-                this.graph.container.style.width = width + 'px';
+-                this.graph.container.style.height = height + 'px';
+-
+-                // Informa ao mxGraph sobre a mudança de tamanho
+-                this.graph.view.updateViewSize();
+-                this.graph.view.setTranslate(0, 0);
+-                this.graph.sizeDidChange();
+-            }
+-        },
+-        // Outros métodos...
+-        drop(evt, x, y) {
+-            // Implementação de drop...
+-        },
+-    }
+-}
+-</script>
+-
+-<style>
+-.graph-container {
+-    background-size: 15px 15px;
+-    background-image:
+-        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),
+-        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);
+-    flex: 1;
+-    overflow: hidden;
+-    height: 100%;
+-}
+-
+-.mxGraph {
+-    height: 100%;
+-}
+-</style>
+Index: public/js/app.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/public/js/app.js b/public/js/app.js
+--- a/public/js/app.js	(revision e9e476273336cf11111e6c6c7fcf059d1d5e2a43)
++++ b/public/js/app.js	(date 1703473438218)
+@@ -20156,6 +20156,9 @@
+ /* harmony import */ var mxgraph__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(mxgraph__WEBPACK_IMPORTED_MODULE_1__);
+ /* harmony import */ var _services_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/api */ "./resources/js/services/api.js");
+ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
++function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
++function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
++function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+ function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+ function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+@@ -20208,7 +20211,7 @@
+     }
+     window.removeEventListener('resize', this.handleResize);
+   },
+-  methods: {
++  methods: _defineProperty({
+     created: function created() {
+       var _this2 = this;
+       _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.on('tabClosed', function (tabIndex) {
+@@ -20326,6 +20329,27 @@
+         }, _callee3, null, [[0, 7]]);
+       }))();
+     },
++    drop: function drop(evt, x, y) {
++      var data = evt.dataTransfer.getData('nodeData');
++      var shapeType = JSON.parse(data).iconClass;
++      var vertexName = JSON.parse(data).name;
++      var parent = this.graph.getDefaultParent();
++      var style = this.graph.getStylesheet().getDefaultVertexStyle();
++      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
++      style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
++      style[mxConstants.STYLE_SPACING_BOTTOM] = 32;
++      this.graph.getStylesheet().putDefaultVertexStyle(style);
++      this.graph.getModel().beginUpdate();
++      try {
++        var iconURL = this.getIconURLFromClassName(shapeType);
++        if (x !== undefined || y !== undefined) {
++          this.graph.setHtmlLabels(true);
++          this.graph.insertVertex(parent, null, vertexName, x - 24, y - 24, 48, 48, "shape=image;image=".concat(iconURL));
++        }
++      } finally {
++        this.graph.getModel().endUpdate();
++      }
++    },
+     handleResize: function handleResize() {
+       if (this.graph && this.$refs.graphContainer) {
+         var container = this.$refs.graphContainer;
+@@ -20339,12 +20363,10 @@
+         this.graph.view.setTranslate(0, 0);
+         this.graph.sizeDidChange();
+       }
+-    },
+-    // Outros métodos...
+-    drop: function drop(evt, x, y) {
+-      // Implementação de drop...
+-    }
+-  }
++    }
++  }, "drop", function drop(evt, x, y) {
++    // Implementação de drop...
++  })
+ });
+ 
+ /***/ }),
+@@ -23357,7 +23379,7 @@
+ 
+ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+ // Module
+-___CSS_LOADER_EXPORT___.push([module.id, "\n.split-container {\n    display: flex;\n    width: 100%; /* Garante que o container ocupe toda a largura */\n}\n\n.split-pane {\n    /* Removido flex: 1 para permitir controle mais preciso com Split.js */\n    min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */\n}\n\n.gutter {\n    cursor: col-resize !important;\n}\n", ""]);
++___CSS_LOADER_EXPORT___.push([module.id, "\r\n.split-container {\r\n    display: flex;\r\n    width: 100%; /* Garante que o container ocupe toda a largura */\r\n}\r\n\r\n.split-pane {\r\n    /* Removido flex: 1 para permitir controle mais preciso com Split.js */\r\n    min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */\r\n}\r\n\r\n.gutter {\r\n    cursor: col-resize !important;\r\n}\r\n", ""]);
+ // Exports
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+ 
+@@ -23405,7 +23427,7 @@
+ 
+ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+ // Module
+-___CSS_LOADER_EXPORT___.push([module.id, "\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n}\n\n.mxGraph {\n    height: 100%;\n}\n", ""]);
++___CSS_LOADER_EXPORT___.push([module.id, "\r\n.graph-container {\r\n    background-size: 15px 15px;\r\n    background-image:\r\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\r\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\r\n    flex: 1;\r\n    overflow: hidden;\r\n    height: 100%;\r\n}\r\n\r\n.mxGraph {\r\n    height: 100%;\r\n}\r\n", ""]);
+ // Exports
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+ 
+Index: public/mix-manifest.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n    \"/js/app.js\": \"/js/app.js?id=7e72a6ca27c75813a67b0b9ae08b687f\",\r\n    \"/css/app.css\": \"/css/app.css?id=cdd8594b9c37196289d78b3024171c77\",\r\n    \"/images/api.svg\": \"/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847\",\r\n    \"/images/database.svg\": \"/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190\",\r\n    \"/images/exception.svg\": \"/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe\",\r\n    \"/images/gmail-receive.svg\": \"/images/gmail-receive.svg?id=8ad119a8beb4bae9d72de7c90c7bd3f9\",\r\n    \"/images/gmail-send.svg\": \"/images/gmail-send.svg?id=ad0e4a4259219041c209bdb99740dccd\",\r\n    \"/images/icons/api.svg\": \"/images/icons/api.svg?id=5303cdf3a5f6826d094adabac9ed3847\",\r\n    \"/images/icons/database.svg\": \"/images/icons/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190\",\r\n    \"/images/icons/exception.svg\": \"/images/icons/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe\",\r\n    \"/images/icons/gmail-receive.svg\": \"/images/icons/gmail-receive.svg?id=8ad119a8beb4bae9d72de7c90c7bd3f9\",\r\n    \"/images/icons/gmail-send.svg\": \"/images/icons/gmail-send.svg?id=ad0e4a4259219041c209bdb99740dccd\",\r\n    \"/images/icons/if.svg\": \"/images/icons/if.svg?id=05f169bb9a47542e6306163f992f9138\",\r\n    \"/images/icons/link.svg\": \"/images/icons/link.svg?id=f4593a44b5b57956131dd2d5ce3b0906\",\r\n    \"/images/icons/schedule.svg\": \"/images/icons/schedule.svg?id=bc5201e816a7429ffd99245a402f2931\",\r\n    \"/images/icons/sleep.svg\": \"/images/icons/sleep.svg?id=b361d48ab929e2cb3c25a6423ac991df\",\r\n    \"/images/icons/start-time.svg\": \"/images/icons/start-time.svg?id=b23b13e544cdce36f697868cb10e1a84\",\r\n    \"/images/icons/start.svg\": \"/images/icons/start.svg?id=f9846cb6df827feb4b776b34ce0fe0bd\",\r\n    \"/images/icons/stop.svg\": \"/images/icons/stop.svg?id=e188f7d823bc150a871603f67df702ae\",\r\n    \"/images/icons/switch.svg\": \"/images/icons/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd\",\r\n    \"/images/icons/trello-add-card.svg\": \"/images/icons/trello-add-card.svg?id=4312b3d246a50fa3cc0d7c9b08607911\",\r\n    \"/images/icons/trello-remove-card.svg\": \"/images/icons/trello-remove-card.svg?id=86a89a76b621c33c2de3d5096ce8ab6c\",\r\n    \"/images/icons/webhook.svg\": \"/images/icons/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671\",\r\n    \"/images/if.svg\": \"/images/if.svg?id=05f169bb9a47542e6306163f992f9138\",\r\n    \"/images/link.svg\": \"/images/link.svg?id=f4593a44b5b57956131dd2d5ce3b0906\",\r\n    \"/images/schedule.svg\": \"/images/schedule.svg?id=bc5201e816a7429ffd99245a402f2931\",\r\n    \"/images/sleep.svg\": \"/images/sleep.svg?id=b361d48ab929e2cb3c25a6423ac991df\",\r\n    \"/images/start-time.svg\": \"/images/start-time.svg?id=b23b13e544cdce36f697868cb10e1a84\",\r\n    \"/images/start.svg\": \"/images/start.svg?id=f9846cb6df827feb4b776b34ce0fe0bd\",\r\n    \"/images/stop.svg\": \"/images/stop.svg?id=e188f7d823bc150a871603f67df702ae\",\r\n    \"/images/switch.svg\": \"/images/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd\",\r\n    \"/images/trello-add-card.svg\": \"/images/trello-add-card.svg?id=4312b3d246a50fa3cc0d7c9b08607911\",\r\n    \"/images/trello-remove-card.svg\": \"/images/trello-remove-card.svg?id=86a89a76b621c33c2de3d5096ce8ab6c\",\r\n    \"/images/webhook.svg\": \"/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/public/mix-manifest.json b/public/mix-manifest.json
+--- a/public/mix-manifest.json	(revision e9e476273336cf11111e6c6c7fcf059d1d5e2a43)
++++ b/public/mix-manifest.json	(date 1703473438828)
+@@ -1,6 +1,6 @@
+ {
+-    "/js/app.js": "/js/app.js?id=7e72a6ca27c75813a67b0b9ae08b687f",
+-    "/css/app.css": "/css/app.css?id=cdd8594b9c37196289d78b3024171c77",
++    "/js/app.js": "/js/app.js?id=37375ddaee074c2483f2de511b37dd06",
++    "/css/app.css": "/css/app.css?id=45457da9ca838b0c504af1ba0440524c",
+     "/images/api.svg": "/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
+     "/images/database.svg": "/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190",
+     "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
