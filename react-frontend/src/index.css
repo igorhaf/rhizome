@@ -11,6 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,77 +30,77 @@ code {
 }
 
 .if{
-    background-image: url('../assets/images/icons/if.svg');
+    background-image: url('./assets/images/icons/if.svg');
 }
 
 .schedule{
 
-    background-image: url('../assets/images/icons/schedule.svg');
+    background-image: url('./assets/images/icons/schedule.svg');
 
 }
 
 .sleep{
-    background-image: url('../assets/images/icons/sleep.svg');
+    background-image: url('./assets/images/icons/sleep.svg');
 }
 
 .start{
-    background-image: url('../assets/images/icons/start.svg');
+    background-image: url('./assets/images/icons/start.svg');
 }
 
 .starttime{
-    background-image: url('../assets/images/icons/starttime.svg');
+    background-image: url('./assets/images/icons/starttime.svg');
 }
 
 .stop{
-    background-image: url('../assets/images/icons/stop.svg');
+    background-image: url('./assets/images/icons/stop.svg');
 }
 
 .switch{
-    background-image: url('../assets/images/icons/switch.svg');
+    background-image: url('./assets/images/icons/switch.svg');
 }
 
 .webhook{
-    background-image: url('../assets/images/icons/webhook.svg');
+    background-image: url('./assets/images/icons/webhook.svg');
 }
 
 .exception{
-    background-image: url('../assets/images/icons/exception.svg');
+    background-image: url('./assets/images/icons/exception.svg');
 }
 
 .query{
-    background-image: url('../assets/images/icons/query.svg');
+    background-image: url('./assets/images/icons/query.svg');
 }
 
 .gmail-receive{
-    background-image: url('../assets/images/icons/gmail-receive.svg');
+    background-image: url('./assets/images/icons/gmail-receive.svg');
 }
 
 .gmail-send{
-    background-image: url('../assets/images/icons/gmail-send.svg');
+    background-image: url('./assets/images/icons/gmail-send.svg');
 }
 
 .trello-add-card{
-    background-image: url('../assets/images/icons/trello-add-card.svg');
+    background-image: url('./assets/images/icons/trello-add-card.svg');
 }
 
 .trello-remove-card{
-    background-image: url('../assets/images/icons/trello-remove-card.svg');
+    background-image: url('./assets/images/icons/trello-remove-card.svg');
 }
 
 .link{
-    background-image: url('../assets/images/icons/link.svg');
+    background-image: url('./assets/images/icons/link.svg');
 }
 
 .api{
-    background-image: url('../assets/images/icons/api.svg');
+    background-image: url('./assets/images/icons/api.svg');
 }
 
 .bash{
-    background-image: url('../assets/images/icons/bash.svg');
+    background-image: url('./assets/images/icons/bash.svg');
 }
 
 .javascript{
-    background-image: url('../assets/images/icons/javascript.svg');
+    background-image: url('./assets/images/icons/javascript.svg');
 }
 
 
@@ -116,32 +117,32 @@ code {
 }
 
 .components{
-    background-image: url('../assets/images/icons/components.svg');
+    background-image: url('./assets/images/icons/components.svg');
     width: 28px;
 }
 
 .frames{
-    background-image: url('../assets/images/icons/frames.svg');
+    background-image: url('./assets/images/icons/frames.svg');
     width: 25px;
 }
 
 .integrations{
-    background-image: url('../assets/images/icons/integrations.svg');
+    background-image: url('./assets/images/icons/integrations.svg');
     width: 26px;
 }
 
 .play{
-    background-image: url('../assets/images/icons/play.svg');
+    background-image: url('./assets/images/icons/play.svg');
     width: 26px;
 }
 
 .config{
-    background-image: url('../assets/images/icons/config.svg');
+    background-image: url('./assets/images/icons/config.svg');
     width: 26px;
 }
 
 .database{
-    background-image: url('../assets/images/icons/database.svg');
+    background-image: url('./assets/images/icons/database.svg');
     width: 24px;
 }
 
@@ -155,6 +156,6 @@ code {
     background-repeat: no-repeat;
     background-position: center;
     color: #e5e7eb;
-    background-image: url('../assets/images/icons/logo.svg');
+    background-image: url('./assets/images/icons/logo.svg');
 }
 

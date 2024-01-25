@@ -1,38 +1,13 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.split-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 100%; /* Garante que o container ocupe toda a largura */
 }
 
-.App-link {
-  color: #61dafb;
+.split-pane {
+  /* Removido flex: 1 para permitir controle mais preciso com Split.js */
+  min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.gutter {
+  cursor: col-resize !important;
 }
