@@ -1,6 +1,24 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mxgraph from 'mxgraph';
 import './MxGraphComponent.css';
+import ifIcon from './assets/images/icons/if.svg';
+import scheduleIcon from './assets/images/icons/schedule.svg';
+import sleepIcon from './assets/images/icons/sleep.svg';
+import startIcon from './assets/images/icons/start.svg';
+import starttimeIcon from './assets/images/icons/starttime.svg';
+import stopIcon from './assets/images/icons/stop.svg';
+import switchIcon from './assets/images/icons/switch.svg';
+import webhookIcon from './assets/images/icons/webhook.svg';
+import exceptionIcon from './assets/images/icons/exception.svg';
+import queryIcon from './assets/images/icons/query.svg';
+import gmailReceiveIcon from './assets/images/icons/gmail-receive.svg';
+import gmailSendIcon from './assets/images/icons/gmail-send.svg';
+import trelloAddCardIcon from './assets/images/icons/trello-add-card.svg';
+import trelloRemoveCardIcon from './assets/images/icons/trello-remove-card.svg';
+import linkIcon from './assets/images/icons/link.svg';
+import apiIcon from './assets/images/icons/api.svg';
+import bashIcon from './assets/images/icons/bash.svg';
+import javascriptIcon from './assets/images/icons/javascript.svg';
 
 const {
   mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec
@@ -12,8 +30,26 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
 
   const getIconURLFromClassName = (className) => {
     const icons = {
-      'if': '/path/to/ifIcon.svg',
-      'schedule': '/path/to/scheduleIcon.svg',
+      'start': startIcon,
+      'if': ifIcon,
+      'schedule': scheduleIcon,
+      'sleep': sleepIcon,
+      'start': startIcon,
+      'starttime': starttimeIcon,
+      'stop': stopIcon,
+      'switch': switchIcon,
+      'webhook': webhookIcon,
+      'exception': exceptionIcon,
+      'query': queryIcon,
+      'gmail-receive': gmailReceiveIcon,
+      'gmail-send': gmailSendIcon,
+      'trello-add-card': trelloAddCardIcon,
+      'trello-remove-card': trelloRemoveCardIcon,
+      'link': linkIcon,
+      'api': apiIcon,
+      'javascript': javascriptIcon,
+      'bash': bashIcon,
+      //'schedule': '/path/to/scheduleIcon.svg',
       // ...outros ícones
     };
     return icons[className] || '';
@@ -73,6 +109,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     graph.getModel().beginUpdate();
     try {
       const iconURL = getIconURLFromClassName(iconClass);
+      console.log(iconClass);
       const x = event.clientX - graph.container.getBoundingClientRect().left;
       const y = event.clientY - graph.container.getBoundingClientRect().top;
       graph.insertVertex(parent, null, name, x, y, 48, 48, `shape=image;image=${iconURL}`);
@@ -241,11 +278,9 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
   };
   const followsStartFlow = (vertex, graph) => {
     if (!vertex) return false;
-    console.log(graph)
     // Verifica se o vértice é do tipo 'start' através do seu estilo
     const style = vertex.getStyle();
     const regex = /shape=image;image=\/img\/start\.[^.]+\.svg/;
-    console.log(regex.test(style));
     if (style && regex.test(style)) {
       return true; // O vértice atual é 'start'
     }
@@ -284,9 +319,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
   }, [graphContainer, onNodeSelected, onNodeType]); // As dependências corretas devem ser listadas aqui
 
   return (
-    <div ref={graphContainer} className="graph-container" onDrop={drop} onDragOver={(e) => e.preventDefault()}>
-      {/* Conteúdo do gráfico */}
-    </div>
+    <div ref={graphContainer} className="graph-container" onDrop={drop} onDragOver={(e) => e.preventDefault()}></div>
   );
 };
 
