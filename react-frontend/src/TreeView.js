@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // Importe seus ícones do pacote react-icons ou onde eles estiverem disponíveis.
 // Suponha que você tenha ícones equivalentes em React.
-// import { FolderOpenIcon, FolderIcon, DocumentIcon } from 'some-icon-pack';
+import { FolderOpenIcon, FolderIcon, DocumentIcon } from '@heroicons/react/solid';
 
 const TreeView = ({ treeData }) => {
   // Criação de um novo estado para armazenar os dados da árvore com a propriedade 'expanded'
@@ -31,16 +31,16 @@ const TreeView = ({ treeData }) => {
               {node.children && node.children.length ? (
                 node.expanded ? (
                   // Substitua pelos ícones de pasta aberta e fechada do seu pacote de ícones
-                  // <FolderOpenIcon className="w-6 h-6 text-yellow-400" />
-                  <span>[Pasta Aberta]</span>
+                  <FolderOpenIcon className="w-6 h-6 text-yellow-400" />
                 ) : (
-                  // <FolderIcon className="w-6 h-6 text-yellow-400" />
-                  <span>[Pasta Fechada]</span>
+                  <FolderIcon className="w-6 h-6 text-yellow-400" />
                 )
               ) : (
-                // Aqui, você renderizaria o ícone do documento ou outro ícone baseado na classe
-                // <DocumentIcon className="w-6 h-6 text-yellow-400" />
-                <div className={node.iconClass} draggable="true" onDragStart={(e) => startDrag(e, node)}>[Ícone]</div>
+                node.iconClass ? (
+                  <div className={`${node.iconClass} nb-icons`} draggable="true" onDragStart={(e) => startDrag(e, node)}></div>
+                ) : (
+                  <DocumentIcon className="w-6 h-6 text-yellow-400" />
+                )
               )}
             </span>
             <span className="text">
