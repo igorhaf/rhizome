@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import mxgraph from 'mxgraph';
+import './MxGraphComponent.css';
 //import api from '../services/api'; // Ajuste conforme sua implementação de API
-import parseString from 'xml2js'; // Certifique-se de que xml2js está instalado
+//import parseString from 'xml2js'; // Certifique-se de que xml2js está instalado
 
 // Substitua pelos caminhos corretos das suas imagens
 {/*import ifIcon from '@/assets/images/icons/if.svg';*/}

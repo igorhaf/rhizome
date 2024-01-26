@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import './TabsComponent.css';
 
 const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) => {
   const [tabs, setTabs] = useState(tabsProp || []);

@@ -16,6 +16,31 @@ code {
 @tailwind components;
 @tailwind utilities;
 
+/* This styles the scrollbar track */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* This styles the scrollbar handle */
+::-webkit-scrollbar-thumb {
+    background: #4d4e51;
+}
+
+/* This styles the scrollbar handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+body {
+    scrollbar-color: #888 #e0e0e0;
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: rgb(43 45 48 / var(--tw-bg-opacity)); /* Ajuste para a cor de fundo correspondente */
+}
+
 .nb-icons{
     width: 16px;
     height: 16px;
@@ -158,4 +183,3 @@ code {
     color: #e5e7eb;
     background-image: url('./assets/images/icons/logo.svg');
 }
-

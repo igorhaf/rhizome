@@ -1,9 +1,9 @@
 // ColumnOne.jsx
 import React from 'react';
 // Importe seus componentes React equivalentes aqui
-// import TreeView from './TreeView';
+import TreeView from './TreeView';
 // import Objects from './Objects';
-// import QuickAccessBar from './QuickAccessBar';
+import QuickAccessBar from './QuickAccessBar';
 
 const ColumnOne = () => {
   // Dados fictícios para a visualização estática
@@ -159,7 +159,7 @@ const ColumnOne = () => {
     <div className="flex h-full">
       <div className="bg w-10 flex-shrink-0">
         {/* Substitua por seu componente QuickAccessBar, se aplicável */}
-        {/* <QuickAccessBar /> */}
+        <QuickAccessBar />
       </div>
       <div className="flex-1 bg flex flex-col space-y-4 overflow-auto">
         {/* Substitua "treeView" pelo estado correspondente, se necessário */}
@@ -170,7 +170,7 @@ const ColumnOne = () => {
               <div className="flex-1">
                 <div className="min-w-max">
                   {/* Substitua por seu componente TreeView, se aplicável */}
-                  {/* <TreeView treeData={logic} /> */}
+                   <TreeView treeData={logic} />
                 </div>
               </div>
             </div>
