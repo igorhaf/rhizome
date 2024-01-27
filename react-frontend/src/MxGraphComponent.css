@@ -6,8 +6,9 @@
     flex: 1;
     background-color: #1e1f22;
     overflow: hidden;
-    height: 100% !important;
+    height: auto !important;
     width: auto !important;
+    padding-bottom: 100%;
 
 }
 .graph-container .mxPlainTextEditor{

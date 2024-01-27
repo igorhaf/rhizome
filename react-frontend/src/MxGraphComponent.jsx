@@ -136,11 +136,16 @@ const MxGraphComponent = () => {
               }
             }
             // Ajuste para a posição do gráfico
-            const graphPoint = convertPoint(event.clientX, event.clientY);
+            /*const graphPoint = convertPoint(event.clientX, event.clientY);
             const x = graphPoint.x;
-            const y = graphPoint.y;
+            const y = graphPoint.y;*/
+            const x = event.clientX;
+            const y = event.clientY;
+
+            // Convertendo as coordenadas do mouse para coordenadas do gráfico
+            const point = graph.getPointForEvent(event);
             if (x !== undefined && y !== undefined) {
-              graph.insertVertex(parent, null, name, x - 24, y - 24, 48, 48, `shape=image;image=${iconURL}`);
+              graph.insertVertex(parent, null, name, point.x - 24, point.y - 24, 48, 48, `shape=image;image=${iconURL}`);
             }
         } finally {
             graph.getModel().endUpdate();
@@ -335,7 +340,7 @@ const MxGraphComponent = () => {
       mxUtils.error('Browser não suportado!', 200, false);
       return;
     }
-
+    
     const newGraph = initGraph(graphContainer.current);
     addClickEventListener(newGraph);
     addConsoleEventListener(newGraph);
