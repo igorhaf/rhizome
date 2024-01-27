@@ -48,9 +48,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
       'link': linkIcon,
       'api': apiIcon,
       'javascript': javascriptIcon,
-      'bash': bashIcon,
-      //'schedule': '/path/to/scheduleIcon.svg',
-      // ...outros ícones
+      'bash': bashIcon
     };
     return icons[className] || '';
   };
@@ -74,6 +72,10 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     style[mxConstants.STYLE_ENTRY_X] = 0;
     style[mxConstants.STYLE_ENTRY_Y] = 0.5;
     style[mxConstants.STYLE_ENTRY_PERIMETER] = 0;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+    style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
+    style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
+    style[mxConstants.STYLE_FONTCOLOR] = '#dee0e4';  // Branco
 
     newGraph.setPanning(true);
     newGraph.panningHandler.useLeftButtonForPanning = true;
@@ -95,8 +97,14 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     }
 
     new mxRubberband(newGraph);
-    new mxKeyHandler(newGraph);
-
+    const keyHandler = new mxKeyHandler(newGraph);
+    keyHandler.bindKey(46, (evt) => {
+        if (newGraph.isEnabled()) {
+          console.log(newGraph);
+          console.log(typeof newGraph.removeCells);
+        }
+    });
+    
     return newGraph;
   };
 
@@ -109,7 +117,6 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     graph.getModel().beginUpdate();
     try {
       const iconURL = getIconURLFromClassName(iconClass);
-      console.log(iconClass);
       const x = event.clientX - graph.container.getBoundingClientRect().left;
       const y = event.clientY - graph.container.getBoundingClientRect().top;
       graph.insertVertex(parent, null, name, x, y, 48, 48, `shape=image;image=${iconURL}`);
@@ -130,7 +137,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
                 onNodeType(nodeType[1]);
               }
             }
-          });
+        });
     });
   };
   const addConsoleEventListener = (graph) => {
@@ -317,6 +324,9 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
       newGraph.destroy();
     };
   }, [graphContainer, onNodeSelected, onNodeType]); // As dependências corretas devem ser listadas aqui
+
+  
+    
 
   return (
     <div ref={graphContainer} className="graph-container" onDrop={drop} onDragOver={(e) => e.preventDefault()}></div>
