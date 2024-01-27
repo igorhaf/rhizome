@@ -310,7 +310,8 @@ const MxGraphComponent = () => {
     if (!vertex) return false;
     // Verifica se o vértice é do tipo 'start' através do seu estilo
     const style = vertex.getStyle();
-    const regex = /static\/media\/start\/([^.]+)\./;
+    const regex = /static\/media\/start\.[^.]+\./;
+    console.log(style);
     if (style && regex.test(style)) {
       console.log(regex.test(style))
       console.log(style)
