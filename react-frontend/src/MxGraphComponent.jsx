@@ -64,7 +64,9 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     newGraph.setConnectable(true);
     newGraph.setMultigraph(false);
     newGraph.setAllowDanglingEdges(false);
-
+    newGraph.getModel().addListener(mxEvent.AFTER_ADD, () => {
+      newGraph.refresh();
+    });
     const style = newGraph.getStylesheet().getDefaultVertexStyle();
     style[mxConstants.STYLE_EXIT_X] = 1.0;
     style[mxConstants.STYLE_EXIT_Y] = 0.5;
@@ -95,15 +97,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     } finally {
       newGraph.getModel().endUpdate();
     }
-
-    new mxRubberband(newGraph);
-    const keyHandler = new mxKeyHandler(newGraph);
-    keyHandler.bindKey(46, (evt) => {
-        if (newGraph.isEnabled()) {
-          console.log(newGraph);
-          console.log(typeof newGraph.removeCells);
-        }
-    });
+    
     
     return newGraph;
   };
@@ -314,6 +308,22 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     addClickEventListener(newGraph);
     addConsoleEventListener(newGraph);
 
+    const initialWidth = graphContainer.current.offsetWidth;
+    const initialHeight = graphContainer.current.offsetHeight;
+    console.log(initialHeight);
+    newGraph.addListener(mxEvent.SIZE, (sender, evt) => {
+      graphContainer.current.style.width = `${initialWidth}px`;
+      graphContainer.current.style.height = `${initialHeight}px`;
+    });
+    new mxRubberband(newGraph);
+    const keyHandler = new mxKeyHandler(newGraph);
+    keyHandler.bindKey(46, (evt) => {
+        if (newGraph.isEnabled()) {
+          console.log(newGraph);
+          console.log(typeof newGraph.removeCells);
+          newGraph.removeCells()
+        }
+    });
     const sendGraphDataToAPI = async () => {
       // ... implementação de envio de dados para a API
     };

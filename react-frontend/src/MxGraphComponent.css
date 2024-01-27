@@ -10,9 +10,9 @@
     width: auto !important;
 
 }
-/*.graph-container .mxPlainTextEditor{
+.graph-container .mxPlainTextEditor{
     color: #FFFFFF!important;
-}*/
+}
 .mxGraph {
     height: 100%;
 }
