@@ -21,10 +21,10 @@ import bashIcon from './assets/images/icons/bash.svg';
 import javascriptIcon from './assets/images/icons/javascript.svg';
 
 const {
-  mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec
+  mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec, mxPoint
 } = mxgraph();
 
-const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
+const MxGraphComponent = () => {
   const graphContainer = useRef(null);
   const [graph, setGraph] = useState(null);
 
@@ -102,33 +102,61 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     return newGraph;
   };
 
-  const drop = (event) => {
-    event.preventDefault();
-    const data = event.dataTransfer.getData('nodeData');
-    const { iconClass, name } = JSON.parse(data);
-
-    const parent = graph.getDefaultParent();
-    graph.getModel().beginUpdate();
-    try {
-      const iconURL = getIconURLFromClassName(iconClass);
-      const x = event.clientX - graph.container.getBoundingClientRect().left;
-      const y = event.clientY - graph.container.getBoundingClientRect().top;
-      graph.insertVertex(parent, null, name, x, y, 48, 48, `shape=image;image=${iconURL}`);
-    } finally {
-      graph.getModel().endUpdate();
-    }
+  const convertPoint = (x, y) => {
+    var pt = mxUtils.convertPoint(graphContainer.current, x, y);
+    return new mxPoint(pt.x, pt.y);
   };
+
+  const drop = (event) => {
+        event.preventDefault();
+        const data = event.dataTransfer.getData('nodeData');
+        const { iconClass, name } = JSON.parse(data);
+
+        const parent = graph.getDefaultParent();
+        graph.getModel().beginUpdate();
+        try {
+          const regex = /static\/media\/([^.]+)\./;
+            const iconURL = getIconURLFromClassName(iconClass);
+            const shapeMatch = iconURL.match(regex);
+            const type = shapeMatch ? shapeMatch[1] : null;
+  
+            if (type === 'start') {
+              // Verifica se já existe um vértice do tipo 'start'
+              const existingVertices = graph.getChildVertices(parent);
+              const startVertexExists = existingVertices.some(vertex => {
+                const style = vertex.getStyle();
+                const match = style && style.match(regex);
+                return match && match[1] === 'start';
+              });
+  
+              if (startVertexExists) {
+                // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
+                //EventBus.emit('errorOccurred', 'Dois vertices do tipo start, não podem coexistir no maesmo frame.');
+                return; // Interrompe a execução do método
+              }
+            }
+            // Ajuste para a posição do gráfico
+            const graphPoint = convertPoint(event.clientX, event.clientY);
+            const x = graphPoint.x;
+            const y = graphPoint.y;
+            if (x !== undefined && y !== undefined) {
+              graph.insertVertex(parent, null, name, x - 24, y - 24, 48, 48, `shape=image;image=${iconURL}`);
+            }
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    };
 
   const addClickEventListener = (graph) => {
     graph.addListener(mxEvent.CLICK, (sender, evt) => {
         graph.addListener(mxEvent.CLICK, (sender, evt) => {
             const cell = evt.getProperty('cell');
             if (cell && cell.value) {
-              let regex = /shape=image;image=\/img\/([^.]+)\..*\.svg/;
+              let regex = /static\/media\/([^.]+)\./;
               let nodeType = cell.style.match(regex);
               if (nodeType && nodeType.length > 1) {
-                onNodeSelected(cell.value);
-                onNodeType(nodeType[1]);
+                //onNodeSelected(cell.value);
+                //onNodeType(nodeType[1]);
               }
             }
         });
@@ -149,12 +177,11 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
         return; // Se não for uma aresta válida ou não tiver terminais, ignora
       }
 
-      const regex = /shape=image;image=\/img\/([^.]+)\..*\.svg/;
+      const regex = /static\/media\/([^.]+)\./;
       const sourceMatch = source.getStyle().match(regex);
       const targetMatch = target.getStyle().match(regex);
       const sourceType = sourceMatch ? sourceMatch[1] : null;
       const targetType = targetMatch ? targetMatch[1] : null;
-
       if (sourceType !== 'if'){
         if (sourceType !== 'switch'){
           const edges = graph.getModel().getEdges(source);
@@ -261,6 +288,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
         }
 
         if (!followsStartFlow(target, graph) || !followsStartFlow(source, graph)) {
+          
           target.removeEdge(edge, true);
           mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
           evt.consume();
@@ -278,14 +306,17 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     }*/
   };
   const followsStartFlow = (vertex, graph) => {
+    
     if (!vertex) return false;
     // Verifica se o vértice é do tipo 'start' através do seu estilo
     const style = vertex.getStyle();
-    const regex = /shape=image;image=\/img\/start\.[^.]+\.svg/;
+    const regex = /static\/media\/start\/([^.]+)\./;
     if (style && regex.test(style)) {
+      console.log(regex.test(style))
+      console.log(style)
       return true; // O vértice atual é 'start'
     }
-
+    
     // Rastreia o caminho de entrada até encontrar um 'start'
     let incomingEdges = graph.getModel().getIncomingEdges(vertex);
     for (let i = 0; i < incomingEdges.length; i++) {
@@ -310,7 +341,6 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
 
     const initialWidth = graphContainer.current.offsetWidth;
     const initialHeight = graphContainer.current.offsetHeight;
-    console.log(initialHeight);
     newGraph.addListener(mxEvent.SIZE, (sender, evt) => {
       graphContainer.current.style.width = `${initialWidth}px`;
       graphContainer.current.style.height = `${initialHeight}px`;
@@ -319,8 +349,6 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     const keyHandler = new mxKeyHandler(newGraph);
     keyHandler.bindKey(46, (evt) => {
         if (newGraph.isEnabled()) {
-          console.log(newGraph);
-          console.log(typeof newGraph.removeCells);
           newGraph.removeCells()
         }
     });
@@ -333,7 +361,7 @@ const MxGraphComponent = ({ onNodeSelected, onNodeType }) => {
     return () => {
       newGraph.destroy();
     };
-  }, [graphContainer, onNodeSelected, onNodeType]); // As dependências corretas devem ser listadas aqui
+  }, [graphContainer]); // As dependências corretas devem ser listadas aqui
 
   
     
