@@ -441,11 +441,9 @@ export default {
         this.graph.getModel().beginUpdate();
         try {
           const iconURL = this.getIconURLFromClassName(shapeType);
-          console.log(iconURL);
           // Utiliza a expressão regular para determinar se o ícone é do tipo 'start'
           const regex = /\/img\/([^.]+)\..*\.svg/;
           const shapeMatch = iconURL.match(regex);
-          console.log(shapeMatch);
           const type = shapeMatch ? shapeMatch[1] : null;
 
           if (type === 'start') {

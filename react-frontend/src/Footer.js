@@ -1,11 +1,13 @@
 // Footer.js
 import React from 'react';
+import './Footer.css'
 
 function Footer() {
     return (
-        <div style={{ height: '50px', backgroundColor: '#333', color: 'white', textAlign: 'center', padding: '10px 0' }}>
-            <p>Rodapé</p>
-        </div>
+        <footer className="bg text w-full p-1 flex items-center">
+            <div className='debug-point-red debug-point'></div>
+            {/*<span class="ml-2">{{ errorMessage }}</span>*/}
+        </footer>
     );
 }
 

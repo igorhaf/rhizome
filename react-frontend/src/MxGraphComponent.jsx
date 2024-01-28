@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+
+import { useDispatch } from 'react-redux';
 import mxgraph from 'mxgraph';
 import './MxGraphComponent.css';
 import ifIcon from './assets/images/icons/if.svg';
@@ -27,6 +29,8 @@ const {
 const MxGraphComponent = () => {
   const graphContainer = useRef(null);
   const [graph, setGraph] = useState(null);
+
+
 
   const getIconURLFromClassName = (className) => {
     const icons = {
@@ -135,10 +139,7 @@ const MxGraphComponent = () => {
                 return; // Interrompe a execução do método
               }
             }
-            // Ajuste para a posição do gráfico
-            /*const graphPoint = convertPoint(event.clientX, event.clientY);
-            const x = graphPoint.x;
-            const y = graphPoint.y;*/
+            
             const x = event.clientX;
             const y = event.clientY;
 
