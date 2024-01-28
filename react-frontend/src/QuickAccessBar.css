@@ -1,45 +1,58 @@
+/* QuickAccessBar.css */
 .quick-access-bar {
   min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .image-container {
-  width: 200px;
+  width: 32px;
   height: 32px;
   margin-top: 10px;
-  margin-left: 10px;
-  background-repeat: no-repeat;
-  background-position: left;
-  color: #e5e7eb;
   position: relative;
-  background-image: url('./assets/images/icons/database.svg');
-  cursor: pointer; /* Opcional: altera o cursor para indicar interatividade */
+}
+
+.icon-area {
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 
 .overlay {
   position: absolute;
-  left: 0;
+  left: 100%; /* Posicionado diretamente ao lado do ícone */
   top: 0;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Cor de fundo do retângulo */
-  color: white; /* Cor do texto */
-  width: 0; /* Inicia com largura zero */
-  transition: .5s ease; /* Efeito de transição */
-  overflow: hidden; /* Esconde o texto até a animação começar */
-  display: flex; /* Usa flexbox para centralizar o texto */
-  align-items: center; /* Centraliza verticalmente */
-  justify-content: center; /* Centraliza horizontalmente */
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  width: 0;
+  transition: width 0.1s ease, opacity 0.1s ease;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  border-radius: 10px;
+  margin-left:10px;
 }
 
-.image-container:hover .overlay {
-  width: 100%; /* Expande a largura para 100% */
+.icon-area:hover .overlay,
+.icon-area:focus .overlay {
+  width: 100px; /* Largura fixa do overlay para não ultrapassar a largura da barra */
+  z-index: 1;
 }
 
-.image-container .text {
-  font-size: 14px; /* Ajuste para o tamanho do contêiner */
-  transition: opacity 0.5s ease; /* Transição suave para o texto */
-  opacity: 0; /* Texto inicialmente invisível */
+.overlay .text {
+  opacity: 0;
+  transition: opacity 0.1s ease;
 }
 
-.image-container:hover .text {
-  opacity: 1; /* Texto se torna visível no hover */
+.icon-area:hover .overlay .text,
+.icon-area:focus .overlay .text {
+  opacity: 1;
 }
