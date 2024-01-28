@@ -228,6 +228,17 @@ const MxGraphComponent = () => {
             return;
         }
 
+        if (sourceType === 'link') {
+          graph.getModel().beginUpdate();
+          try {
+              dispatch(setText("Link não pode ser fonte de uma conexão."));
+              target.removeEdge(edge, true);
+          } finally {
+              graph.getModel().endUpdate();
+          }
+          return;
+      }
+
         if (sourceType === 'exception') {
             graph.getModel().beginUpdate();
             try {
