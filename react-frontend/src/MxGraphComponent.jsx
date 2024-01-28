@@ -61,7 +61,6 @@ const MxGraphComponent = () => {
     setGraph(newGraph);
     mxUtils.alert = (message) => {
       dispatch(setText("Emitindo evento de erro: " + message));
-      console.log("Emitindo evento de erro:", message);
     };
 
     newGraph.setCellsEditable(true);
@@ -136,7 +135,6 @@ const MxGraphComponent = () => {
               if (startVertexExists) {
                 // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
                 dispatch(setText('Dois vertices do tipo start, não podem coexistir no maesmo frame.'));
-                //EventBus.emit('errorOccurred', 'Dois vertices do tipo start, não podem coexistir no maesmo frame.');
                 return; // Interrompe a execução do método
               }
             }
@@ -199,7 +197,6 @@ const MxGraphComponent = () => {
               graph.getModel().beginUpdate();
               try {
                 dispatch(setText('O "'+sourceType+'" não pode ter mais de uma conexão saindo.'));
-                //EventBus.emit('errorOccurred', 'O "'+sourceType+'" não pode ter mais de uma conexão saindo.');
                 target.removeEdge(edge, true);
               } finally {
                 graph.getModel().endUpdate();
@@ -212,7 +209,6 @@ const MxGraphComponent = () => {
       if (targetType === 'start') {
         graph.getModel().beginUpdate();
         try {
-          //EventBus.emit('errorOccurred', 'Start não pode ser o alvo de uma conexão.');
           dispatch(setText("Start não pode ser o alvo de uma conexão."));
           target.removeEdge(edge, true);
         } finally {
@@ -225,7 +221,6 @@ const MxGraphComponent = () => {
             graph.getModel().beginUpdate();
             try {
                 dispatch(setText("Stop não pode ser fonte de uma conexão."));
-                //EventBus.emit('errorOccurred', 'Stop não pode ser fonte de uma conexão.');
                 target.removeEdge(edge, true);
             } finally {
                 graph.getModel().endUpdate();
@@ -237,7 +232,6 @@ const MxGraphComponent = () => {
             graph.getModel().beginUpdate();
             try {
                 dispatch(setText("Exception não pode ser fonte de uma conexão."));
-                //EventBus.emit('errorOccurred', 'Exception não pode ser fonte de uma conexão.');
                 target.removeEdge(edge, true);
             } finally {
                 graph.getModel().endUpdate();
@@ -258,7 +252,6 @@ const MxGraphComponent = () => {
           graph.getModel().beginUpdate();
           try {
             dispatch(setText("Uma conexão inversa já existe!"));
-            //EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
             target.removeEdge(edge, true);
 
             break;
@@ -310,9 +303,7 @@ const MxGraphComponent = () => {
       }
     });
     mxUtils.alert = function(message) {
-      console.log("Emitindo evento de erro:", message);
       dispatch(setText("Emitindo evento de erro:"+ message));
-      //EventBus.emit('errorOccurred', message);
     };
     /*if (!followsStartFlow(target) || !followsStartFlow(source)) {
       target.removeEdge(edge, true);
