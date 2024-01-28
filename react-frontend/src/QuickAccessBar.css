@@ -1,3 +1,45 @@
-.quick-access-bar{
-    min-width: 200px;
-  }
+.quick-access-bar {
+  min-width: 200px;
+}
+
+.image-container {
+  width: 200px;
+  height: 32px;
+  margin-top: 10px;
+  margin-left: 10px;
+  background-repeat: no-repeat;
+  background-position: left;
+  color: #e5e7eb;
+  position: relative;
+  background-image: url('./assets/images/icons/database.svg');
+  cursor: pointer; /* Opcional: altera o cursor para indicar interatividade */
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Cor de fundo do retângulo */
+  color: white; /* Cor do texto */
+  width: 0; /* Inicia com largura zero */
+  transition: .5s ease; /* Efeito de transição */
+  overflow: hidden; /* Esconde o texto até a animação começar */
+  display: flex; /* Usa flexbox para centralizar o texto */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+}
+
+.image-container:hover .overlay {
+  width: 100%; /* Expande a largura para 100% */
+}
+
+.image-container .text {
+  font-size: 14px; /* Ajuste para o tamanho do contêiner */
+  transition: opacity 0.5s ease; /* Transição suave para o texto */
+  opacity: 0; /* Texto inicialmente invisível */
+}
+
+.image-container:hover .text {
+  opacity: 1; /* Texto se torna visível no hover */
+}

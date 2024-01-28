@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-
+import { setText } from './redux/actions/textActions';
 import { useDispatch } from 'react-redux';
 import mxgraph from 'mxgraph';
 import './MxGraphComponent.css';
@@ -29,8 +29,7 @@ const {
 const MxGraphComponent = () => {
   const graphContainer = useRef(null);
   const [graph, setGraph] = useState(null);
-
-
+  const dispatch = useDispatch();
 
   const getIconURLFromClassName = (className) => {
     const icons = {
@@ -61,6 +60,7 @@ const MxGraphComponent = () => {
     const newGraph = new mxGraph(container);
     setGraph(newGraph);
     mxUtils.alert = (message) => {
+      dispatch(setText("Emitindo evento de erro: " + message));
       console.log("Emitindo evento de erro:", message);
     };
 
@@ -135,6 +135,7 @@ const MxGraphComponent = () => {
   
               if (startVertexExists) {
                 // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
+                dispatch(setText('Dois vertices do tipo start, não podem coexistir no maesmo frame.'));
                 //EventBus.emit('errorOccurred', 'Dois vertices do tipo start, não podem coexistir no maesmo frame.');
                 return; // Interrompe a execução do método
               }
@@ -170,6 +171,7 @@ const MxGraphComponent = () => {
   };
   const addConsoleEventListener = (graph) => {
     mxUtils.alert = function(message) {
+      dispatch(setText("Alert from mxGraph:"+ message));
       console.log("Alert from mxGraph:", message);
     };
 
@@ -196,6 +198,7 @@ const MxGraphComponent = () => {
               // Se "start" já tem uma aresta saindo e está tentando fazer outra, remova a nova aresta.
               graph.getModel().beginUpdate();
               try {
+                dispatch(setText('O "'+sourceType+'" não pode ter mais de uma conexão saindo.'));
                 //EventBus.emit('errorOccurred', 'O "'+sourceType+'" não pode ter mais de uma conexão saindo.');
                 target.removeEdge(edge, true);
               } finally {
@@ -209,7 +212,8 @@ const MxGraphComponent = () => {
       if (targetType === 'start') {
         graph.getModel().beginUpdate();
         try {
-          //EventBus.emit('errorOccurred', 'O "start" não pode ser o alvo de uma conexão.');
+          //EventBus.emit('errorOccurred', 'Start não pode ser o alvo de uma conexão.');
+          dispatch(setText("Start não pode ser o alvo de uma conexão."));
           target.removeEdge(edge, true);
         } finally {
           graph.getModel().endUpdate();
@@ -220,7 +224,8 @@ const MxGraphComponent = () => {
         if (sourceType === 'stop') {
             graph.getModel().beginUpdate();
             try {
-                //EventBus.emit('errorOccurred', 'O "stop" não pode ser fonte de uma conexão.');
+                dispatch(setText("Stop não pode ser fonte de uma conexão."));
+                //EventBus.emit('errorOccurred', 'Stop não pode ser fonte de uma conexão.');
                 target.removeEdge(edge, true);
             } finally {
                 graph.getModel().endUpdate();
@@ -231,7 +236,8 @@ const MxGraphComponent = () => {
         if (sourceType === 'exception') {
             graph.getModel().beginUpdate();
             try {
-                //EventBus.emit('errorOccurred', 'O "exception" não pode ser fonte de uma conexão.');
+                dispatch(setText("Exception não pode ser fonte de uma conexão."));
+                //EventBus.emit('errorOccurred', 'Exception não pode ser fonte de uma conexão.');
                 target.removeEdge(edge, true);
             } finally {
                 graph.getModel().endUpdate();
@@ -251,6 +257,7 @@ const MxGraphComponent = () => {
           // Se uma conexão inversa já existe
           graph.getModel().beginUpdate();
           try {
+            dispatch(setText("Uma conexão inversa já existe!"));
             //EventBus.emit('errorOccurred', 'Uma conexão inversa já existe!');
             target.removeEdge(edge, true);
 
@@ -297,12 +304,14 @@ const MxGraphComponent = () => {
           
           target.removeEdge(edge, true);
           mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
+          dispatch(setText("A conexão deve seguir o fluxo a partir de start"));
           evt.consume();
         }
       }
     });
     mxUtils.alert = function(message) {
       console.log("Emitindo evento de erro:", message);
+      dispatch(setText("Emitindo evento de erro:"+ message));
       //EventBus.emit('errorOccurred', message);
     };
     /*if (!followsStartFlow(target) || !followsStartFlow(source)) {
@@ -317,10 +326,7 @@ const MxGraphComponent = () => {
     // Verifica se o vértice é do tipo 'start' através do seu estilo
     const style = vertex.getStyle();
     const regex = /static\/media\/start\.[^.]+\./;
-    console.log(style);
     if (style && regex.test(style)) {
-      console.log(regex.test(style))
-      console.log(style)
       return true; // O vértice atual é 'start'
     }
     
