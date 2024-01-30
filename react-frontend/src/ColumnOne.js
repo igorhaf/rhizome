@@ -1,13 +1,13 @@
-// ColumnOne.jsx
 import React from 'react';
-// Importe seus componentes React equivalentes aqui
-import TreeView from './TreeView';
-// import Objects from './Objects';
+import { useSelector } from 'react-redux';
+import Elements from './Elements';
+import Frames from './Frames';
 import QuickAccessBar from './QuickAccessBar';
 
 const ColumnOne = () => {
-  // Dados fictícios para a visualização estática
-  const logic = [
+   const activeFragments = useSelector(state => state.fragments.activeFragments);
+  
+  const elements = [
         {
             id: 1,
             name: "Core",
@@ -148,50 +148,23 @@ const ColumnOne = () => {
             ]
         }
     ];
-    const objects = [{
+    const frames = [{
             id: 1,
             name: "Frame 1",
             expanded: false,
         },
     ];
 
-  return (
-    <div className="flex h-full">
-      <div className="bg w-10 flex-shrink-0">
-        {/* Substitua por seu componente QuickAccessBar, se aplicável */}
-        <QuickAccessBar />
+    return (
+      <div className="flex h-full">
+          <div className="bg w-10 flex-shrink-0">
+              <QuickAccessBar />
+          </div>
+          <div className="flex-1 bg flex flex-col space-y-4 overflow-auto">
+              {activeFragments.includes('Elements') && <Elements elements={elements} />}
+              {activeFragments.includes('Frames') && <Frames frames={frames} />}
+          </div>
       </div>
-      <div className="flex-1 bg flex flex-col space-y-4 overflow-auto">
-        {/* Substitua "treeView" pelo estado correspondente, se necessário */}
-        {true && (
-          <>
-            <h2 className="text font-semibold p-4" style={{ paddingBottom: '0px' }}>Components</h2>
-            <div className="flex flex-col h-full overflow-auto" style={{ paddingBottom: '0px' }}>
-              <div className="flex-1">
-                <div className="min-w-max">
-                  {/* Substitua por seu componente TreeView, se aplicável */}
-                   <TreeView treeData={logic} />
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-        {/* Substitua "project" pelo estado correspondente, se necessário */}
-        {false && (
-          <>
-            <h2 className="text font-semibold p-4" style={{ paddingBottom: '0px' }}>Project</h2>
-            <div className="flex flex-col h-full overflow-auto" style={{ paddingBottom: '0px' }}>
-              <div className="flex-1">
-                <div className="min-w-max">
-                  {/* Substitua por seu componente Objects, se aplicável */}
-                  {/* <Objects treeData={objects} /> */}
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
   );
 };
 

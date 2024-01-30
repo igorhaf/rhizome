@@ -1,7 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { addFragment } from './redux/actions/fragmentActions';
+
 import './QuickAccessBar.css';
 
 const QuickAccessBar = () => {
+  const dispatch = useDispatch();
+  
   return (
     <div className="quick-access-bar">
       <div className="logo"></div>
@@ -14,18 +19,18 @@ const QuickAccessBar = () => {
         </div>
       </div>
       <div className="image-container">
-        <div className="icon-area">
+      <div className="icon-area">
           <div className="qm-icons components"></div>
           <div className="overlay">
-            <div className="text">Components</div>
+              <div className="text" onClick={() => dispatch(addFragment('Elements'))}>Elements</div>
           </div>
-        </div>
+      </div>
       </div>
       <div className="image-container">
         <div className="icon-area">
           <div className="qm-icons frames"></div>
           <div className="overlay">
-            <div className="text">Frames</div>
+            <div className="text" onClick={() => dispatch(addFragment('Frames'))}>Frames</div>
           </div>
         </div>
       </div>
@@ -33,7 +38,7 @@ const QuickAccessBar = () => {
         <div className="icon-area">
           <div className="qm-icons database"></div>
           <div className="overlay">
-            <div className="text">Database</div>
+            <div className="text" >Database</div>
           </div>
         </div>
       </div>

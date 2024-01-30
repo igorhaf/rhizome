@@ -8,7 +8,7 @@ function Footer() {
     return (
         <footer className="bg text w-full p-1 flex items-center">
             <div className='debug-point-red debug-point'></div>
-            <span class="ml-2">{text}</span>
+            <span className="ml-2">{text}</span>
         </footer>
     );
 }
