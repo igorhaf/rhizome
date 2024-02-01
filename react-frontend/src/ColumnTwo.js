@@ -1,0 +1,63 @@
+// SeusComponentesReact.jsx
+import React, { useState } from 'react';
+// Importe os componentes React equivalentes aqui
+import MxGraphComponent from './MxGraphComponent';
+import TabsComponent from './TabsComponent';
+
+const SeusComponentesReact = () => {
+  // Definindo o estado inicial para as abas e a aba ativa
+  const [tabs, setTabs] = useState([
+    {
+      id: 1,
+      label: 'Tab 1',
+      content: 'Conteúdo da Tab 1',
+      graphData: null
+    }
+  ]);
+  const [activeTab, setActiveTab] = useState(0);
+
+  // Manipuladores para mudanças nas abas
+  const handleTabChange = (index) => {
+    setActiveTab(index);
+  };
+
+  const handleTabAdded = () => {
+    const newTabId = tabs.length + 1;
+    const nextTab = {
+      id: newTabId,
+      label: `Tab ${newTabId}`,
+      content: `Conteúdo da Tab ${newTabId}`,
+      graphData: null
+    };
+    setTabs([...tabs, nextTab]);
+    setActiveTab(tabs.length); // Define a nova aba como ativa
+  };
+
+  const handleNodeSelected = (node) => {
+    console.log('Node selecionado:', node);
+  };
+
+  return (
+    <div className="bg-white p">
+      {/* Substitua por seu componente TabsComponent, se aplicável */}
+      <TabsComponent tabs={tabs} activeTab={activeTab} onTabAdded={handleTabAdded} onTabChanged={handleTabChange} />
+      
+      {/* Substitua os componentes comentados por seus equivalentes em React, se aplicável */}
+      {/* <Database /> */}
+      {/* <JavascriptEditor /> */}
+      {/* <SqlEditor /> */}
+      {/* <BashEditor /> */}
+
+      {tabs.map((tab, index) => (
+        activeTab === index && (
+          <div key={tab.id} style={{ display: activeTab === index ? 'block' : 'none' }}>
+            {/* Substitua por seu componente MxGraphComponent, se aplicável */}
+            <MxGraphComponent graphContent={tab.content} onNodeSelected={handleNodeSelected} />
+          </div>
+        )
+      ))}
+    </div>
+  );
+};
+
+export default SeusComponentesReact;

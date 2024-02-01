@@ -1,53 +1,36 @@
+version: '3'
 services:
-    laravel.test:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.2
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
+    #app:
+    #  build: .
+    #  ports:
+    #   - "3000:3000"
+    #depends_on:
+    # - postgres
+    # - mongo
+    #environment:
+    #- DATABASE_URL=postgres://nexabuild:nexabuild@postgres:5432/nexabuild
+
+    postgres:
+        image: postgres
         ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - "5432:5432"
         environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            POSTGRES_USER: nexabuild
+            POSTGRES_PASSWORD: nexabuild
+            POSTGRES_DB: nexabuild
         volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on:
-            - pgsql
-    pgsql:
-        image: 'postgres:15'
+            - ./data/pgsql:/var/lib/postgresql/data
+
+    mongo:
+        image: mongo
         ports:
-            - '${FORWARD_DB_PORT:-5432}:5432'
+            - "27017:27017"
         environment:
-            PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+            MONGO_INITDB_ROOT_USERNAME: nexabuild
+            MONGO_INITDB_ROOT_PASSWORD: nexabuild
         volumes:
-            - './data/pgsql:/var/lib/postgresql/data'
-            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - pg_isready
-                - '-q'
-                - '-d'
-                - '${DB_DATABASE}'
-                - '-U'
-                - '${DB_USERNAME}'
-            retries: 3
-            timeout: 5s
-networks:
-    sail:
-        driver: bridge
+            - ./data/mongo:/data/db
+
+volumes:
+    pgdata:
+    mongodata:
