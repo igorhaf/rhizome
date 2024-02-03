@@ -11,7 +11,7 @@ function fragmentReducer(state = initialState, action) {
         case ADD_FRAGMENT:
             return {
                 ...state,
-                activeFragments: [...state.activeFragments, action.payload]
+                activeFragments: [action.payload] // Substitui a lista existente pelo novo componente exclusivamente
             };
         case REMOVE_FRAGMENT:
             return {
