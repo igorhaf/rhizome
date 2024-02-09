@@ -150,8 +150,9 @@ const ColumnOne = () => {
     ];
     const frames = [{
             id: 1,
-            name: "Frame 1",
-            expanded: false,
+            name: "Remove card",
+            type: "trello-remove-card",
+            iconClass: "trello-remove-card"
         },
     ];
 
