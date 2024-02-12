@@ -76,36 +76,5 @@ router.get('/schemas', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-  router.get('/api/schema/:schemaName/table/:tableName/records/:start/:end', async (req, res) => {
-    const { schemaName, tableName, start, end } = req.params;
-    const offset = parseInt(start, 10);
-    const limit = parseInt(end, 10) - offset + 1;
-  
-    try {
-      if (limit < 1) {
-        return res.status(400).json({ error: 'O valor final deve ser maior que o valor inicial.' });
-      }
-  
-      const recordsQuery = `
-        SELECT * FROM "${schemaName}"."${tableName}"
-        ORDER BY id
-        LIMIT $1 OFFSET $2
-      `;
-  
-      const records = await sequelize.query(recordsQuery, {
-        bind: [limit, offset],
-        type: QueryTypes.SELECT,
-      });
-  
-      // Enviamos a resposta em formato JSON
-      res.json({
-        start,
-        end,
-        data: records
-      });
-    } catch (error) {
-      // Em caso de erro, enviamos uma resposta com status 500 e a mensagem de erro
-      res.status(500).json({ error: error.message });
-    }
-  });
+  ;
 module.exports = router;
