@@ -137,37 +137,38 @@ body {
     margin-left: 10px;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
     color: #e5e7eb;
 
 }
 
-.components{
-    background-image: url('./assets/images/icons/components.svg');
+.elements{
+    background-image: url('./assets/images/icons/quick-menu/32w/elements@32w.png');
     width: 28px;
 }
 
 .frames{
-    background-image: url('./assets/images/icons/frames.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/frames@32w.png');
     width: 25px;
 }
 
 .integrations{
-    background-image: url('./assets/images/icons/integrations.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/integrations@32w.png');
     width: 26px;
 }
 
-.play{
-    background-image: url('./assets/images/icons/play.svg');
+.run{
+    background-image: url('./assets/images/icons/quick-menu/32w/run@32w.png');
     width: 26px;
 }
 
 .config{
-    background-image: url('./assets/images/icons/config.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/config@32w.png');
     width: 26px;
 }
 
 .database{
-    background-image: url('./assets/images/icons/database.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/database@32w.png');
     width: 24px;
 }
 

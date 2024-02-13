@@ -12,15 +12,15 @@ const QuickAccessBar = () => {
       <div className="logo"></div>
       <div className="image-container">
         <div className="icon-area">
-          <div className="qm-icons play"></div>
+          <div className="qm-icons run"></div>
           <div className="overlay">
-            <div className="text">Start</div>
+            <div className="text">Run</div>
           </div>
         </div>
       </div>
       <div className="image-container">
       <div className="icon-area"  onClick={() => dispatch(addFragment('Elements'))}>
-          <div className="qm-icons components"></div>
+          <div className="qm-icons elements"></div>
           <div className="overlay">
               <div className="text">Elements</div>
           </div>
