@@ -23,7 +23,7 @@ import bashIcon from './assets/images/icons/bash.svg';
 import javascriptIcon from './assets/images/icons/javascript.svg';
 
 const {
-  mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec, mxPoint
+  mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants
 } = mxgraph();
 
 const MxGraphComponent = () => {
@@ -37,7 +37,6 @@ const MxGraphComponent = () => {
       'if': ifIcon,
       'schedule': scheduleIcon,
       'sleep': sleepIcon,
-      'start': startIcon,
       'starttime': starttimeIcon,
       'stop': stopIcon,
       'switch': switchIcon,
@@ -103,11 +102,6 @@ const MxGraphComponent = () => {
     
     
     return newGraph;
-  };
-
-  const convertPoint = (x, y) => {
-    var pt = mxUtils.convertPoint(graphContainer.current, x, y);
-    return new mxPoint(pt.x, pt.y);
   };
 
   const drop = (event) => {
@@ -270,7 +264,6 @@ const MxGraphComponent = () => {
           } finally {
             graph.getModel().endUpdate();
           }
-          break;
         }
       }
 
@@ -376,6 +369,7 @@ const MxGraphComponent = () => {
     return () => {
       newGraph.destroy();
     };
+  // eslint-disable-next-line
   }, [graphContainer]); // As dependências corretas devem ser listadas aqui
 
   
