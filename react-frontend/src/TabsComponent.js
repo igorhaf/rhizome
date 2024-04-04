@@ -31,9 +31,13 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
 
     const changeTab = (index) => {
         // Não precisa mais inverter o índice
-        setActiveTab(index);
+        const newTabs = [...tabs];
+        const selectedTab = newTabs.splice(index, 1)[0]; // Remove a aba clicada do array
+        newTabs.unshift(selectedTab); // Insere a aba no início do array
+        setTabs(newTabs); // Atualiza o estado com o novo array de abas
+        setActiveTab(0); // A aba movida agora é a aba ativa
         if (onTabChanged) {
-            onTabChanged(index);
+            onTabChanged(0); // Se necessário, chama o callback com o novo índice da aba ativa
         }
     };
 
