@@ -17,7 +17,7 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
 
         const updateVisibleTabLimit = () => {
             const wrapperWidth = tabsWrapperRef.current.offsetWidth;
-            const tabWidth = 120; // Incluindo margens e padding
+            const tabWidth = 100; // Incluindo margens e padding
             setVisibleTabLimit(Math.floor(wrapperWidth / tabWidth));
         };
 

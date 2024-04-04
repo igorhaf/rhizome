@@ -1,17 +1,20 @@
 .tabs-container {
-    margin-top: 0; /* Adjusted to match your design */
+    margin-top: 0;
+    overflow-x: hidden;
+    /*display: flex;*/
+}
+
+.tabs-wrapper {
+    /*flex-grow: 1;*/
+    display: flex;
+    flex-wrap: nowrap;
+    background: #2B2F3A;
+    padding: 0;
+    /*align-items: stretch; */
     overflow-x: hidden;
 }
 
-  .tabs-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
-    background: #2B2F3A; /* Color of your tab background */
-    padding: 0; /* Adjusted to match your design */
-    overflow-x: hidden; /* Isso deve impedir o scroll horizontal e ocultar as abas excedentes */
-  }
-
-  .tab {
+.tab {
     display: inline-flex;
     align-items: center;
     padding: 8px 16px; /* Adjusted to match your design */
@@ -22,23 +25,23 @@
     border: none;
     cursor: pointer;
     position: relative;
-      max-width: 100px; /* Defina um máximo para a largura da aba */
-      min-width: 100px; /* Defina um máximo para a largura da aba */
-      overflow: hidden; /* Oculta qualquer conteúdo que ultrapasse o max-width */
-      text-overflow: ellipsis; /* Adiciona "..." para indicar que o texto foi cortado */
-      white-space: nowrap;
-      flex: 0 1 auto; /* Isso diz para a aba não crescer, permitir encolhimento e ter uma largura baseada no conteúdo */
-  }
+    max-width: 100px; /* Defina um máximo para a largura da aba */
+    min-width: 100px; /* Defina um máximo para a largura da aba */
+    overflow: hidden; /* Oculta qualquer conteúdo que ultrapasse o max-width */
+    text-overflow: ellipsis; /* Adiciona "..." para indicar que o texto foi cortado */
+    white-space: nowrap;
+    flex: 0 1 auto; /* Isso diz para a aba não crescer, permitir encolhimento e ter uma largura baseada no conteúdo */
+}
 
-  .tab.active-tab {
+.tab.active-tab {
     background: #32363E; /* Active tab background */
-  }
+}
 
-  .tab:not(.active-tab):hover {
+.tab:not(.active-tab):hover {
     background: #373C49; /* Hover state for non-active tabs */
-  }
+}
 
-  .tab.active-tab::after {
+.tab.active-tab::after {
     content: '';
     position: absolute;
     left: 0;
@@ -46,29 +49,29 @@
     width: 100%;
     height: 2px;
     background-color: #4fa0f8; /* Cor do indicador */
-  }
+}
 
-  .close-btn {
+.close-btn {
     margin-left: 8px;
     color: #F56565;
     cursor: pointer;
     font-size: x-small;
-  }
+}
 
-  .add-tab {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px; /* Adjusted to match your design */
-      height: 24px; /* Adjusted to match your design */
-      font-size: 20px; /* Adjusted to match your design */
-      color: white; /* Text color */
-      background: #373C49; /* Color of your add button */
-      border-radius: 50%; /* To make it round */
-      cursor: pointer;
-      margin: 5px 10px 5px 5px;
-  }
+.add-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; /* Adjusted to match your design */
+    height: 24px; /* Adjusted to match your design */
+    font-size: 20px; /* Adjusted to match your design */
+    color: white; /* Text color */
+    background: #373C49; /* Color of your add button */
+    border-radius: 50%; /* To make it round */
+    cursor: pointer;
+    margin: 5px 10px 5px 5px;
+}
 
-  .add-tab:hover {
-      background: #6DA0FE;
-  }
+.add-tab:hover {
+    background: #6DA0FE;
+}
