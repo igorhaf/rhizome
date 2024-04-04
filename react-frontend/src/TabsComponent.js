@@ -29,15 +29,32 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
         };
     }, [tabs]);
 
+    const onDragStart = (event, index) => {
+        event.dataTransfer.setData("text/plain", index);
+    };
+
+    const onDragOver = (event) => {
+        event.preventDefault(); // Permite que o elemento seja solto
+    };
+
+    const onDrop = (event, dropIndex) => {
+        const dragIndex = Number(event.dataTransfer.getData("text/plain"));
+        if (dragIndex === dropIndex) {
+            return; // Se soltar na mesma posição, não faz nada
+        }
+
+        const newTabs = Array.from(tabs);
+        const draggedTab = newTabs.splice(dragIndex, 1)[0];
+        newTabs.splice(dropIndex, 0, draggedTab); // Insere a aba na nova posição
+        setTabs(newTabs);
+
+        setActiveTab(dropIndex); // Atualiza a aba ativa para a nova posição
+    };
+
     const changeTab = (index) => {
-        // Não precisa mais inverter o índice
-        const newTabs = [...tabs];
-        const selectedTab = newTabs.splice(index, 1)[0]; // Remove a aba clicada do array
-        newTabs.unshift(selectedTab); // Insere a aba no início do array
-        setTabs(newTabs); // Atualiza o estado com o novo array de abas
-        setActiveTab(0); // A aba movida agora é a aba ativa
+        setActiveTab(index);
         if (onTabChanged) {
-            onTabChanged(0); // Se necessário, chama o callback com o novo índice da aba ativa
+            onTabChanged(index);
         }
     };
 
@@ -48,9 +65,8 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
             content: 'MxGraphComponent',
             isEditing: false
         };
-        // Adiciona a nova aba no início do array
         setTabs([newTab, ...tabs]);
-        setActiveTab(0); // Define a primeira aba (a mais recente) como ativa
+        setActiveTab(0);
         setNextTabId(nextTabId + 1);
         if (onTabAdded) {
             onTabAdded(newTab);
@@ -93,6 +109,8 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
         setIsDropdownVisible(!isDropdownVisible);
     };
 
+    const hiddenTabsExist = tabs.length > visibleTabLimit;
+
     // Verifica se há abas ocultas
     const hiddenTabs = tabs.length > visibleTabLimit;
     // As abas visíveis são agora as primeiras até o limite
@@ -100,24 +118,21 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
 
     return (
         <div className="tabs-container">
-            <div className="tabs-wrapper" ref={tabsWrapperRef}>
+            <div className="tabs-wrapper" ref={tabsWrapperRef} onDragOver={onDragOver}>
                 <div onClick={addTab} className="add-tab">+</div>
-                {visibleTabs.map((tab, index) => (
+                {tabs.map((tab, index) => (
                     <div key={tab.id} className={`tab ${activeTab === index ? 'active-tab' : ''}`}
+                         draggable
+                         onDragStart={(e) => onDragStart(e, index)}
+                         onDragOver={onDragOver}
+                         onDrop={(e) => onDrop(e, index)}
                          onClick={() => changeTab(index)}>
-                        {tab.isEditing ? (
-                            <input ref={tabInputRef} value={tab.label}
-                                   onChange={(e) => saveTabName({ ...tab, label: e.target.value })}
-                                   onBlur={() => saveTabName(tab)}
-                                   className="tab-input" />
-                        ) : (
-                            <span>{tab.label}</span>
-                        )}
+                        {tab.label}
                         <span onClick={(e) => { e.stopPropagation(); closeTab(index); }}
                               className="close-btn">X</span>
                     </div>
                 ))}
-                {hiddenTabs && <div className="dropdown-button" onClick={toggleDropdown}>⯆</div>}
+                {hiddenTabsExist && <div className="dropdown-button" onClick={toggleDropdown}>⯆</div>}
             </div>
             {isDropdownVisible && (
                 <div className="dropdown-menu">
