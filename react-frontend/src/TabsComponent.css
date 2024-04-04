@@ -1,15 +1,16 @@
 .tabs-container {
     margin-top: 0; /* Adjusted to match your design */
     overflow-x: hidden;
-  }
-  
+}
+
   .tabs-wrapper {
     display: flex;
-  
+    flex-wrap: nowrap;
     background: #2B2F3A; /* Color of your tab background */
     padding: 0; /* Adjusted to match your design */
+    overflow-x: hidden; /* Isso deve impedir o scroll horizontal e ocultar as abas excedentes */
   }
-  
+
   .tab {
     display: inline-flex;
     align-items: center;
@@ -21,16 +22,22 @@
     border: none;
     cursor: pointer;
     position: relative;
+      max-width: 100px; /* Defina um máximo para a largura da aba */
+      min-width: 100px; /* Defina um máximo para a largura da aba */
+      overflow: hidden; /* Oculta qualquer conteúdo que ultrapasse o max-width */
+      text-overflow: ellipsis; /* Adiciona "..." para indicar que o texto foi cortado */
+      white-space: nowrap;
+      flex: 0 1 auto; /* Isso diz para a aba não crescer, permitir encolhimento e ter uma largura baseada no conteúdo */
   }
-  
+
   .tab.active-tab {
     background: #32363E; /* Active tab background */
   }
-  
+
   .tab:not(.active-tab):hover {
     background: #373C49; /* Hover state for non-active tabs */
   }
-  
+
   .tab.active-tab::after {
     content: '';
     position: absolute;
@@ -40,14 +47,14 @@
     height: 2px;
     background-color: #4fa0f8; /* Cor do indicador */
   }
-  
+
   .close-btn {
     margin-left: 8px;
     color: #F56565;
     cursor: pointer;
     font-size: x-small;
   }
-  
+
   .add-tab {
       display: flex;
       align-items: center;
@@ -61,7 +68,7 @@
       cursor: pointer;
       margin: 5px 10px 5px 5px;
   }
-  
+
   .add-tab:hover {
       background: #6DA0FE;
   }
