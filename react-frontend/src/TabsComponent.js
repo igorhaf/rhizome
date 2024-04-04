@@ -17,18 +17,14 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
 
         const updateVisibleTabLimit = () => {
             const wrapperWidth = tabsWrapperRef.current.offsetWidth;
-            const tabWidth = 100; // Incluindo margens e padding
+            const tabWidth = 100; // Largura ajustada para suas abas
             setVisibleTabLimit(Math.floor(wrapperWidth / tabWidth));
         };
 
-        // Inicializa o limite de abas visíveis
-        updateVisibleTabLimit();
+        updateVisibleTabLimit(); // Inicializa o limite de abas visíveis
+        window.addEventListener('resize', updateVisibleTabLimit); // Adiciona listener de redimensionamento
 
-        // Adiciona listener para o evento de redimensionamento da janela
-        window.addEventListener('resize', updateVisibleTabLimit);
-
-        // Limpeza do event listener
-        return () => {
+        return () => { // Limpeza do listener
             window.removeEventListener('resize', updateVisibleTabLimit);
         };
     }, [tabs]);
@@ -41,17 +37,17 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     };
 
     const addTab = () => {
-        const nextTab = {
+        const newTab = {
             id: nextTabId,
             label: `Frame ${nextTabId}`,
             content: 'MxGraphComponent',
             isEditing: false
         };
-        setTabs([...tabs, nextTab]);
-        setActiveTab(tabs.length);
+        setTabs([...tabs, newTab]);
+        setActiveTab(tabs.length); // Define a nova aba como ativa
         setNextTabId(nextTabId + 1);
         if (onTabAdded) {
-            onTabAdded(nextTab);
+            onTabAdded(newTab);
         }
     };
 
@@ -89,8 +85,9 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
         setIsDropdownVisible(!isDropdownVisible);
     };
 
-    // Determina quais abas devem ser mostradas no menu suspenso
-    const hiddenTabs = tabs.slice(visibleTabLimit);
+    // Verifica se há abas ocultas
+    const hiddenTabs = tabs.length > visibleTabLimit;
+    const dropdownTabs = tabs.slice(visibleTabLimit);
 
     return (
         <div className="tabs-container">
@@ -107,11 +104,11 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
                         <span onClick={(e) => { e.stopPropagation(); closeTab(index); }} className="close-btn">X</span>
                     </div>
                 ))}
-                <div className="dropdown-button" onClick={toggleDropdown}>⯆</div>
+                {hiddenTabs && <div className="dropdown-button" onClick={toggleDropdown}>⯆</div>}
             </div>
             {isDropdownVisible && (
                 <div className="dropdown-menu">
-                    {hiddenTabs.map((tab, index) => (
+                    {dropdownTabs.map((tab, index) => (
                         <div key={tab.id} onClick={() => {
                             changeTab(index + visibleTabLimit);
                             setIsDropdownVisible(false);
