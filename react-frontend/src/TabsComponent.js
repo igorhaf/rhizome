@@ -52,9 +52,23 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     };
 
     const changeTab = (index) => {
-        setActiveTab(index);
-        if (onTabChanged) {
-            onTabChanged(index);
+        // Checa se a aba clicada está fora do limite das abas visíveis
+        if (index >= visibleTabLimit) {
+            // A aba está fora da visão principal, então move para o início
+            const newTabs = [...tabs];
+            const selectedTab = newTabs.splice(index, 1)[0];
+            newTabs.unshift(selectedTab); // Move a aba selecionada para o início
+            setTabs(newTabs); // Atualiza o estado
+            setActiveTab(0); // Define a aba movida como ativa
+            if (onTabChanged) {
+                onTabChanged(0); // Notifica sobre a mudança, se houver um handler
+            }
+        } else {
+            // A aba já está visível, apenas muda a aba ativa
+            setActiveTab(index);
+            if (onTabChanged) {
+                onTabChanged(index); // Notifica sobre a mudança, se houver um handler
+            }
         }
     };
 
@@ -65,8 +79,9 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
             content: 'MxGraphComponent',
             isEditing: false
         };
+        // Adiciona a nova aba no início do array
         setTabs([newTab, ...tabs]);
-        setActiveTab(0);
+        setActiveTab(0); // Define a primeira aba (a mais recente) como ativa
         setNextTabId(nextTabId + 1);
         if (onTabAdded) {
             onTabAdded(newTab);
@@ -108,9 +123,7 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     const toggleDropdown = () => {
         setIsDropdownVisible(!isDropdownVisible);
     };
-
     const hiddenTabsExist = tabs.length > visibleTabLimit;
-
     // Verifica se há abas ocultas
     const hiddenTabs = tabs.length > visibleTabLimit;
     // As abas visíveis são agora as primeiras até o limite
@@ -118,21 +131,28 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
 
     return (
         <div className="tabs-container">
-            <div className="tabs-wrapper" ref={tabsWrapperRef} onDragOver={onDragOver}>
+            <div className="tabs-wrapper" ref={tabsWrapperRef} onDragOver={onDragOver} >
                 <div onClick={addTab} className="add-tab">+</div>
-                {tabs.map((tab, index) => (
+                {visibleTabs.map((tab, index) => (
                     <div key={tab.id} className={`tab ${activeTab === index ? 'active-tab' : ''}`}
                          draggable
-                         onDragStart={(e) => onDragStart(e, index)}
-                         onDragOver={onDragOver}
+                         onDragstart={(e) => onDragStart(e, index)}
+                         onDragover={onDragOver}
                          onDrop={(e) => onDrop(e, index)}
                          onClick={() => changeTab(index)}>
-                        {tab.label}
+                        {tab.isEditing ? (
+                            <input ref={tabInputRef} value={tab.label}
+                                   onChange={(e) => saveTabName({ ...tab, label: e.target.value })}
+                                   onBlur={() => saveTabName(tab)}
+                                   className="tab-input" />
+                        ) : (
+                            <span>{tab.label}</span>
+                        )}
                         <span onClick={(e) => { e.stopPropagation(); closeTab(index); }}
                               className="close-btn">X</span>
                     </div>
                 ))}
-                {hiddenTabsExist && <div className="dropdown-button" onClick={toggleDropdown}>⯆</div>}
+                {hiddenTabs && <div className="dropdown-button" onClick={toggleDropdown}>⯆</div>}
             </div>
             {isDropdownVisible && (
                 <div className="dropdown-menu">
