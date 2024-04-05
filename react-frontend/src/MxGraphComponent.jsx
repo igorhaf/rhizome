@@ -69,6 +69,17 @@ const MxGraphComponent = () => {
     newGraph.getModel().addListener(mxEvent.AFTER_ADD, () => {
       newGraph.refresh();
     });
+      newGraph.setPanning(true);
+      newGraph.panningHandler.useLeftButtonForPanning = true;
+      newGraph.panningHandler.border = 0;
+      newGraph.gridSize = 10;
+      newGraph.scrollbars = false;
+      newGraph.pageVisible = false;
+      newGraph.setEnabled(true);
+      newGraph.setCellsDeletable(true);
+      newGraph.stylesheet.getDefaultEdgeStyle().rounded = 1;
+      newGraph.stylesheet.getDefaultEdgeStyle().jettySize = 30;
+      newGraph.setCellsResizable(false);
     const style = newGraph.getStylesheet().getDefaultVertexStyle();
     style[mxConstants.STYLE_EXIT_X] = 1.0;
     style[mxConstants.STYLE_EXIT_Y] = 0.5;
@@ -81,17 +92,7 @@ const MxGraphComponent = () => {
     style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
     style[mxConstants.STYLE_FONTCOLOR] = '#dee0e4';  // Branco
 
-    newGraph.setPanning(true);
-    newGraph.panningHandler.useLeftButtonForPanning = true;
-    newGraph.panningHandler.border = 0;
-    newGraph.gridSize = 10;
-    newGraph.scrollbars = false;
-    newGraph.pageVisible = false;
-    newGraph.setEnabled(true);
-    newGraph.setCellsDeletable(true);
-    newGraph.stylesheet.getDefaultEdgeStyle().rounded = 1;
-    newGraph.stylesheet.getDefaultEdgeStyle().jettySize = 30;
-    newGraph.setCellsResizable(false);
+
 
     newGraph.getModel().beginUpdate();
     try {
@@ -99,8 +100,20 @@ const MxGraphComponent = () => {
     } finally {
       newGraph.getModel().endUpdate();
     }
-    
-    
+      new mxRubberband(newGraph);
+
+      const keyHandler = new mxKeyHandler(newGraph);
+      keyHandler.bindKey(46, (evt) => {
+          container.setAttribute('tabindex', '-1');
+          container.focus();
+          console.log(newGraph.isEnabled());
+          if (newGraph.isEnabled()) {
+
+              //newGraph.container.focus();
+              newGraph.removeCells()
+          }
+      });
+
     return newGraph;
   };
 
@@ -110,13 +123,15 @@ const MxGraphComponent = () => {
         const { iconClass, name } = JSON.parse(data);
 
         const parent = graph.getDefaultParent();
-        graph.getModel().beginUpdate();
+
+
+      graph.getModel().beginUpdate();
         try {
           const regex = /static\/media\/([^.]+)\./;
             const iconURL = getIconURLFromClassName(iconClass);
             const shapeMatch = iconURL.match(regex);
             const type = shapeMatch ? shapeMatch[1] : null;
-  
+
             if (type === 'start') {
               // Verifica se já existe um vértice do tipo 'start'
               const existingVertices = graph.getChildVertices(parent);
@@ -125,14 +140,14 @@ const MxGraphComponent = () => {
                 const match = style && style.match(regex);
                 return match && match[1] === 'start';
               });
-  
+
               if (startVertexExists) {
                 // Se um vértice 'start' já existe, não adiciona outro e emite um evento de erro
                 dispatch(setText('Dois vertices do tipo start, não podem coexistir no maesmo frame.'));
                 return; // Interrompe a execução do método
               }
             }
-            
+
             const x = event.clientX;
             const y = event.clientY;
 
@@ -144,6 +159,7 @@ const MxGraphComponent = () => {
         } finally {
             graph.getModel().endUpdate();
         }
+
     };
 
   const addClickEventListener = (graph) => {
@@ -298,25 +314,38 @@ const MxGraphComponent = () => {
         }
 
         if (!followsStartFlow(target, graph) || !followsStartFlow(source, graph)) {
-          
+
           target.removeEdge(edge, true);
           mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
           dispatch(setText("A conexão deve seguir o fluxo a partir de start"));
           evt.consume();
         }
       }
+        //!todo: animation
+        //const edges = edges;
+        //console.log(edges)
+        //var state = graph.view.getState(edge);
+        //console.log(state)
+
+        //state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+        //state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+        //state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+        //state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
+
     });
     mxUtils.alert = function(message) {
       dispatch(setText("Emitindo evento de erro:"+ message));
     };
+
     /*if (!followsStartFlow(target) || !followsStartFlow(source)) {
       target.removeEdge(edge, true);
       mxUtils.alert('A conexão deve seguir o fluxo a partir de "start".');
       evt.consume();
     }*/
+
   };
   const followsStartFlow = (vertex, graph) => {
-    
+
     if (!vertex) return false;
     // Verifica se o vértice é do tipo 'start' através do seu estilo
     const style = vertex.getStyle();
@@ -324,7 +353,7 @@ const MxGraphComponent = () => {
     if (style && regex.test(style)) {
       return true; // O vértice atual é 'start'
     }
-    
+
     // Rastreia o caminho de entrada até encontrar um 'start'
     let incomingEdges = graph.getModel().getIncomingEdges(vertex);
     for (let i = 0; i < incomingEdges.length; i++) {
@@ -342,7 +371,7 @@ const MxGraphComponent = () => {
       mxUtils.error('Browser não suportado!', 200, false);
       return;
     }
-    
+
     const newGraph = initGraph(graphContainer.current);
     addClickEventListener(newGraph);
     addConsoleEventListener(newGraph);
@@ -353,13 +382,7 @@ const MxGraphComponent = () => {
       graphContainer.current.style.width = `${initialWidth}px`;
       graphContainer.current.style.height = `${initialHeight}px`;
     });
-    new mxRubberband(newGraph);
-    const keyHandler = new mxKeyHandler(newGraph);
-    keyHandler.bindKey(46, (evt) => {
-        if (newGraph.isEnabled()) {
-          newGraph.removeCells()
-        }
-    });
+
     const sendGraphDataToAPI = async () => {
       // ... implementação de envio de dados para a API
     };
@@ -372,8 +395,8 @@ const MxGraphComponent = () => {
   // eslint-disable-next-line
   }, [graphContainer]); // As dependências corretas devem ser listadas aqui
 
-  
-    
+
+
 
   return (
     <div ref={graphContainer} className="graph-container" onDrop={drop} onDragOver={(e) => e.preventDefault()}></div>
