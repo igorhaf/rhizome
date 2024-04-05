@@ -6,19 +6,18 @@ import QuickAccessBar from './QuickAccessBar';
 
 const ColumnOne = () => {
    const activeFragments = useSelector(state => state.fragments.activeFragments);
-  
+
   const elements = [
-        {
+      {
+          id: 2,
+          name: "Start",
+          type: "start",
+          iconClass: "start"
+      }, {
             id: 1,
             name: "Core",
             expanded: true,
             children: [
-                {
-                    id: 2,
-                    name: "Start",
-                    type: "start",
-                    iconClass: "start"
-                },
                 {
                     id: 3,
                     name: "Schedule",
