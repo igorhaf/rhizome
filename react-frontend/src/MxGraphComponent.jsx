@@ -104,8 +104,7 @@ const MxGraphComponent = () => {
 
       const keyHandler = new mxKeyHandler(newGraph);
       keyHandler.bindKey(46, (evt) => {
-          container.setAttribute('tabindex', '-1');
-          container.focus();
+          
           console.log(newGraph.isEnabled());
           if (newGraph.isEnabled()) {
 
