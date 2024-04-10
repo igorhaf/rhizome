@@ -104,7 +104,7 @@ const MxGraphComponent = () => {
 
       const keyHandler = new mxKeyHandler(newGraph);
       keyHandler.bindKey(46, (evt) => {
-          
+
           console.log(newGraph.isEnabled());
           if (newGraph.isEnabled()) {
 

@@ -4,17 +4,21 @@ module.exports = {
   theme: {
     extend: {
         fontSize:{
-            DEFAULT: '12px'
+            DEFAULT: '12px',
+            primary: '10px'
         },
         textColor: {
             DEFAULT: '#dfe1e5', // Define a cor padrão do texto para branco
+            primary: '#dfe1e5'
         },
 
         backgroundColor: {
             DEFAULT: '#2b2d30',
+            primary: '#2b2d30'
         },
         borderColor: {
             DEFAULT: '#ffffff', // Contorno branco
+            primary: '#ffffff'
         },
         outline: {
             none: 'none', // Remove outlines padrão

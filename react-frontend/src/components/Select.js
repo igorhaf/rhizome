@@ -3,7 +3,7 @@ import React from 'react';
 function Select({ label, name, options }) {
     return (
         <div className="w-full mb-4">
-            <label className="block mb-2 text" htmlFor={name}>
+            <label className="block mb-2 text-primary" htmlFor={name}>
                 {label}
             </label>
             <select

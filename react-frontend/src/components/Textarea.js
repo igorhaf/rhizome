@@ -3,7 +3,7 @@ import React from 'react';
 function Textarea({ label, name, placeholder }) {
     return (
         <div className="mb-4">
-            <label className="block mb-2 text" htmlFor={name}>
+            <label className="block mb-2 text-primary" htmlFor={name}>
                 {label}
             </label>
             <textarea

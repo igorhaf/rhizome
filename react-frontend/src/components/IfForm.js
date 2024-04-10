@@ -5,7 +5,7 @@ import Text from './Text';
 import Select from './Select';
 import Textarea from './Textarea';
 
-function Form() {
+function IfForm() {
     const [conditions, setConditions] = useState([
         { id: 'cond-0', value1: '', operator: 'equal', value2: '' }
     ]);
@@ -109,4 +109,4 @@ function Form() {
     );
 }
 
-export default Form;
+export default IfForm;

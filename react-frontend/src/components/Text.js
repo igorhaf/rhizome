@@ -4,7 +4,7 @@ function Text({ label, name, placeholder }) {
     // Aplicando estilos condicionalmente se o tipo é 'text' ou 'textarea'
     return (
         <div className="w-full mb-4">
-            <label className="block mb-2 text" htmlFor={name}>
+            <label className="block mb-2 text-primary" htmlFor={name}>
                 {label}
             </label>
                 <input
