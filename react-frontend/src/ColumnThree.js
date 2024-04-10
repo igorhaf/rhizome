@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
+import IfForm from './components/IfForm'
 // Importe o componente StartTime que você converteu de StartTimeComponent.vue para React
 // import StartTime from './GraphComponents/StartTime';
 
-// Se você estiver usando um sistema de eventos global como o EventBus do Vue, 
+// Se você estiver usando um sistema de eventos global como o EventBus do Vue,
 // você precisará substituí-lo por um contexto ou gerenciamento de estado global como Redux.
 // Este é um exemplo de como você poderia criar um contexto se necessário.
 // const EventBusContext = React.createContext();
@@ -33,11 +34,11 @@ const ColumnThree = () => {
   }, []);
 
   return (
-    <div className="bg p-4">
+    <div className="bg p-4 h-full overflow-auto">
       {nodeName ? (
         <p className="font font-semibold text">Nome do Objeto: {nodeType}</p>
       ) : (
-        <p className="font text">Coluna 3</p>
+          <IfForm />
       )}
       {/* Substitua isso pelo seu componente StartTime convertido */}
       {/* <StartTime /> */}

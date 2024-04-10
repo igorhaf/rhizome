@@ -6,19 +6,18 @@ import QuickAccessBar from './QuickAccessBar';
 
 const ColumnOne = () => {
    const activeFragments = useSelector(state => state.fragments.activeFragments);
-  
+
   const elements = [
-        {
+      {
+          id: 2,
+          name: "Start",
+          type: "start",
+          iconClass: "start"
+      }, {
             id: 1,
             name: "Core",
             expanded: true,
             children: [
-                {
-                    id: 2,
-                    name: "Start",
-                    type: "start",
-                    iconClass: "start"
-                },
                 {
                     id: 3,
                     name: "Schedule",
@@ -150,8 +149,9 @@ const ColumnOne = () => {
     ];
     const frames = [{
             id: 1,
-            name: "Frame 1",
-            expanded: false,
+            name: "Remove card",
+            type: "trello-remove-card",
+            iconClass: "trello-remove-card"
         },
     ];
 

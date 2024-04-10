@@ -33,7 +33,7 @@ code {
 }
 
 body {
-    scrollbar-color: #888 #e0e0e0;
+    /*scrollbar-color: #888 #e0e0e0;*/
     scrollbar-width: thin;
 }
 
@@ -55,77 +55,77 @@ body {
 }
 
 .if{
-    background-image: url('./assets/images/icons/if.svg');
+    background-image: url('./assets/images/icons/components/16w/if@16w.png');
 }
 
 .schedule{
 
-    background-image: url('./assets/images/icons/schedule.svg');
+    background-image: url('./assets/images/icons/components/16w/schedule@16w.png');
 
 }
 
 .sleep{
-    background-image: url('./assets/images/icons/sleep.svg');
+    background-image: url('./assets/images/icons/components/16w/sleep@16w.png');
 }
 
 .start{
-    background-image: url('./assets/images/icons/start.svg');
+    background-image: url('./assets/images/icons/components/16w/start@16w.png');
 }
 
 .starttime{
-    background-image: url('./assets/images/icons/starttime.svg');
+    background-image: url('./assets/images/icons/components/16w/starttime@16w.png');
 }
 
 .stop{
-    background-image: url('./assets/images/icons/stop.svg');
+    background-image: url('./assets/images/icons/components/16w/stop@16w.png');
 }
 
 .switch{
-    background-image: url('./assets/images/icons/switch.svg');
+    background-image: url('./assets/images/icons/components/16w/switch@16w.png');
 }
 
 .webhook{
-    background-image: url('./assets/images/icons/webhook.svg');
+    background-image: url('./assets/images/icons/components/16w/webhook@16w.png');
 }
 
 .exception{
-    background-image: url('./assets/images/icons/exception.svg');
+    background-image: url('./assets/images/icons/components/16w/exception@16w.png');
 }
 
 .query{
-    background-image: url('./assets/images/icons/query.svg');
+    background-image: url('./assets/images/icons/components/16w/query@16w.png');
 }
 
 .gmail-receive{
-    background-image: url('./assets/images/icons/gmail-receive.svg');
+    background-image: url('./assets/images/icons/components/16w/gmail-receive@16w.png');
 }
 
 .gmail-send{
-    background-image: url('./assets/images/icons/gmail-send.svg');
+    background-image: url('./assets/images/icons/components/16w/gmail-send@16w.png');
 }
 
 .trello-add-card{
-    background-image: url('./assets/images/icons/trello-add-card.svg');
+    background-image: url('./assets/images/icons/components/16w/trello-add-card@16w.png');
 }
 
 .trello-remove-card{
-    background-image: url('./assets/images/icons/trello-remove-card.svg');
+    background-image: url('./assets/images/icons/components/16w/trello-remove-card@16w.png');
 }
 
 .link{
-    background-image: url('./assets/images/icons/link.svg');
+    background-image: url('./assets/images/icons/components/16w/link@16w.png');
 }
 
 .api{
-    background-image: url('./assets/images/icons/api.svg');
+    background-image: url('./assets/images/icons/components/16w/api@16w.png');
 }
 
 .bash{
-    background-image: url('./assets/images/icons/bash.svg');
+    background-image: url('./assets/images/icons/components/16w/bash@16w.png');
 }
 
 .javascript{
-    background-image: url('./assets/images/icons/javascript.svg');
+    background-image: url('./assets/images/icons/components/16w/javascript@16w.png');
 }
 
 
@@ -137,37 +137,38 @@ body {
     margin-left: 10px;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
     color: #e5e7eb;
 
 }
 
-.components{
-    background-image: url('./assets/images/icons/components.svg');
+.elements{
+    background-image: url('./assets/images/icons/quick-menu/32w/elements@32w.png');
     width: 28px;
 }
 
 .frames{
-    background-image: url('./assets/images/icons/frames.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/frames@32w.png');
     width: 25px;
 }
 
 .integrations{
-    background-image: url('./assets/images/icons/integrations.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/integrations@32w.png');
     width: 26px;
 }
 
-.play{
-    background-image: url('./assets/images/icons/play.svg');
+.run{
+    background-image: url('./assets/images/icons/quick-menu/32w/run@32w.png');
     width: 26px;
 }
 
 .config{
-    background-image: url('./assets/images/icons/config.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/config@32w.png');
     width: 26px;
 }
 
 .database{
-    background-image: url('./assets/images/icons/database.svg');
+    background-image: url('./assets/images/icons/quick-menu/32w/database@32w.png');
     width: 24px;
 }
 
