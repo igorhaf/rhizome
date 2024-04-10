@@ -2,12 +2,12 @@ import React from 'react';
 
 function Textarea({ label, name, placeholder }) {
     return (
-        <div className="mb-4">
+        <div className="mb-1">
             <label className="block mb-2 text-primary" htmlFor={name}>
                 {label}
             </label>
             <textarea
-                className="shadow appearance-none rounded w-full py-2 px-3 bg text border focus:border-blue-500 focus:outline-blue leading-tight"
+                className="shadow text-primary appearance-none w-full py-1 px-1 bg text border focus:border-blue-500 focus:outline-blue leading-tight"
                 id={name}
                 placeholder={placeholder}
             />

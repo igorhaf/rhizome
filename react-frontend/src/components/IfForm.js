@@ -4,6 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Text from './Text';
 import Select from './Select';
 import Textarea from './Textarea';
+import TagInput from './TagInput';
 
 function IfForm() {
     const [conditions, setConditions] = useState([
@@ -47,10 +48,10 @@ function IfForm() {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    className="flex items-center mb-4"
+                                                    className="flex items-center mb-1"
                                                 >
                                                     {/* Substitua por ícone de arrastar */}
-                                                    <span className="mr-1 p-0.5 rounded bg-gray-500 text-white">::</span>
+                                                    <span className="mr-1 mt-5 p-0.5 rounded bg text">🟰</span>
                                                     <Text label="Variável 1" name={`value1_${index}`} placeholder="Primeira variável de comparação" />
                                                     <Select
                                                         label="Operador"
@@ -64,7 +65,7 @@ function IfForm() {
                                                     <button
                                                         type="button"
                                                         onClick={() => removeCondition(index)}
-                                                        className="ml-1 p-0.5 rounded bg-red-500 text-white"
+                                                        className="ml-1 mt-5 p-0.5 rounded bg text"
                                                     >
                                                         {/* Substitua por ícone de menos */}
                                                         ➖
@@ -72,7 +73,7 @@ function IfForm() {
                                                     <button
                                                         type="button"
                                                         onClick={addCondition}
-                                                        className="ml-1 p-0.5 rounded bg-green-500 text-white"
+                                                        className="ml-1 mt-5 p-0.5 rounded bg text"
                                                     >
                                                         {/* Substitua por ícone de mais */}
                                                         ➕
@@ -103,6 +104,7 @@ function IfForm() {
                             { value: 'enabled', label: 'Habilitado' },
                         ]}
                     />
+                    <TagInput label={'Grupos de alerta'} />
                 </form>
             </div>
 
