@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import IfForm from './components/IfForm'
+import ScheduleForm from './components/ScheduleForm'
 // Importe o componente StartTime que você converteu de StartTimeComponent.vue para React
 // import StartTime from './GraphComponents/StartTime';
 
@@ -38,7 +38,7 @@ const ColumnThree = () => {
       {nodeName ? (
         <p className="font font-semibold text">Nome do Objeto: {nodeType}</p>
       ) : (
-          <IfForm />
+          <ScheduleForm />
       )}
       {/* Substitua isso pelo seu componente StartTime convertido */}
       {/* <StartTime /> */}

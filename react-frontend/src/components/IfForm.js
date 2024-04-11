@@ -36,7 +36,10 @@ function IfForm() {
 
             <div className="w-full">
                 <form>
-                    <Text label="Nome do objeto" name="object_name" placeholder="Nome do objeto" />
+                    <Text label="Nome do objeto" name="object_name" placeholder="Nome do objeto"/>
+                    <label className="block mb-1 text-primary">
+                        Condicionais
+                    </label>
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="conditions">
                             {(provided) => (
@@ -52,16 +55,18 @@ function IfForm() {
                                                 >
                                                     {/* Substitua por ícone de arrastar */}
                                                     <span className="mr-1 mt-5 p-0.5 rounded bg text">🟰</span>
-                                                    <Text label="Variável 1" name={`value1_${index}`} placeholder="Primeira variável de comparação" />
+                                                    <Text label="Variável 1" name={`value1_${index}`}
+                                                          placeholder="Primeira variável de comparação"/>
                                                     <Select
                                                         label="Operador"
                                                         name={`operator_${index}`}
                                                         options={[
-                                                            { value: 'equal', label: '==' },
-                                                            { value: 'different', label: '!=' },
+                                                            {value: 'equal', label: '=='},
+                                                            {value: 'different', label: '!='},
                                                         ]}
                                                     />
-                                                    <Text label="Variável 2" name={`value2_${index}`} placeholder="Segunda variável de comparação" />
+                                                    <Text label="Variável 2" name={`value2_${index}`}
+                                                          placeholder="Segunda variável de comparação"/>
                                                     <button
                                                         type="button"
                                                         onClick={() => removeCondition(index)}
@@ -87,24 +92,25 @@ function IfForm() {
                             )}
                         </Droppable>
                     </DragDropContext>
-                    <Textarea label="Condicional complexa" name="complex_conditional" placeholder="Condicionais com aninhamentos, subcondições, etc.." />
+                    <Textarea label="Condicional complexa" name="complex_conditional"
+                              placeholder="Condicionais com aninhamentos, subcondições, etc.."/>
                     <Select
                         label="Log local"
                         name="local_log"
                         options={[
-                            { value: 'disabled', label: 'Desabilitado' },
-                            { value: 'enabled', label: 'Habilitado' },
+                            {value: 'disabled', label: 'Desabilitado'},
+                            {value: 'enabled', label: 'Habilitado'},
                         ]}
                     />
                     <Select
                         label="Log global"
                         name="global_log"
                         options={[
-                            { value: 'disabled', label: 'Desabilitado' },
-                            { value: 'enabled', label: 'Habilitado' },
+                            {value: 'disabled', label: 'Desabilitado'},
+                            {value: 'enabled', label: 'Habilitado'},
                         ]}
                     />
-                    <TagsInput label={'Email-s de alerta'} />
+                    <TagsInput label={'Email-s de alerta'}/>
                 </form>
             </div>
 
