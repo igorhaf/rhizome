@@ -18,7 +18,7 @@ module.exports = {
         },
         borderColor: {
             DEFAULT: '#ffffff', // Contorno branco
-            primary: '#ffffff'
+            primary: 'blue'
         },
         outline: {
             none: 'none', // Remove outlines padrão
@@ -30,7 +30,7 @@ module.exports = {
       extend: {
           borderColor: ['responsive', 'hover', 'focus', 'focus-visible'], // Variantes para cor de borda
           ringWidth: ['focus-visible'], // Variantes para largura do anel
-          outline: ['focus-visible'], // Variantes para outline
+          inline: ['focus-visible'], // Variantes para outline
       },
   },
   plugins: [],

@@ -8,7 +8,7 @@ function Select({ label, name, options }) {
             </label>
             <select
 
-                className="shadow appearance-none text-primary w-full py-0.5 px-2 bg text border focus:border-blue-500 focus:outline-blue leading-tight"
+                className="focus:outline-none focus:box-shadow-blue-500 shadow appearance-none text-primary w-full py-0.5 px-2 bg text border focus:border-blue-500 focus:outline-blue leading-tight"
                 id={name}
             >
                 {options.map(option => (

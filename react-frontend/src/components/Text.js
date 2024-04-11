@@ -1,4 +1,5 @@
 import React from 'react';
+import './Text.css';
 
 function Text({ label, name, placeholder }) {
     // Aplicando estilos condicionalmente se o tipo é 'text' ou 'textarea'
@@ -8,7 +9,7 @@ function Text({ label, name, placeholder }) {
                 {label}
             </label>
                 <input
-                    className="shadow text-primary appearance-none w-full py-0.5 px-2 bg text border focus:border-blue-500 focus:outline-blue leading-tight"
+                    className="focus:outline-none focus:box-shadow-blue-500 shadow text-primary appearance-none w-full py-1 px-1 bg text border focus:border-blue-500 focus:outline-blue leading-tight"
                     id={name}
                     placeholder={placeholder}
                 />

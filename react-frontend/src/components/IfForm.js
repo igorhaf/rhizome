@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Text from './Text';
 import Select from './Select';
 import Textarea from './Textarea';
-import TagInput from './TagInput';
+import TagsInput from "./TagsInput";
 
 function IfForm() {
     const [conditions, setConditions] = useState([
@@ -104,7 +104,7 @@ function IfForm() {
                             { value: 'enabled', label: 'Habilitado' },
                         ]}
                     />
-                    <TagInput label={'Grupos de alerta'} />
+                    <TagsInput label={'Email-s de alerta'} />
                 </form>
             </div>
 
