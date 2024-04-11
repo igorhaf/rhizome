@@ -1,0 +1,486 @@
+Index: public/js/app.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/public/js/app.js b/public/js/app.js
+--- a/public/js/app.js	
++++ b/public/js/app.js	
+@@ -20156,6 +20156,12 @@
+ /* harmony import */ var mxgraph__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(mxgraph__WEBPACK_IMPORTED_MODULE_1__);
+ /* harmony import */ var _services_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/api */ "./resources/js/services/api.js");
+ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
++function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
++function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
++function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
++function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
++function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
++function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+ function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw new Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw new Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+ function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+@@ -20190,17 +20196,29 @@
+   },
+   mounted: function mounted() {
+     var _this = this;
+-    this.$nextTick(function () {
+-      if (!mxClient.isBrowserSupported()) {
+-        mxUtils.error("Browser não suportado!", 200, false);
+-        return;
+-      }
+-      _this.initGraph();
+-      _this.addEventListeners();
+-      _this.graph.getModel().addListener(mxEvent.CHANGE, _this.sendGraphDataToAPI);
+-      window.addEventListener('resize', _this.handleResize);
+-      _this.graph.refresh();
+-    });
++    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
++      return _regeneratorRuntime().wrap(function _callee$(_context) {
++        while (1) switch (_context.prev = _context.next) {
++          case 0:
++            _this.$nextTick(function () {
++              if (!mxClient.isBrowserSupported()) {
++                mxUtils.error("Browser não suportado!", 200, false);
++                return;
++              }
++              _this.initGraph();
++              _this.addClickEventListener();
++              _this.addEventListeners();
++              _this.addDblClickListener();
++              _this.graph.getModel().addListener(mxEvent.CHANGE, _this.sendGraphDataToAPI);
++              _this.graph.refresh();
++              window.addEventListener('resize', _this.handleResize);
++            });
++          case 1:
++          case "end":
++            return _context.stop();
++        }
++      }, _callee);
++    }))();
+   },
+   beforeDestroy: function beforeDestroy() {
+     if (this.graph) {
+@@ -20219,112 +20237,244 @@
+     },
+     sendGraphDataToAPI: function sendGraphDataToAPI() {
+       var _this3 = this;
+-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
++      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+         var encoder, result, xml;
+-        return _regeneratorRuntime().wrap(function _callee$(_context) {
+-          while (1) switch (_context.prev = _context.next) {
++        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
++          while (1) switch (_context2.prev = _context2.next) {
+             case 0:
+               encoder = new mxCodec();
+               result = encoder.encode(_this3.graph.getModel());
+               xml = mxUtils.getXml(result);
+               _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('graphDataUpdated', xml);
+-              _context.prev = 4;
+-              _context.next = 7;
++              _context2.prev = 4;
++              _context2.next = 7;
+               return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].post('/graph-data', {
+                 data: xml
+               });
+             case 7:
+-              _context.next = 12;
++              _context2.next = 11;
+               break;
+             case 9:
+-              _context.prev = 9;
+-              _context.t0 = _context["catch"](4);
+-              console.error('Erro ao enviar os dados para a API:', _context.t0);
+-            case 12:
++              _context2.prev = 9;
++              _context2.t0 = _context2["catch"](4);
++            case 11:
+             case "end":
+-              return _context.stop();
++              return _context2.stop();
+           }
+-        }, _callee, null, [[4, 9]]);
++        }, _callee2, null, [[4, 9]]);
+       }))();
+     },
++    /*async loadGraphFromDatabase() {
++        try {
++            const response = await api.get('/get-latest-diagram');
++            //console.log(response.data);
++            if (response && response.data) {
++                let doc = mxUtils.parseXml(response.data);
++                let codec = new mxCodec(doc);
++                codec.decode(doc.documentElement, this.graph.getModel());
++            }
++        } catch (error) {
++            //console.error('Erro ao carregar o diagrama:', error);
++        }
++    },*/
+     initGraph: function initGraph() {
+       var _this4 = this;
+-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+-        var container;
+-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+-          while (1) switch (_context2.prev = _context2.next) {
++      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
++        var container, style, initialWidth, initialHeight, parent, _style, shapeType, vertexName, iconURL, response, self, keyHandler;
++        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
++          while (1) switch (_context3.prev = _context3.next) {
+             case 0:
+               container = _this4.$refs.graphContainer;
+               _this4.graph = new mxGraph(container);
+-              // Configurações adicionais do mxGraph...
+-              _this4.configureStyles();
+-              _this4.configureGraph();
+-              _this4.loadGraphFromAPI();
++              _this4.graph.setCellsEditable(true);
++              _this4.graph.setConnectable(true);
++              _this4.graph.setMultigraph(false); // Evita múltiplas arestas entre dois vértices
++              _this4.graph.setAllowDanglingEdges(false); // Evita que arestas fiquem penduradas
++              _this4.graph.getModel().addListener(mxEvent.AFTER_ADD, function () {
++                _this4.graph.refresh();
++              });
++
++              // Define o estilo da aresta
++              style = _this4.graph.getStylesheet().getDefaultVertexStyle();
++              /*style[mxConstants.STYLE_ROUNDED] = true;
++              style[mxConstants.STYLE_STROKEWIDTH] = 2;
++              style[mxConstants.STYLE_STROKECOLOR] = '#000000';  // Define a cor da linha
++              style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;*/
++              style[mxConstants.STYLE_EXIT_X] = 1.0; // Ponto de saída no meio do vértice
++              style[mxConstants.STYLE_EXIT_Y] = 0.5; // Ponto de saída na parte inferior do vértice
++              style[mxConstants.STYLE_EXIT_PERIMETER] = 0; // Desativa a busca do ponto de saída ao redor do perímetro do vértice
++              style[mxConstants.STYLE_ENTRY_X] = 0; // Ponto de entrada no meio do vértice
++              style[mxConstants.STYLE_ENTRY_Y] = 0.5; // Ponto de entrada na parte superior do vértice
++              style[mxConstants.STYLE_ENTRY_PERIMETER] = 0; // Desativa a busca do ponto de entrada ao redor do perímetro do vértice
++
++              _this4.graph.setPanning(true);
++              _this4.graph.panningHandler.useLeftButtonForPanning = true;
++              _this4.graph.panningHandler.border = 0;
++              _this4.graph.gridSize = 10;
++              _this4.graph.scrollbars = false; // Desabilita as barras de rolagem
++              _this4.graph.pageVisible = false; // Evita que o mxGraph ajuste o tamanho do contêiner
++              _this4.graph.setEnabled(true);
++              _this4.graph.setCellsDeletable(true);
++              //this.graph.stylesheet.getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
++              _this4.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
++              _this4.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
++              _this4.graph.setCellsResizable(false);
++
++              //const edgeStyle = this.graph.getStylesheet().getDefaultEdgeStyle();
++              //edgeStyle[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation; // Exemplo de estilo de aresta
++              //edgeStyle[mxConstants.STYLE_CURVED] = 1; // Curva as arestas
++              //this.graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
++
++              mxEvent.addListener(container, 'drop', function (evt) {
++                var x = mxEvent.getClientX(evt);
++                var y = mxEvent.getClientY(evt);
++                var cord = mxUtils.convertPoint(container, x, y);
++                _this4.drop(evt, cord.x, cord.y);
++              });
++              container.setAttribute('draggable', 'true');
++              mxEvent.addListener(container, 'dragover', function (evt) {
++                evt.stopPropagation();
++                evt.preventDefault();
++              });
++              initialWidth = container.offsetWidth;
++              initialHeight = container.offsetHeight;
++              _this4.graph.addListener(mxEvent.SIZE, function (sender, evt) {
++                container.style.width = "".concat(initialWidth, "px");
++                container.style.height = "".concat(initialHeight, "px");
++              });
+               new mxRubberband(_this4.graph);
+               new mxKeyHandler(_this4.graph);
+-            case 7:
++              parent = _this4.graph.getDefaultParent();
++              _this4.graph.getModel().beginUpdate();
++              _context3.prev = 35;
++              _style = _this4.graph.getStylesheet().getDefaultVertexStyle();
++              _style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
++              _style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
++              _style[mxConstants.STYLE_SPACING_BOTTOM] = 32; // Mova o label 32 pixels para cima
++
++              _this4.graph.getStylesheet().putDefaultVertexStyle(_style);
++              shapeType = 'start';
++              vertexName = "Start";
++              iconURL = _this4.getIconURLFromClassName(shapeType);
++              _context3.next = 46;
++              return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].get('/get-latest-diagram');
++            case 46:
++              response = _context3.sent;
++              self = _this4;
++              parseString(response.data, function (err, result) {
++                Object.values(result.mxGraphModel.root).forEach(function (val) {
++                  Object.entries(val.mxCell).forEach(function (entry) {
++                    var _entry = _slicedToArray(entry, 2),
++                      key = _entry[0],
++                      value = _entry[1];
++                    if (value.$.vertex === '1') {
++                      if (key !== '0') {
++                        if (key !== '1') {
++                          console.log(value.$.parent);
++                          self.graph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
++                        }
++                      }
++                    }
++                    if (value.$.edge === '1') {
++                      var edge = self.graph.insertEdge(parent, value.$.id, value.$.value, self.graph.model.getCell(value.$.source), self.graph.model.getCell(value.$.target));
++                      if (value.Array && value.Array.mxPoint) {
++                        var geometry = new mxGeometry();
++                        geometry.relative = true;
++                        edge.geometry = geometry;
++                        geometry.points = value.Array.mxPoint.map(function (point) {
++                          return new mxPoint(point.$.x, point.$.y);
++                        });
++                        self.graph.model.setGeometry(edge, geometry);
++                      }
++                    }
++                  });
++                });
++              });
++            case 49:
++              _context3.prev = 49;
++              _this4.graph.getModel().endUpdate();
++              return _context3.finish(49);
++            case 52:
++              new mxRubberband(_this4.graph);
++              keyHandler = new mxKeyHandler(_this4.graph);
++              keyHandler.bindKey(46, function (evt) {
++                if (_this4.graph.isEnabled()) {
++                  _this4.graph.removeCells();
++                }
++              });
++              _this4.handleResize();
++            case 56:
+             case "end":
+-              return _context2.stop();
++              return _context3.stop();
+           }
+-        }, _callee2);
++        }, _callee3, null, [[35,, 49, 52]]);
+       }))();
+     },
+-    configureStyles: function configureStyles() {
++    addClickEventListener: function addClickEventListener() {
++      this.graph.addListener(mxEvent.CLICK, function (sender, evt) {
++        var cell = evt.getProperty('cell');
++        if (cell && cell.value) {
++          var regex = /\/([a-zA-Z0-9_]+)\.svg$/;
++          var nodeType = cell.style.match(regex);
++          _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('nodeSelected', cell.value);
++          _EventBus_js__WEBPACK_IMPORTED_MODULE_0__.EventBus.emit('nodeType', nodeType[1]);
++        }
++      });
++    },
++    addDblClickListener: function addDblClickListener() {
++      var _this5 = this;
++      this.graph.addListener(mxEvent.DOUBLE_CLICK, function (sender, evt) {
++        var cell = evt.getProperty('cell');
++        if (cell) {
++          if (cell.isVertex()) {
++            _this5.graph.startEditing(cell);
++          } else if (cell.isEdge()) {
++            _this5.graph.startEditingAtCell(cell);
++          }
++        }
++      });
++    },
++    getIconURLFromClassName: function getIconURLFromClassName(className) {
++      var icons = {
++        'if': '../images/icons/if.svg',
++        'schedule': '../images/icons/schedule.svg',
++        'sleep': '../images/icons/sleep.svg',
++        'start': '../images/icons/start.svg',
++        'start-time': '../images/icons/start-time.svg',
++        'stop': '../images/icons/stop.svg',
++        'switch': '../images/icons/switch.svg',
++        'webhook': '../images/icons/webhook.svg',
++        'exception': '../images/icons/exception.svg',
++        'database': '../images/icons/database.svg',
++        'gmail-receive': '../images/icons/gmail-receive.svg',
++        'gmail-send': '../images/icons/gmail-send.svg',
++        'trello-add-card': '../images/icons/trello-add-card.svg',
++        'trello-remove-card': '../images/icons/trello-remove-card.svg',
++        'link': '../images/icons/link.svg',
++        'api': '../images/icons/api.svg'
++      };
++      return icons[className] || './images/icons/stop.svg';
++    },
++    drop: function drop(evt, x, y) {
++      var data = evt.dataTransfer.getData('nodeData');
++      var shapeType = JSON.parse(data).iconClass;
++      var vertexName = JSON.parse(data).name;
++      var parent = this.graph.getDefaultParent();
+       var style = this.graph.getStylesheet().getDefaultVertexStyle();
+       style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+       style[mxConstants.STYLE_VERTICAL_LABEL_POSITION] = 'bottom';
+       style[mxConstants.STYLE_SPACING_BOTTOM] = 32;
+       this.graph.getStylesheet().putDefaultVertexStyle(style);
+-    },
+-    configureGraph: function configureGraph() {
+-      this.graph.setCellsEditable(true);
+-      this.graph.setConnectable(true);
+-      this.graph.setMultigraph(false);
+-      this.graph.setAllowDanglingEdges(false);
+-      this.graph.setPanning(true);
+-      this.graph.panningHandler.useLeftButtonForPanning = true;
+-      this.graph.panningHandler.border = 0;
+-      this.graph.gridSize = 10;
+-      this.graph.scrollbars = false;
+-      this.graph.pageVisible = false;
+-      this.graph.setEnabled(true);
+-      this.graph.setCellsDeletable(true);
+-      this.graph.setCellsResizable(false);
+-      this.graph.stylesheet.getDefaultEdgeStyle()['rounded'] = 1;
+-      this.graph.stylesheet.getDefaultEdgeStyle()['jettySize'] = 30;
+-    },
+-    loadGraphFromAPI: function loadGraphFromAPI() {
+-      var _this5 = this;
+-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+-        var response;
+-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+-          while (1) switch (_context3.prev = _context3.next) {
+-            case 0:
+-              _context3.prev = 0;
+-              _context3.next = 3;
+-              return _services_api__WEBPACK_IMPORTED_MODULE_2__["default"].get('/get-latest-diagram');
+-            case 3:
+-              response = _context3.sent;
+-              parseString(response.data, function (err, result) {
+-                _this5.graph.getModel().beginUpdate();
+-                try {
+-                  // Processa e adiciona células ao gráfico...
+-                } finally {
+-                  _this5.graph.getModel().endUpdate();
+-                }
+-              });
+-              _context3.next = 10;
+-              break;
+-            case 7:
+-              _context3.prev = 7;
+-              _context3.t0 = _context3["catch"](0);
+-              console.error('Erro ao carregar o diagrama:', _context3.t0);
+-            case 10:
+-            case "end":
+-              return _context3.stop();
+-          }
+-        }, _callee3, null, [[0, 7]]);
+-      }))();
++      this.graph.getModel().beginUpdate();
++      try {
++        var iconURL = this.getIconURLFromClassName(shapeType);
++        if (x !== undefined || y !== undefined) {
++          this.graph.setHtmlLabels(true);
++          this.graph.insertVertex(parent, null, vertexName, x - 24, y - 24, 48, 48, "shape=image;image=".concat(iconURL));
++        }
++      } finally {
++        this.graph.getModel().endUpdate();
++      }
+     },
+     handleResize: function handleResize() {
+       if (this.graph && this.$refs.graphContainer) {
+@@ -20333,16 +20483,9 @@
+         var height = container.offsetHeight;
+         this.graph.container.style.width = width + 'px';
+         this.graph.container.style.height = height + 'px';
+-
+-        // Informa ao mxGraph sobre a mudança de tamanho
+         this.graph.view.updateViewSize();
+-        this.graph.view.setTranslate(0, 0);
+         this.graph.sizeDidChange();
+       }
+-    },
+-    // Outros métodos...
+-    drop: function drop(evt, x, y) {
+-      // Implementação de drop...
+     }
+   }
+ });
+@@ -23357,7 +23500,7 @@
+ 
+ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+ // Module
+-___CSS_LOADER_EXPORT___.push([module.id, "\n.split-container {\n    display: flex;\n    width: 100%; /* Garante que o container ocupe toda a largura */\n}\n\n.split-pane {\n    /* Removido flex: 1 para permitir controle mais preciso com Split.js */\n    min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */\n}\n\n.gutter {\n    cursor: col-resize !important;\n}\n", ""]);
++___CSS_LOADER_EXPORT___.push([module.id, "\r\n.split-container {\r\n    display: flex;\r\n    width: 100%; /* Garante que o container ocupe toda a largura */\r\n}\r\n\r\n.split-pane {\r\n    /* Removido flex: 1 para permitir controle mais preciso com Split.js */\r\n    min-width: 0; /* Previne que as colunas não encolham abaixo de um certo ponto */\r\n}\r\n\r\n.gutter {\r\n    cursor: col-resize !important;\r\n}\r\n", ""]);
+ // Exports
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+ 
+@@ -23405,7 +23548,7 @@
+ 
+ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+ // Module
+-___CSS_LOADER_EXPORT___.push([module.id, "\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n}\n\n.mxGraph {\n    height: 100%;\n}\n", ""]);
++___CSS_LOADER_EXPORT___.push([module.id, "\n/*.mxCellEditor .mxPlainTextEditor{\n\n}*/\n.graph-container {\n    background-size: 15px 15px;\n    background-image:\n        linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),\n        linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);\n    flex: 1;\n    overflow: hidden;\n    height: 100%;\n}\n\n.mxGraph {\n    height: 100%;\n}\n\n", ""]);
+ // Exports
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+ 
+Index: public/css/app.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/*\r\n! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com\r\n*//*\r\n1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)\r\n2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)\r\n*/\r\n\r\n*,\r\n::before,\r\n::after {\r\n  box-sizing: border-box; /* 1 */\r\n  border-width: 0; /* 2 */\r\n  border-style: solid; /* 2 */\r\n  border-color: #e5e7eb; /* 2 */\r\n}\r\n\r\n::before,\r\n::after {\r\n  --tw-content: '';\r\n}\r\n\r\n/*\r\n1. Use a consistent sensible line-height in all browsers.\r\n2. Prevent adjustments of font size after orientation changes in iOS.\r\n3. Use a more readable tab size.\r\n4. Use the user's configured `sans` font-family by default.\r\n5. Use the user's configured `sans` font-feature-settings by default.\r\n6. Use the user's configured `sans` font-variation-settings by default.\r\n*/\r\n\r\nhtml {\r\n  line-height: 1.5; /* 1 */\r\n  -webkit-text-size-adjust: 100%; /* 2 */\r\n  -moz-tab-size: 4; /* 3 */\r\n  -o-tab-size: 4;\r\n     tab-size: 4; /* 3 */\r\n  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"; /* 4 */\r\n  font-feature-settings: normal; /* 5 */\r\n  font-variation-settings: normal; /* 6 */\r\n}\r\n\r\n/*\r\n1. Remove the margin in all browsers.\r\n2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.\r\n*/\r\n\r\nbody {\r\n  margin: 0; /* 1 */\r\n  line-height: inherit; /* 2 */\r\n}\r\n\r\n/*\r\n1. Add the correct height in Firefox.\r\n2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)\r\n3. Ensure horizontal rules are visible by default.\r\n*/\r\n\r\nhr {\r\n  height: 0; /* 1 */\r\n  color: inherit; /* 2 */\r\n  border-top-width: 1px; /* 3 */\r\n}\r\n\r\n/*\r\nAdd the correct text decoration in Chrome, Edge, and Safari.\r\n*/\r\n\r\nabbr:where([title]) {\r\n  -webkit-text-decoration: underline dotted;\r\n          text-decoration: underline dotted;\r\n}\r\n\r\n/*\r\nRemove the default font size and weight for headings.\r\n*/\r\n\r\nh1,\r\nh2,\r\nh3,\r\nh4,\r\nh5,\r\nh6 {\r\n  font-size: inherit;\r\n  font-weight: inherit;\r\n}\r\n\r\n/*\r\nReset links to optimize for opt-in styling instead of opt-out.\r\n*/\r\n\r\na {\r\n  color: inherit;\r\n  text-decoration: inherit;\r\n}\r\n\r\n/*\r\nAdd the correct font weight in Edge and Safari.\r\n*/\r\n\r\nb,\r\nstrong {\r\n  font-weight: bolder;\r\n}\r\n\r\n/*\r\n1. Use the user's configured `mono` font family by default.\r\n2. Correct the odd `em` font sizing in all browsers.\r\n*/\r\n\r\ncode,\r\nkbd,\r\nsamp,\r\npre {\r\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; /* 1 */\r\n  font-size: 1em; /* 2 */\r\n}\r\n\r\n/*\r\nAdd the correct font size in all browsers.\r\n*/\r\n\r\nsmall {\r\n  font-size: 80%;\r\n}\r\n\r\n/*\r\nPrevent `sub` and `sup` elements from affecting the line height in all browsers.\r\n*/\r\n\r\nsub,\r\nsup {\r\n  font-size: 75%;\r\n  line-height: 0;\r\n  position: relative;\r\n  vertical-align: baseline;\r\n}\r\n\r\nsub {\r\n  bottom: -0.25em;\r\n}\r\n\r\nsup {\r\n  top: -0.5em;\r\n}\r\n\r\n/*\r\n1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)\r\n2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)\r\n3. Remove gaps between table borders by default.\r\n*/\r\n\r\ntable {\r\n  text-indent: 0; /* 1 */\r\n  border-color: inherit; /* 2 */\r\n  border-collapse: collapse; /* 3 */\r\n}\r\n\r\n/*\r\n1. Change the font styles in all browsers.\r\n2. Remove the margin in Firefox and Safari.\r\n3. Remove default padding in all browsers.\r\n*/\r\n\r\nbutton,\r\ninput,\r\noptgroup,\r\nselect,\r\ntextarea {\r\n  font-family: inherit; /* 1 */\r\n  font-feature-settings: inherit; /* 1 */\r\n  font-variation-settings: inherit; /* 1 */\r\n  font-size: 100%; /* 1 */\r\n  font-weight: inherit; /* 1 */\r\n  line-height: inherit; /* 1 */\r\n  color: inherit; /* 1 */\r\n  margin: 0; /* 2 */\r\n  padding: 0; /* 3 */\r\n}\r\n\r\n/*\r\nRemove the inheritance of text transform in Edge and Firefox.\r\n*/\r\n\r\nbutton,\r\nselect {\r\n  text-transform: none;\r\n}\r\n\r\n/*\r\n1. Correct the inability to style clickable types in iOS and Safari.\r\n2. Remove default button styles.\r\n*/\r\n\r\nbutton,\r\n[type='button'],\r\n[type='reset'],\r\n[type='submit'] {\r\n  -webkit-appearance: button; /* 1 */\r\n  background-color: transparent; /* 2 */\r\n  background-image: none; /* 2 */\r\n}\r\n\r\n/*\r\nUse the modern Firefox focus style for all focusable elements.\r\n*/\r\n\r\n:-moz-focusring {\r\n  outline: auto;\r\n}\r\n\r\n/*\r\nRemove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)\r\n*/\r\n\r\n:-moz-ui-invalid {\r\n  box-shadow: none;\r\n}\r\n\r\n/*\r\nAdd the correct vertical alignment in Chrome and Firefox.\r\n*/\r\n\r\nprogress {\r\n  vertical-align: baseline;\r\n}\r\n\r\n/*\r\nCorrect the cursor style of increment and decrement buttons in Safari.\r\n*/\r\n\r\n::-webkit-inner-spin-button,\r\n::-webkit-outer-spin-button {\r\n  height: auto;\r\n}\r\n\r\n/*\r\n1. Correct the odd appearance in Chrome and Safari.\r\n2. Correct the outline style in Safari.\r\n*/\r\n\r\n[type='search'] {\r\n  -webkit-appearance: textfield; /* 1 */\r\n  outline-offset: -2px; /* 2 */\r\n}\r\n\r\n/*\r\nRemove the inner padding in Chrome and Safari on macOS.\r\n*/\r\n\r\n::-webkit-search-decoration {\r\n  -webkit-appearance: none;\r\n}\r\n\r\n/*\r\n1. Correct the inability to style clickable types in iOS and Safari.\r\n2. Change font properties to `inherit` in Safari.\r\n*/\r\n\r\n::-webkit-file-upload-button {\r\n  -webkit-appearance: button; /* 1 */\r\n  font: inherit; /* 2 */\r\n}\r\n\r\n/*\r\nAdd the correct display in Chrome and Safari.\r\n*/\r\n\r\nsummary {\r\n  display: list-item;\r\n}\r\n\r\n/*\r\nRemoves the default spacing and border for appropriate elements.\r\n*/\r\n\r\nblockquote,\r\ndl,\r\ndd,\r\nh1,\r\nh2,\r\nh3,\r\nh4,\r\nh5,\r\nh6,\r\nhr,\r\nfigure,\r\np,\r\npre {\r\n  margin: 0;\r\n}\r\n\r\nfieldset {\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n\r\nlegend {\r\n  padding: 0;\r\n}\r\n\r\nol,\r\nul,\r\nmenu {\r\n  list-style: none;\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n\r\n/*\r\nReset default styling for dialogs.\r\n*/\r\ndialog {\r\n  padding: 0;\r\n}\r\n\r\n/*\r\nPrevent resizing textareas horizontally by default.\r\n*/\r\n\r\ntextarea {\r\n  resize: vertical;\r\n}\r\n\r\n/*\r\n1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)\r\n2. Set the default placeholder color to the user's configured gray 400 color.\r\n*/\r\n\r\ninput::-moz-placeholder, textarea::-moz-placeholder {\r\n  opacity: 1; /* 1 */\r\n  color: #9ca3af; /* 2 */\r\n}\r\n\r\ninput::placeholder,\r\ntextarea::placeholder {\r\n  opacity: 1; /* 1 */\r\n  color: #9ca3af; /* 2 */\r\n}\r\n\r\n/*\r\nSet the default cursor for buttons.\r\n*/\r\n\r\nbutton,\r\n[role=\"button\"] {\r\n  cursor: pointer;\r\n}\r\n\r\n/*\r\nMake sure disabled buttons don't get the pointer cursor.\r\n*/\r\n:disabled {\r\n  cursor: default;\r\n}\r\n\r\n/*\r\n1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)\r\n2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)\r\n   This can trigger a poorly considered lint error in some tools but is included by design.\r\n*/\r\n\r\nimg,\r\nsvg,\r\nvideo,\r\ncanvas,\r\naudio,\r\niframe,\r\nembed,\r\nobject {\r\n  display: block; /* 1 */\r\n  vertical-align: middle; /* 2 */\r\n}\r\n\r\n/*\r\nConstrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)\r\n*/\r\n\r\nimg,\r\nvideo {\r\n  max-width: 100%;\r\n  height: auto;\r\n}\r\n\r\n/* Make elements with the HTML hidden attribute stay hidden by default */\r\n[hidden] {\r\n  display: none;\r\n}\r\n\r\n*, ::before, ::after {\r\n  --tw-border-spacing-x: 0;\r\n  --tw-border-spacing-y: 0;\r\n  --tw-translate-x: 0;\r\n  --tw-translate-y: 0;\r\n  --tw-rotate: 0;\r\n  --tw-skew-x: 0;\r\n  --tw-skew-y: 0;\r\n  --tw-scale-x: 1;\r\n  --tw-scale-y: 1;\r\n  --tw-pan-x:  ;\r\n  --tw-pan-y:  ;\r\n  --tw-pinch-zoom:  ;\r\n  --tw-scroll-snap-strictness: proximity;\r\n  --tw-gradient-from-position:  ;\r\n  --tw-gradient-via-position:  ;\r\n  --tw-gradient-to-position:  ;\r\n  --tw-ordinal:  ;\r\n  --tw-slashed-zero:  ;\r\n  --tw-numeric-figure:  ;\r\n  --tw-numeric-spacing:  ;\r\n  --tw-numeric-fraction:  ;\r\n  --tw-ring-inset:  ;\r\n  --tw-ring-offset-width: 0px;\r\n  --tw-ring-offset-color: #fff;\r\n  --tw-ring-color: rgb(59 130 246 / 0.5);\r\n  --tw-ring-offset-shadow: 0 0 #0000;\r\n  --tw-ring-shadow: 0 0 #0000;\r\n  --tw-shadow: 0 0 #0000;\r\n  --tw-shadow-colored: 0 0 #0000;\r\n  --tw-blur:  ;\r\n  --tw-brightness:  ;\r\n  --tw-contrast:  ;\r\n  --tw-grayscale:  ;\r\n  --tw-hue-rotate:  ;\r\n  --tw-invert:  ;\r\n  --tw-saturate:  ;\r\n  --tw-sepia:  ;\r\n  --tw-drop-shadow:  ;\r\n  --tw-backdrop-blur:  ;\r\n  --tw-backdrop-brightness:  ;\r\n  --tw-backdrop-contrast:  ;\r\n  --tw-backdrop-grayscale:  ;\r\n  --tw-backdrop-hue-rotate:  ;\r\n  --tw-backdrop-invert:  ;\r\n  --tw-backdrop-opacity:  ;\r\n  --tw-backdrop-saturate:  ;\r\n  --tw-backdrop-sepia:  ;\r\n}\r\n\r\n::backdrop {\r\n  --tw-border-spacing-x: 0;\r\n  --tw-border-spacing-y: 0;\r\n  --tw-translate-x: 0;\r\n  --tw-translate-y: 0;\r\n  --tw-rotate: 0;\r\n  --tw-skew-x: 0;\r\n  --tw-skew-y: 0;\r\n  --tw-scale-x: 1;\r\n  --tw-scale-y: 1;\r\n  --tw-pan-x:  ;\r\n  --tw-pan-y:  ;\r\n  --tw-pinch-zoom:  ;\r\n  --tw-scroll-snap-strictness: proximity;\r\n  --tw-gradient-from-position:  ;\r\n  --tw-gradient-via-position:  ;\r\n  --tw-gradient-to-position:  ;\r\n  --tw-ordinal:  ;\r\n  --tw-slashed-zero:  ;\r\n  --tw-numeric-figure:  ;\r\n  --tw-numeric-spacing:  ;\r\n  --tw-numeric-fraction:  ;\r\n  --tw-ring-inset:  ;\r\n  --tw-ring-offset-width: 0px;\r\n  --tw-ring-offset-color: #fff;\r\n  --tw-ring-color: rgb(59 130 246 / 0.5);\r\n  --tw-ring-offset-shadow: 0 0 #0000;\r\n  --tw-ring-shadow: 0 0 #0000;\r\n  --tw-shadow: 0 0 #0000;\r\n  --tw-shadow-colored: 0 0 #0000;\r\n  --tw-blur:  ;\r\n  --tw-brightness:  ;\r\n  --tw-contrast:  ;\r\n  --tw-grayscale:  ;\r\n  --tw-hue-rotate:  ;\r\n  --tw-invert:  ;\r\n  --tw-saturate:  ;\r\n  --tw-sepia:  ;\r\n  --tw-drop-shadow:  ;\r\n  --tw-backdrop-blur:  ;\r\n  --tw-backdrop-brightness:  ;\r\n  --tw-backdrop-contrast:  ;\r\n  --tw-backdrop-grayscale:  ;\r\n  --tw-backdrop-hue-rotate:  ;\r\n  --tw-backdrop-invert:  ;\r\n  --tw-backdrop-opacity:  ;\r\n  --tw-backdrop-saturate:  ;\r\n  --tw-backdrop-sepia:  ;\r\n}\r\n.container {\r\n  width: 100%;\r\n}\r\n@media (min-width: 640px) {\r\n\r\n  .container {\r\n    max-width: 640px;\r\n  }\r\n}\r\n@media (min-width: 768px) {\r\n\r\n  .container {\r\n    max-width: 768px;\r\n  }\r\n}\r\n@media (min-width: 1024px) {\r\n\r\n  .container {\r\n    max-width: 1024px;\r\n  }\r\n}\r\n@media (min-width: 1280px) {\r\n\r\n  .container {\r\n    max-width: 1280px;\r\n  }\r\n}\r\n@media (min-width: 1536px) {\r\n\r\n  .container {\r\n    max-width: 1536px;\r\n  }\r\n}\r\n.fixed {\r\n  position: fixed;\r\n}\r\n.absolute {\r\n  position: absolute;\r\n}\r\n.relative {\r\n  position: relative;\r\n}\r\n.inset-0 {\r\n  inset: 0px;\r\n}\r\n.bottom-0 {\r\n  bottom: 0px;\r\n}\r\n.right-0 {\r\n  right: 0px;\r\n}\r\n.top-0 {\r\n  top: 0px;\r\n}\r\n.z-10 {\r\n  z-index: 10;\r\n}\r\n.mx-auto {\r\n  margin-left: auto;\r\n  margin-right: auto;\r\n}\r\n.-mt-px {\r\n  margin-top: -1px;\r\n}\r\n.mb-20 {\r\n  margin-bottom: 5rem;\r\n}\r\n.mb-4 {\r\n  margin-bottom: 1rem;\r\n}\r\n.ml-1 {\r\n  margin-left: 8px;\r\n}\r\n.ml-12 {\r\n  margin-left: 3rem;\r\n}\r\n.ml-2 {\r\n  margin-left: 12px;\r\n}\r\n.ml-4 {\r\n  margin-left: 1rem;\r\n}\r\n.mr-1 {\r\n  margin-right: 8px;\r\n}\r\n.mr-2 {\r\n  margin-right: 12px;\r\n}\r\n.mt-2 {\r\n  margin-top: 12px;\r\n}\r\n.mt-20 {\r\n  margin-top: 5rem;\r\n}\r\n.mt-4 {\r\n  margin-top: 1rem;\r\n}\r\n.mt-6 {\r\n  margin-top: 1.5rem;\r\n}\r\n.mt-8 {\r\n  margin-top: 2rem;\r\n}\r\n.block {\r\n  display: block;\r\n}\r\n.flex {\r\n  display: flex;\r\n}\r\n.inline-flex {\r\n  display: inline-flex;\r\n}\r\n.grid {\r\n  display: grid;\r\n}\r\n.hidden {\r\n  display: none;\r\n}\r\n.h-16 {\r\n  height: 4rem;\r\n}\r\n.h-5 {\r\n  height: 1.25rem;\r\n}\r\n.h-6 {\r\n  height: 1.5rem;\r\n}\r\n.h-8 {\r\n  height: 2rem;\r\n}\r\n.h-full {\r\n  height: 100%;\r\n}\r\n.h-screen {\r\n  height: 100vh;\r\n}\r\n.max-h-60 {\r\n  max-height: 15rem;\r\n}\r\n.max-h-screen {\r\n  max-height: 100vh;\r\n}\r\n.min-h-screen {\r\n  min-height: 100vh;\r\n}\r\n.w-48 {\r\n  width: 12rem;\r\n}\r\n.w-5 {\r\n  width: 1.25rem;\r\n}\r\n.w-6 {\r\n  width: 1.5rem;\r\n}\r\n.w-64 {\r\n  width: 16rem;\r\n}\r\n.w-8 {\r\n  width: 2rem;\r\n}\r\n.w-auto {\r\n  width: auto;\r\n}\r\n.w-full {\r\n  width: 100%;\r\n}\r\n.min-w-max {\r\n  min-width: -moz-max-content;\r\n  min-width: max-content;\r\n}\r\n.max-w-6xl {\r\n  max-width: 72rem;\r\n}\r\n.max-w-xl {\r\n  max-width: 36rem;\r\n}\r\n.max-w-xs {\r\n  max-width: 20rem;\r\n}\r\n.flex-1 {\r\n  flex: 1 1 0%;\r\n}\r\n.flex-shrink-0 {\r\n  flex-shrink: 0;\r\n}\r\n.flex-grow {\r\n  flex-grow: 1;\r\n}\r\n.cursor-pointer {\r\n  cursor: pointer;\r\n}\r\n.resize {\r\n  resize: both;\r\n}\r\n.grid-cols-1 {\r\n  grid-template-columns: repeat(1, minmax(0, 1fr));\r\n}\r\n.flex-col {\r\n  flex-direction: column;\r\n}\r\n.items-center {\r\n  align-items: center;\r\n}\r\n.justify-end {\r\n  justify-content: flex-end;\r\n}\r\n.justify-center {\r\n  justify-content: center;\r\n}\r\n.space-x-2 > :not([hidden]) ~ :not([hidden]) {\r\n  --tw-space-x-reverse: 0;\r\n  margin-right: calc(12px * var(--tw-space-x-reverse));\r\n  margin-left: calc(12px * calc(1 - var(--tw-space-x-reverse)));\r\n}\r\n.space-y-2 > :not([hidden]) ~ :not([hidden]) {\r\n  --tw-space-y-reverse: 0;\r\n  margin-top: calc(12px * calc(1 - var(--tw-space-y-reverse)));\r\n  margin-bottom: calc(12px * var(--tw-space-y-reverse));\r\n}\r\n.space-y-4 > :not([hidden]) ~ :not([hidden]) {\r\n  --tw-space-y-reverse: 0;\r\n  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));\r\n  margin-bottom: calc(1rem * var(--tw-space-y-reverse));\r\n}\r\n.overflow-auto {\r\n  overflow: auto;\r\n}\r\n.overflow-hidden {\r\n  overflow: hidden;\r\n}\r\n.overflow-x-auto {\r\n  overflow-x: auto;\r\n}\r\n.overflow-y-auto {\r\n  overflow-y: auto;\r\n}\r\n.rounded {\r\n  border-radius: 0.25rem;\r\n}\r\n.rounded-lg {\r\n  border-radius: 0.5rem;\r\n}\r\n.rounded-md {\r\n  border-radius: 0.375rem;\r\n}\r\n.rounded-t-lg {\r\n  border-top-left-radius: 0.5rem;\r\n  border-top-right-radius: 0.5rem;\r\n}\r\n.border {\r\n  border-width: 1px;\r\n}\r\n.border-r {\r\n  border-right-width: 1px;\r\n}\r\n.border-t {\r\n  border-top-width: 1px;\r\n}\r\n.border-gray-200 {\r\n  --tw-border-opacity: 1;\r\n  border-color: rgb(229 231 235 / var(--tw-border-opacity));\r\n}\r\n.border-gray-300 {\r\n  --tw-border-opacity: 1;\r\n  border-color: rgb(209 213 219 / var(--tw-border-opacity));\r\n}\r\n.border-gray-400 {\r\n  --tw-border-opacity: 1;\r\n  border-color: rgb(156 163 175 / var(--tw-border-opacity));\r\n}\r\n.bg-black {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(0 0 0 / var(--tw-bg-opacity));\r\n}\r\n.bg-blue-500 {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(59 130 246 / var(--tw-bg-opacity));\r\n}\r\n.bg-blue-600 {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(37 99 235 / var(--tw-bg-opacity));\r\n}\r\n.bg-gray-100 {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity));\r\n}\r\n.bg-gray-200 {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity));\r\n}\r\n.bg-gray-300 {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(209 213 219 / var(--tw-bg-opacity));\r\n}\r\n.bg-white {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(255 255 255 / var(--tw-bg-opacity));\r\n}\r\n.bg-opacity-50 {\r\n  --tw-bg-opacity: 0.5;\r\n}\r\n.p-1 {\r\n  padding: 8px;\r\n}\r\n.p-2 {\r\n  padding: 12px;\r\n}\r\n.p-4 {\r\n  padding: 1rem;\r\n}\r\n.p-6 {\r\n  padding: 1.5rem;\r\n}\r\n.px-4 {\r\n  padding-left: 1rem;\r\n  padding-right: 1rem;\r\n}\r\n.px-6 {\r\n  padding-left: 1.5rem;\r\n  padding-right: 1.5rem;\r\n}\r\n.py-1 {\r\n  padding-top: 8px;\r\n  padding-bottom: 8px;\r\n}\r\n.py-2 {\r\n  padding-top: 12px;\r\n  padding-bottom: 12px;\r\n}\r\n.py-4 {\r\n  padding-top: 1rem;\r\n  padding-bottom: 1rem;\r\n}\r\n.pl-4 {\r\n  padding-left: 1rem;\r\n}\r\n.pt-8 {\r\n  padding-top: 2rem;\r\n}\r\n.text-center {\r\n  text-align: center;\r\n}\r\n.font-sans {\r\n  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";\r\n}\r\n.text-lg {\r\n  font-size: 1.125rem;\r\n  line-height: 1.75rem;\r\n}\r\n.text-sm {\r\n  font-size: 0.875rem;\r\n  line-height: 1.25rem;\r\n}\r\n.text-xl {\r\n  font-size: 1.25rem;\r\n  line-height: 1.75rem;\r\n}\r\n.font-bold {\r\n  font-weight: 700;\r\n}\r\n.font-semibold {\r\n  font-weight: 600;\r\n}\r\n.uppercase {\r\n  text-transform: uppercase;\r\n}\r\n.leading-7 {\r\n  line-height: 1.75rem;\r\n}\r\n.tracking-wider {\r\n  letter-spacing: 0.05em;\r\n}\r\n.text-black {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(0 0 0 / var(--tw-text-opacity));\r\n}\r\n.text-gray-200 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(229 231 235 / var(--tw-text-opacity));\r\n}\r\n.text-gray-300 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(209 213 219 / var(--tw-text-opacity));\r\n}\r\n.text-gray-400 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(156 163 175 / var(--tw-text-opacity));\r\n}\r\n.text-gray-500 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(107 114 128 / var(--tw-text-opacity));\r\n}\r\n.text-gray-600 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(75 85 99 / var(--tw-text-opacity));\r\n}\r\n.text-gray-700 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(55 65 81 / var(--tw-text-opacity));\r\n}\r\n.text-gray-900 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(17 24 39 / var(--tw-text-opacity));\r\n}\r\n.text-red-500 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(239 68 68 / var(--tw-text-opacity));\r\n}\r\n.text-white {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(255 255 255 / var(--tw-text-opacity));\r\n}\r\n.text-yellow-400 {\r\n  --tw-text-opacity: 1;\r\n  color: rgb(250 204 21 / var(--tw-text-opacity));\r\n}\r\n.underline {\r\n  text-decoration-line: underline;\r\n}\r\n.antialiased {\r\n  -webkit-font-smoothing: antialiased;\r\n  -moz-osx-font-smoothing: grayscale;\r\n}\r\n.shadow {\r\n  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);\r\n  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);\r\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);\r\n}\r\n.shadow-lg {\r\n  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);\r\n  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);\r\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);\r\n}\r\n.blur {\r\n  --tw-blur: blur(8px);\r\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\r\n}\r\n\r\n.nb-icons{\r\n    width: 14px;\r\n    height: 14px;\r\n    margin-top: 2px;\r\n    margin-right: 4px;\r\n    background-repeat: no-repeat;\r\n}\r\n\r\n.nb-icon-label{\r\n    position: relative;\r\n    top: 32px;\r\n}\r\n\r\n.if{\r\n    background-image: url(/images/if.svg?47b9730a2b4f98468dbfab07cee8f388);\r\n}\r\n\r\n.schedule{\r\n\r\n    background-image: url(/images/schedule.svg?fc4e32673887fe78d813bae7ce5cf2b9);\r\n\r\n}\r\n\r\n.sleep{\r\n    background-image: url(/images/sleep.svg?576ae6ec5fce9eadca9dac1e8055310d);\r\n}\r\n\r\n.start{\r\n    background-image: url(/images/start.svg?d306028ccad0b3019a1923183e86e2bf);\r\n}\r\n\r\n.start-time{\r\n    background-image: url(/images/start-time.svg?05dfb53c651e099eb7462961efab788a);\r\n}\r\n\r\n.stop{\r\n    background-image: url(/images/stop.svg?b1a815bdd8ea15b135b47df6ff890121);\r\n}\r\n\r\n.switch{\r\n    background-image: url(/images/switch.svg?d20392aa854c1a788bfee429d946b7a7);\r\n}\r\n\r\n.webhook{\r\n    background-image: url(/images/webhook.svg?3ee68c8837ea8047d04228271ce12763);\r\n}\r\n\r\n.exception{\r\n    background-image: url(/images/exception.svg?afd7899f22c7bd3c178d5d914e47a4c0);\r\n}\r\n\r\n.database{\r\n    background-image: url(/images/database.svg?ddc883d24fea921dd8a8718d421335dd);\r\n}\r\n\r\n.gmail-receive{\r\n    background-image: url(/images/gmail-receive.svg?97595dd74819cee53c3fdce0bd635f05);\r\n}\r\n\r\n.gmail-send{\r\n    background-image: url(/images/gmail-send.svg?0b745ccf1f19d9b99f77760d446cb1fe);\r\n}\r\n\r\n.trello-add-card{\r\n    background-image: url(/images/trello-add-card.svg?1347790c1de8d76e2cfedc29dd4b293c);\r\n}\r\n\r\n.trello-remove-card{\r\n    background-image: url(/images/trello-remove-card.svg?2e80e3a12634a28bbc9051d185159081);\r\n}\r\n\r\n.link{\r\n    background-image: url(/images/link.svg?69847fd5df3f808fdaf2865d3166a22e);\r\n}\r\n\r\n.api{\r\n    background-image: url(/images/api.svg?3d17e7e961609d1fea0d7f5aa8bd9604);\r\n}\r\n\r\n.hover\\:bg-gray-200:hover {\r\n  --tw-bg-opacity: 1;\r\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity));\r\n}\r\n\r\n.focus\\:outline-none:focus {\r\n  outline: 2px solid transparent;\r\n  outline-offset: 2px;\r\n}\r\n\r\n@media (prefers-color-scheme: dark) {\r\n\r\n  .dark\\:border-gray-700 {\r\n    --tw-border-opacity: 1;\r\n    border-color: rgb(55 65 81 / var(--tw-border-opacity));\r\n  }\r\n\r\n  .dark\\:bg-gray-800 {\r\n    --tw-bg-opacity: 1;\r\n    background-color: rgb(31 41 55 / var(--tw-bg-opacity));\r\n  }\r\n\r\n  .dark\\:bg-gray-900 {\r\n    --tw-bg-opacity: 1;\r\n    background-color: rgb(17 24 39 / var(--tw-bg-opacity));\r\n  }\r\n\r\n  .dark\\:text-gray-400 {\r\n    --tw-text-opacity: 1;\r\n    color: rgb(156 163 175 / var(--tw-text-opacity));\r\n  }\r\n\r\n  .dark\\:text-gray-500 {\r\n    --tw-text-opacity: 1;\r\n    color: rgb(107 114 128 / var(--tw-text-opacity));\r\n  }\r\n\r\n  .dark\\:text-white {\r\n    --tw-text-opacity: 1;\r\n    color: rgb(255 255 255 / var(--tw-text-opacity));\r\n  }\r\n}\r\n\r\n@media (min-width: 640px) {\r\n\r\n  .sm\\:ml-0 {\r\n    margin-left: 0px;\r\n  }\r\n\r\n  .sm\\:block {\r\n    display: block;\r\n  }\r\n\r\n  .sm\\:h-20 {\r\n    height: 5rem;\r\n  }\r\n\r\n  .sm\\:items-center {\r\n    align-items: center;\r\n  }\r\n\r\n  .sm\\:justify-start {\r\n    justify-content: flex-start;\r\n  }\r\n\r\n  .sm\\:justify-between {\r\n    justify-content: space-between;\r\n  }\r\n\r\n  .sm\\:rounded-lg {\r\n    border-radius: 0.5rem;\r\n  }\r\n\r\n  .sm\\:px-6 {\r\n    padding-left: 1.5rem;\r\n    padding-right: 1.5rem;\r\n  }\r\n\r\n  .sm\\:pt-0 {\r\n    padding-top: 0px;\r\n  }\r\n\r\n  .sm\\:text-left {\r\n    text-align: left;\r\n  }\r\n\r\n  .sm\\:text-right {\r\n    text-align: right;\r\n  }\r\n}\r\n\r\n@media (min-width: 768px) {\r\n\r\n  .md\\:grid-cols-2 {\r\n    grid-template-columns: repeat(2, minmax(0, 1fr));\r\n  }\r\n\r\n  .md\\:border-l {\r\n    border-left-width: 1px;\r\n  }\r\n\r\n  .md\\:border-t-0 {\r\n    border-top-width: 0px;\r\n  }\r\n}\r\n\r\n@media (min-width: 1024px) {\r\n\r\n  .lg\\:px-8 {\r\n    padding-left: 2rem;\r\n    padding-right: 2rem;\r\n  }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/public/css/app.css b/public/css/app.css
+--- a/public/css/app.css	
++++ b/public/css/app.css	
+@@ -1029,6 +1029,21 @@
+     background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+   }
+ 
++  .dark\:bg-gray-100 {
++    --tw-bg-opacity: 1;
++    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
++  }
++
++  .dark\:bg-gray-200 {
++    --tw-bg-opacity: 1;
++    background-color: rgb(229 231 235 / var(--tw-bg-opacity));
++  }
++
++  .dark\:bg-gray-300 {
++    --tw-bg-opacity: 1;
++    background-color: rgb(209 213 219 / var(--tw-bg-opacity));
++  }
++
+   .dark\:text-gray-400 {
+     --tw-text-opacity: 1;
+     color: rgb(156 163 175 / var(--tw-text-opacity));
+Index: public/mix-manifest.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n    \"/js/app.js\": \"/js/app.js?id=7e72a6ca27c75813a67b0b9ae08b687f\",\r\n    \"/css/app.css\": \"/css/app.css?id=cdd8594b9c37196289d78b3024171c77\",\r\n    \"/images/api.svg\": \"/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847\",\r\n    \"/images/database.svg\": \"/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190\",\r\n    \"/images/exception.svg\": \"/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe\",\r\n    \"/images/gmail-receive.svg\": \"/images/gmail-receive.svg?id=8ad119a8beb4bae9d72de7c90c7bd3f9\",\r\n    \"/images/gmail-send.svg\": \"/images/gmail-send.svg?id=ad0e4a4259219041c209bdb99740dccd\",\r\n    \"/images/icons/api.svg\": \"/images/icons/api.svg?id=5303cdf3a5f6826d094adabac9ed3847\",\r\n    \"/images/icons/database.svg\": \"/images/icons/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190\",\r\n    \"/images/icons/exception.svg\": \"/images/icons/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe\",\r\n    \"/images/icons/gmail-receive.svg\": \"/images/icons/gmail-receive.svg?id=8ad119a8beb4bae9d72de7c90c7bd3f9\",\r\n    \"/images/icons/gmail-send.svg\": \"/images/icons/gmail-send.svg?id=ad0e4a4259219041c209bdb99740dccd\",\r\n    \"/images/icons/if.svg\": \"/images/icons/if.svg?id=05f169bb9a47542e6306163f992f9138\",\r\n    \"/images/icons/link.svg\": \"/images/icons/link.svg?id=f4593a44b5b57956131dd2d5ce3b0906\",\r\n    \"/images/icons/schedule.svg\": \"/images/icons/schedule.svg?id=bc5201e816a7429ffd99245a402f2931\",\r\n    \"/images/icons/sleep.svg\": \"/images/icons/sleep.svg?id=b361d48ab929e2cb3c25a6423ac991df\",\r\n    \"/images/icons/start-time.svg\": \"/images/icons/start-time.svg?id=b23b13e544cdce36f697868cb10e1a84\",\r\n    \"/images/icons/start.svg\": \"/images/icons/start.svg?id=f9846cb6df827feb4b776b34ce0fe0bd\",\r\n    \"/images/icons/stop.svg\": \"/images/icons/stop.svg?id=e188f7d823bc150a871603f67df702ae\",\r\n    \"/images/icons/switch.svg\": \"/images/icons/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd\",\r\n    \"/images/icons/trello-add-card.svg\": \"/images/icons/trello-add-card.svg?id=4312b3d246a50fa3cc0d7c9b08607911\",\r\n    \"/images/icons/trello-remove-card.svg\": \"/images/icons/trello-remove-card.svg?id=86a89a76b621c33c2de3d5096ce8ab6c\",\r\n    \"/images/icons/webhook.svg\": \"/images/icons/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671\",\r\n    \"/images/if.svg\": \"/images/if.svg?id=05f169bb9a47542e6306163f992f9138\",\r\n    \"/images/link.svg\": \"/images/link.svg?id=f4593a44b5b57956131dd2d5ce3b0906\",\r\n    \"/images/schedule.svg\": \"/images/schedule.svg?id=bc5201e816a7429ffd99245a402f2931\",\r\n    \"/images/sleep.svg\": \"/images/sleep.svg?id=b361d48ab929e2cb3c25a6423ac991df\",\r\n    \"/images/start-time.svg\": \"/images/start-time.svg?id=b23b13e544cdce36f697868cb10e1a84\",\r\n    \"/images/start.svg\": \"/images/start.svg?id=f9846cb6df827feb4b776b34ce0fe0bd\",\r\n    \"/images/stop.svg\": \"/images/stop.svg?id=e188f7d823bc150a871603f67df702ae\",\r\n    \"/images/switch.svg\": \"/images/switch.svg?id=ea0fa68d27cb845915b138aaa3f5dddd\",\r\n    \"/images/trello-add-card.svg\": \"/images/trello-add-card.svg?id=4312b3d246a50fa3cc0d7c9b08607911\",\r\n    \"/images/trello-remove-card.svg\": \"/images/trello-remove-card.svg?id=86a89a76b621c33c2de3d5096ce8ab6c\",\r\n    \"/images/webhook.svg\": \"/images/webhook.svg?id=f9430d61fe7a1eb213298f0f0e7be671\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/public/mix-manifest.json b/public/mix-manifest.json
+--- a/public/mix-manifest.json	
++++ b/public/mix-manifest.json	
+@@ -1,6 +1,6 @@
+ {
+-    "/js/app.js": "/js/app.js?id=7e72a6ca27c75813a67b0b9ae08b687f",
+-    "/css/app.css": "/css/app.css?id=cdd8594b9c37196289d78b3024171c77",
++    "/js/app.js": "/js/app.js?id=f257a026b348d73272f3b3da44df3efe",
++    "/css/app.css": "/css/app.css?id=3013eb31aa2e838e03933af17c23d2ee",
+     "/images/api.svg": "/images/api.svg?id=5303cdf3a5f6826d094adabac9ed3847",
+     "/images/database.svg": "/images/database.svg?id=78a1ee82b7883baa8d4fe71c7699a190",
+     "/images/exception.svg": "/images/exception.svg?id=4d3e1c678e4800fca8ae33c215107ffe",
+Index: resources/views/layouts/app.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Nexabuild - Service integrations with flowcharts</title>\r\n    <link href=\"{{ asset('css/app.css') }}\" rel=\"stylesheet\">\r\n</head>\r\n<body class=\"bg-gray-200 h-screen font-sans\">\r\n<div id=\"app\" class=\"h-screen flex flex-col\"></div>\r\n\r\n<script src=\"{{ asset('js/app.js') }}\"></script>\r\n</body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/layouts/app.blade.php b/resources/views/layouts/app.blade.php
+--- a/resources/views/layouts/app.blade.php	
++++ b/resources/views/layouts/app.blade.php	
+@@ -6,7 +6,7 @@
+     <title>Nexabuild - Service integrations with flowcharts</title>
+     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+ </head>
+-<body class="bg-gray-200 h-screen font-sans">
++<body class="dark:bg-gray-200 h-screen font-sans">
+ <div id="app" class="h-screen flex flex-col"></div>
+ 
+ <script src="{{ asset('js/app.js') }}"></script>

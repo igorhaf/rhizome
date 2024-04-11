@@ -1,0 +1,36 @@
+version: '3'
+services:
+    #app:
+    #  build: .
+    #  ports:
+    #   - "3000:3000"
+    #depends_on:
+    # - postgres
+    # - mongo
+    #environment:
+    #- DATABASE_URL=postgres://nexabuild:nexabuild@postgres:5432/nexabuild
+
+    postgres:
+        image: postgres
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: nexabuild
+            POSTGRES_PASSWORD: nexabuild
+            POSTGRES_DB: nexabuild
+        volumes:
+            - ./data/pgsql:/var/lib/postgresql/data
+
+    mongo:
+        image: mongo
+        ports:
+            - "27017:27017"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: nexabuild
+            MONGO_INITDB_ROOT_PASSWORD: nexabuild
+        volumes:
+            - ./data/mongo:/data/db
+
+volumes:
+    pgdata:
+    mongodata:

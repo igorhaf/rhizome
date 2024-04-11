@@ -1,0 +1,50 @@
+<!--TreeView.vue-->
+<template>
+    <ul class="pl-4 space-y-2">
+        <li v-for="node in treeData" :key="node.id">
+            <div class="flex items-center space-x-2" @click="toggle(node)">
+              <span>
+                <template v-if="node.children && node.children.length">
+                  <FolderOpenIcon v-if="node.expanded" class="w-6 h-6 text-yellow-400"/>
+                  <FolderIcon v-else class="w-6 h-6 text-yellow-400"/>
+                </template>
+                <template v-else>
+                  <div :class="['nb-icons', node.iconClass]" @dragstart="startDrag($event, node)" draggable="true"></div>
+                </template>
+              </span>
+                <span class="text">
+                {{ node.name }}
+                    </span>
+            </div>
+            <tree-view v-if="node.expanded && node.children" :tree-data="node.children" />
+        </li>
+    </ul>
+</template>
+
+<script>
+import { FolderIcon, FolderOpenIcon, DocumentIcon } from '@heroicons/vue/solid';
+
+export default {
+    name: "TreeView",
+    components: {
+        FolderIcon,
+        FolderOpenIcon,
+        DocumentIcon,
+        TreeView: "TreeView"
+    },
+    props: {
+        treeData: {
+            type: Array,
+            default: () => []
+        }
+    },
+    methods: {
+        toggle(node) {
+            node.expanded = !node.expanded;
+        },
+        startDrag(event, node) {
+            event.dataTransfer.setData('nodeData', JSON.stringify(node));
+        }
+    }
+}
+</script>
