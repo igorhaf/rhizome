@@ -61,8 +61,19 @@ function IfForm() {
                                                         label="Operador"
                                                         name={`operator_${index}`}
                                                         options={[
-                                                            {value: 'equal', label: '=='},
-                                                            {value: 'different', label: '!='},
+                                                            {"value": "equal", "label": "=="},
+                                                            {"value": "different", "label": "!="},
+                                                            {"value": "greater", "label": ">"},
+                                                            {"value": "less", "label": "<"},
+                                                            {"value": "greater_equal", "label": ">="},
+                                                            {"value": "less_equal", "label": "<="},
+                                                            {"value": "and", "label": "and"},
+                                                            {"value": "or", "label": "or"},
+                                                            {"value": "not", "label": "not"},
+                                                            {"value": "is", "label": "is"},
+                                                            {"value": "is_not", "label": "is not"},
+                                                            {"value": "in", "label": "in"},
+                                                            {"value": "not_in", "label": "not in"}
                                                         ]}
                                                     />
                                                     <Text label="Variável 2" name={`value2_${index}`}

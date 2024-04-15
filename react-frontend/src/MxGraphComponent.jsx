@@ -21,6 +21,7 @@ import linkIcon from './assets/images/icons/link.svg';
 import apiIcon from './assets/images/icons/api.svg';
 import bashIcon from './assets/images/icons/bash.svg';
 import javascriptIcon from './assets/images/icons/javascript.svg';
+import { addFragment } from './redux/actions/fragmentActions';
 
 const {
   mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants
@@ -169,6 +170,18 @@ const MxGraphComponent = () => {
               let regex = /static\/media\/([^.]+)\./;
               let nodeType = cell.style.match(regex);
               if (nodeType && nodeType.length > 1) {
+                console.log(nodeType[1])
+                if(nodeType[1] === 'sleep'){
+                  dispatch(addFragment('SleepForm'))
+                }
+                if(nodeType[1] === 'schedule'){
+                  dispatch(addFragment('ScheduleForm'))
+                }
+                if(nodeType[1] === 'if'){
+                  dispatch(addFragment('IfForm'))
+                }
+
+
                 //onNodeSelected(cell.value);
                 //onNodeType(nodeType[1]);
               }
