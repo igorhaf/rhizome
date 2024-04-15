@@ -1,5 +1,3 @@
-// redux/reducers/componentReducer.js
-
 import { ADD_FRAGMENT, REMOVE_FRAGMENT } from '../actions/fragmentActions';
 
 const initialState = {
@@ -28,3 +26,7 @@ function fragmentReducer(state = initialState, action) {
 }
 
 export default fragmentReducer;
+
+
+
+

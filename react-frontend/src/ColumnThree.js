@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import ScheduleForm from './components/ScheduleForm'
 import {useSelector} from "react-redux";
-import Frames from "./Frames";
 import SleepForm from "./components/SleepForm";
 import IfForm from "./components/IfForm";
+
 // Importe o componente StartTime que você converteu de StartTimeComponent.vue para React
 // import StartTime from './GraphComponents/StartTime';
 
@@ -13,7 +13,7 @@ import IfForm from "./components/IfForm";
 // const EventBusContext = React.createContext();
 
 const ColumnThree = () => {
-  const activeFragments = useSelector(state => state.fragments.activeFragments);
+  const activeForms = useSelector(state => state.forms.activeForms);
 
   const [nodeName, setNodeName] = useState(null);
   const [nodeType, setNodeType] = useState(null);
@@ -44,9 +44,9 @@ const ColumnThree = () => {
         <p className="font font-semibold text">Nome do Objeto: {nodeType}</p>
       ) : (
           <>
-            {activeFragments.includes('SleepForm') && <SleepForm />}
-            {activeFragments.includes('ScheduleForm') && <ScheduleForm />}
-            {activeFragments.includes('IfForm') && <IfForm />}
+            {activeForms.includes('SleepForm') && <SleepForm />}
+            {activeForms.includes('ScheduleForm') && <ScheduleForm />}
+            {activeForms.includes('IfForm') && <IfForm />}
           </>
       )}
       {/* Substitua isso pelo seu componente StartTime convertido */}

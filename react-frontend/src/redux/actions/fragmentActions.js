@@ -2,7 +2,7 @@
 
 // Tipos de ações
 export const ADD_FRAGMENT = 'ADD_FRAGMENT';
-export const REMOVE_FRAGMENT = 'REMOVE_COMPONENT';
+export const REMOVE_FRAGMENT = 'REMOVE_FRAGMENT';
 
 // Action creators
 export const addFragment = fragmentName => ({

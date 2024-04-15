@@ -22,6 +22,7 @@ import apiIcon from './assets/images/icons/api.svg';
 import bashIcon from './assets/images/icons/bash.svg';
 import javascriptIcon from './assets/images/icons/javascript.svg';
 import { addFragment } from './redux/actions/fragmentActions';
+import { addForm, removeForm } from './redux/actions/formActions';
 
 const {
   mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants
@@ -172,13 +173,13 @@ const MxGraphComponent = () => {
               if (nodeType && nodeType.length > 1) {
                 console.log(nodeType[1])
                 if(nodeType[1] === 'sleep'){
-                  dispatch(addFragment('SleepForm'))
+                  dispatch(addForm('SleepForm'))
                 }
                 if(nodeType[1] === 'schedule'){
-                  dispatch(addFragment('ScheduleForm'))
+                  dispatch(addForm('ScheduleForm'))
                 }
                 if(nodeType[1] === 'if'){
-                  dispatch(addFragment('IfForm'))
+                  dispatch(addForm('IfForm'))
                 }
 
 
