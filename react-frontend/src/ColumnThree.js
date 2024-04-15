@@ -17,26 +17,6 @@ const ColumnThree = () => {
 
   const [nodeName, setNodeName] = useState(null);
   const [nodeType, setNodeType] = useState(null);
-  // Substitua a funcionalidade do EventBus pelo uso do contexto ou por um gerenciamento de estado global.
-  // const EventBus = useContext(EventBusContext);
-
-  useEffect(() => {
-    // Aqui você configuraria seus ouvintes de eventos.
-    // Substitua isso por ouvintes de contexto ou ações de Redux, conforme necessário.
-    // Por exemplo:
-    // const handleNodeSelected = EventBus.on('nodeSelected', (name) => {
-    //   setNodeName(name);
-    // });
-    // const handleNodeType = EventBus.on('nodeType', (type) => {
-    //   setNodeType(type);
-    // });
-    // return () => {
-    //   // Limpando ouvintes ao desmontar o componente
-    //   handleNodeSelected.unsubscribe();
-    //   handleNodeType.unsubscribe();
-    // };
-
-  }, []);
 
   return (
     <div className="bg p-4 h-full overflow-auto">
@@ -49,8 +29,6 @@ const ColumnThree = () => {
             {activeForms.includes('IfForm') && <IfForm />}
           </>
       )}
-      {/* Substitua isso pelo seu componente StartTime convertido */}
-      {/* <StartTime /> */}
     </div>
   );
 };

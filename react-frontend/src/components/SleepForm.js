@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Text from './Text';
 import Select from './Select';
 import TagsInput from "./TagsInput";
+import ActionButtonGroup from "./ActionButtonGroup";
 
 function SleepForm() {
 
@@ -29,6 +30,7 @@ function SleepForm() {
                     ]}
                 />
                 <TagsInput label={'Email-s de alerta'}/>
+                <ActionButtonGroup />
             </form>
         </div>
 

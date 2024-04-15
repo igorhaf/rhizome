@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Select({ label, name, options }) {
+function Select({ label, name, options, width = 'w-full' }) {
     return (
-        <div className="w-full mb-1">
+        <div className={`mb-1 ${width}`}>
             <label className="block mb-1 text-primary" htmlFor={name}>
                 {label}
             </label>

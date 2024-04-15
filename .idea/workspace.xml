@@ -6,11 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="c7bf2b6a-53dc-4235-a0b0-fdaa0f57ccdc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/ColumnOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/ColumnOne.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-frontend/src/ColumnThree.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/ColumnThree.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-frontend/src/MxGraphComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/MxGraphComponent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/redux/actions/fragmentActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/redux/actions/fragmentActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/redux/reducers/fragmentReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/redux/reducers/fragmentReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/redux/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/redux/reducers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/assets/images/icons/starttime.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/components/IfForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/components/IfForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/components/ScheduleForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/components/ScheduleForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/components/Select.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/components/Select.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/components/SleepForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/components/SleepForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,7 +245,7 @@
       <workItem from="1712714113611" duration="31901000" />
       <workItem from="1712796191928" duration="9872000" />
       <workItem from="1713065422279" duration="9741000" />
-      <workItem from="1713203877567" duration="3191000" />
+      <workItem from="1713203877567" duration="7248000" />
     </task>
     <servers />
   </component>

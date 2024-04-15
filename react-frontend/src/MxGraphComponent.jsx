@@ -7,7 +7,6 @@ import ifIcon from './assets/images/icons/if.svg';
 import scheduleIcon from './assets/images/icons/schedule.svg';
 import sleepIcon from './assets/images/icons/sleep.svg';
 import startIcon from './assets/images/icons/start.svg';
-import starttimeIcon from './assets/images/icons/starttime.svg';
 import stopIcon from './assets/images/icons/stop.svg';
 import switchIcon from './assets/images/icons/switch.svg';
 import webhookIcon from './assets/images/icons/webhook.svg';
@@ -39,7 +38,6 @@ const MxGraphComponent = () => {
       'if': ifIcon,
       'schedule': scheduleIcon,
       'sleep': sleepIcon,
-      'starttime': starttimeIcon,
       'stop': stopIcon,
       'switch': switchIcon,
       'webhook': webhookIcon,

@@ -5,6 +5,7 @@ import Select from './Select';
 import TagsInput from "./TagsInput";
 import TimeInput from "./TimeInput";
 import DateInput from "./DateInput";
+import ActionButtonGroup from "./ActionButtonGroup";
 
 function ScheduleForm() {
     const [time, setTime] = useState('');
@@ -42,6 +43,7 @@ function ScheduleForm() {
                     ]}
                 />
                 <TagsInput label={'Email-s de alerta'}/>
+                <ActionButtonGroup />
             </form>
         </div>
     );

@@ -43,12 +43,6 @@ const ColumnOne = () => {
                     iconClass: "sleep"
                 },
                 {
-                    id: 7,
-                    name: "Start Time",
-                    type: "starttime",
-                    iconClass: "starttime"
-                },
-                {
                     id: 8,
                     name: "Webhook",
                     type: "webhook",
