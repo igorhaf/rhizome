@@ -132,7 +132,6 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     return (
         <div className="tabs-container">
             <div className="tabs-wrapper" ref={tabsWrapperRef} onDragOver={onDragOver} >
-                <div onClick={addTab} className="add-tab">+</div>
                 {visibleTabs.map((tab, index) => (
                     <div key={tab.id} className={`tab ${activeTab === index ? 'active-tab' : ''}`}
                          draggable

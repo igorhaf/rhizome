@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "Configuration Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Configuration",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"objectName\": \"Example Object Name\",\n    \"conditionals\": [\n        {\n            \"variable\": \"variable1\",\n            \"comparison\": \"==\",\n            \"value\": \"value1\"\n        }\n    ],\n    \"complexConditional\": \"var1 > var2 && var2 < var3\",\n    \"localLog\": true,\n    \"globalLog\": true,\n    \"alertEmails\": [\n        \"example1@example.com\",\n        \"example2@example.com\"\n    ]\n}"
+        },
+        "url": {
+          "raw": "{{url}}/configurations/create",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "configurations",
+            "create"
+          ]
+        },
+        "description": "Creates a new configuration with the specified details."
+      }
+    },
+    {
+      "name": "Update Configuration",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"objectName\": \"Updated Object Name\",\n    \"conditionals\": [\n        {\n            \"variable\": \"variable1\",\n            \"comparison\": \"!=\",\n            \"value\": \"newValue1\"\n        }\n    ],\n    \"complexConditional\": \"var1 < var3 || var2 > var4\",\n    \"localLog\": false,\n    \"globalLog\": true,\n    \"alertEmails\": [\n        \"example3@example.com\"\n    ]\n}"
+        },
+        "url": {
+          "raw": "{{url}}/configurations/update/{{id}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "configurations",
+            "update",
+            "{{id}}"
+          ],
+          "variable": [
+            {
+              "id": "id",
+              "value": "1"
+            }
+          ]
+        },
+        "description": "Updates an existing configuration by its ID."
+      }
+    },
+    {
+      "name": "Get Configuration",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/configurations/get/{{id}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "configurations",
+            "get",
+            "{{id}}"
+          ],
+          "variable": [
+            {
+              "id": "id",
+              "value": "1"
+            }
+          ]
+        },
+        "description": "Retrieves a configuration by its ID."
+      }
+    },
+    {
+      "name": "Delete Configuration",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/configurations/delete/{{id}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "configurations",
+            "delete",
+            "{{id}}"
+          ],
+          "variable": [
+            {
+              "id": "id",
+              "value": "1"
+            }
+          ]
+        },
+        "description": "Deletes a configuration by its ID."
+      }
+    },
+    {
+      "name": "List Configurations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/configurations/list",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "configurations",
+            "list"
+          ]
+        },
+        "description": "Lists all configurations."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "https://api.yourcompany.com"
+    }
+  ]
+}
