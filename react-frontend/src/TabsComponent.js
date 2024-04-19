@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './TabsComponent.css';
+import { addGraph } from './redux/actions/graphActions';
+import {useDispatch} from "react-redux";
 
 const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) => {
     const [tabs, setTabs] = useState(tabsProp || []);
@@ -9,8 +11,10 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     const tabInputRef = useRef(null);
     const tabsWrapperRef = useRef(null);
     const [visibleTabLimit, setVisibleTabLimit] = useState(0);
+    const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(addGraph('MxGraph'))
         if (tabs.length > 0) {
             setNextTabId(Math.max(...tabs.map(tab => tab.id)) + 1);
         }
@@ -52,6 +56,8 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     };
 
     const changeTab = (index) => {
+        dispatch(addGraph('MxGraph'))
+        console.log('Node selecionado:', index);
         // Checa se a aba clicada está fora do limite das abas visíveis
         if (index >= visibleTabLimit) {
             // A aba está fora da visão principal, então move para o início
@@ -76,7 +82,6 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
         const newTab = {
             id: nextTabId,
             label: `Frame ${nextTabId}`,
-            content: 'MxGraphComponent',
             isEditing: false
         };
         // Adiciona a nova aba no início do array
@@ -132,11 +137,12 @@ const TabsComponent = ({ tabsProp, activeTabProp, onTabChanged, onTabAdded }) =>
     return (
         <div className="tabs-container">
             <div className="tabs-wrapper" ref={tabsWrapperRef} onDragOver={onDragOver} >
+                <div onClick={addTab} className="add-tab">+</div>
                 {visibleTabs.map((tab, index) => (
                     <div key={tab.id} className={`tab ${activeTab === index ? 'active-tab' : ''}`}
                          draggable
-                         onDragstart={(e) => onDragStart(e, index)}
-                         onDragover={onDragOver}
+                         onDragStart={(e) => onDragStart(e, index)}
+                         onDragOver={onDragOver}
                          onDrop={(e) => onDrop(e, index)}
                          onClick={() => changeTab(index)}>
                         {tab.isEditing ? (
