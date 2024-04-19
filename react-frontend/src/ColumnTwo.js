@@ -32,12 +32,13 @@ const ColumnTwo = () => {
     setTabs([...tabs, nextTab]);
     setActiveTab(tabs.length); // Define a nova aba como ativa
   };
-  
+
   return (
     <div className="bg-white p">
+
       {/* Substitua por seu componente TabsComponent, se aplicável */}
       <TabsComponent tabs={tabs} activeTab={activeTab} onTabAdded={handleTabAdded} onTabChanged={handleTabChange} />
-      
+
       {/* Substitua os componentes comentados por seus equivalentes em React, se aplicável */}
       {/* <Database /> */}
       {/* <JavascriptEditor /> */}

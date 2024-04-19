@@ -40,29 +40,36 @@ const MainComponent = () => {
   }, []); // O array vazio assegura que o efeito será executado apenas uma vez após o componente montar
 
   return (
-      <div className="h-screen flex flex-col">
+      <div>
+        {/*<div className="text">
+          {showBar && (
+              <div className="absolute inset-0 bg-white bg-opacity-50 flex flex-col items-center justify-center" style={{zIndex: 1000}}>
+                <ProgressBar progress={progress} show={showBar}/>
+                <div className="text-center text-black mt-2 font-semibold">
+                  Carregando... {progress}%
+                </div>
+              </div>
+          )}
+        </div>*/}
+        <div className="h-screen flex flex-col">
 
-        <div ref={splitContainerRef} style={{ backgroundColor: "#1e1f22" }} className="overflow-hidden split-container flex-1 flex">
-        <div className="split-pane">
-          <ColumnOne className="flex-1 h-full" />
-        </div>
-          <div className="split-pane">
-              {showBar && (
-                  <>
-                    <ProgressBar progress={progress} show={showBar}/>
-                    <div className="text-center mt-2">
-                      Carregando... {progress}%
-                    </div>
-                  </>
-              )}
-            <ColumnTwo className="flex-grow overflow-hidden h-full"/>
-          </div>
-          <div className="split-pane">
-            <ColumnThree className="flex-1 h-full"/>
-          </div>
-        </div>
+          <div ref={splitContainerRef} style={{backgroundColor: "#1e1f22"}}
+               className="overflow-hidden split-container flex-1 flex">
+            <div className="split-pane">
+              <ColumnOne className="flex-1 h-full"/>
+            </div>
+            <div className="split-pane">
 
-        <Footer/>
+              <ColumnTwo className="flex-grow overflow-hidden h-full"/>
+
+                </div>
+                <div className="split-pane">
+                  <ColumnThree className="flex-1 h-full"/>
+                </div>
+              </div>
+
+              <Footer/>
+            </div>
       </div>
   );
 };

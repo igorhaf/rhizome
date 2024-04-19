@@ -11,13 +11,12 @@ const ProgressBar = ({ progress, show }) => {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="w-1/5 bg-gray-200 h-4 rounded-lg overflow-hidden">
-                <div
-                    className="bg-blue-600 h-4 rounded-lg transition-width duration-150 ease-in-out"
-                    style={{ width: getProgressWidth() }}
-                >
-                </div>
+
+        <div className="w-1/5 bg-gray-50 h-4 rounded-lg overflow-hidden text-center z-0">
+            <div
+                className="bg-blue-400 h-4 rounded-lg transition-width duration-150 ease-in-out"
+                style={{ width: getProgressWidth()}}
+            >
             </div>
         </div>
     );
