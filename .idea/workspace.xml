@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c7bf2b6a-53dc-4235-a0b0-fdaa0f57ccdc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postman-if-form.json" beforeDir="false" afterPath="$PROJECT_DIR$/postman-if-form.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postman-tabs.json" beforeDir="false" afterPath="$PROJECT_DIR$/postman-tabs.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,7 +237,7 @@
       <workItem from="1712714113611" duration="31901000" />
       <workItem from="1712796191928" duration="9872000" />
       <workItem from="1713065422279" duration="9741000" />
-      <workItem from="1713203877567" duration="26359000" />
+      <workItem from="1713203877567" duration="28661000" />
     </task>
     <servers />
   </component>
