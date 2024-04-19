@@ -1,158 +1,158 @@
 {
-  "info": {
-    "name": "Tabs Management API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Open Tab",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"name\": \"New Tab\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{url}}/tabs/open",
-          "host": [
-            "{{url}}"
-          ],
-          "path": [
-            "tabs",
-            "open"
-          ]
-        },
-        "description": "Opens a new tab with the specified name."
-      }
-    },
-    {
-      "name": "Close Tab",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"id\": 1\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{url}}/tabs/close",
-          "host": [
-            "{{url}}"
-          ],
-          "path": [
-            "tabs",
-            "close"
-          ]
-        },
-        "description": "Closes the tab specified by its ID."
-      }
-    },
-    {
-      "name": "Rename Tab",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"id\": 1,\n    \"newName\": \"Updated Tab Name\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{url}}/tabs/rename",
-          "host": [
-            "{{url}}"
-          ],
-          "path": [
-            "tabs",
-            "rename"
-          ]
-        },
-        "description": "Renames a specified tab by its ID to a new name."
-      }
-    },
-    {
-      "name": "Reposition Tab",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"id\": 1,\n    \"newPosition\": 2\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{url}}/tabs/reposition",
-          "host": [
-            "{{url}}"
-          ],
-          "path": [
-            "tabs",
-            "reposition"
-          ]
-        },
-        "description": "Repositions a specified tab to a new position in the list."
-      }
-    },
-    {
-      "name": "List Tabs",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{url}}/tabs/list",
-          "host": [
-            "{{url}}"
-          ],
-          "path": [
-            "tabs",
-            "list"
-          ]
-        },
-        "description": "Lists all tabs including their ID, name, status, and position."
-      }
-    },
-    {
-      "name": "Get Status",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{url}}/tabs/status",
-          "host": [
-            "{{url}}"
-          ],
-          "path": [
-            "tabs",
-            "status"
-          ]
-        },
-        "description": "Retrieves the complete status of all tabs."
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "url",
-      "value": "https://api.suaempresa.com"
-    }
-  ]
+	"info": {
+		"name": "Tabs Management API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Open Tab",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"New Tab\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/tabs/open",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tabs",
+						"open"
+					]
+				},
+				"description": "Opens a new tab with the specified name."
+			}
+		},
+		{
+			"name": "Close Tab",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/tabs/close",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tabs",
+						"close"
+					]
+				},
+				"description": "Closes the tab specified by its ID."
+			}
+		},
+		{
+			"name": "Rename Tab",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\",\n    \"newName\": \"Updated Tab Name\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/tabs/rename",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tabs",
+						"rename"
+					]
+				},
+				"description": "Renames a specified tab by its ID to a new name."
+			}
+		},
+		{
+			"name": "Reposition Tab",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\",\n    \"newPosition\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/tabs/reposition",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tabs",
+						"reposition"
+					]
+				},
+				"description": "Repositions a specified tab to a new position in the list."
+			}
+		},
+		{
+			"name": "List Tabs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/tabs/list",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tabs",
+						"list"
+					]
+				},
+				"description": "Lists all tabs including their ID, name, status, and position."
+			}
+		},
+		{
+			"name": "Get Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/tabs/status",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tabs",
+						"status"
+					]
+				},
+				"description": "Retrieves the complete status of all tabs."
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:3000"
+		}
+	]
 }
