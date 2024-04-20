@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c7bf2b6a-53dc-4235-a0b0-fdaa0f57ccdc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/ColumnTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/ColumnTwo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/ProgressBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/ProgressBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/MxGraphComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/MxGraphComponent.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +18,7 @@
     <execution />
   </component>
   <component name="Git.Rebase.Settings">
-    <option name="NEW_BASE" value="origin/express-version" />
+    <option name="NEW_BASE" value="develop" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -156,7 +154,7 @@
     "git-widget-placeholder": "develop",
     "ignore.virus.scanning.warn.message": "true",
     "js.linters.configure.manually.selectedeslint": "true",
-    "last_opened_file_path": "//wsl.localhost/Ubuntu-22.04/home/igorhaf/nexabuild/react-frontend/src/redux/reducers",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu-22.04/home/igorhaf/nexabuild/react-frontend/src/api",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -177,11 +175,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild\react-frontend\src\api" />
+      <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild\backend\routes" />
       <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild\react-frontend\src\redux\reducers" />
       <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild\react-frontend\src\redux\actions" />
       <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild" />
-      <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild\react-frontend\src\components" />
-      <recent name="\\wsl$\Ubuntu-22.04\home\igorhaf\nexabuild\react-frontend\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="\\wsl.localhost\Ubuntu-22.04\home\igorhaf\nexabuild\react-frontend\src\components" />
@@ -239,7 +237,7 @@
       <workItem from="1712714113611" duration="31901000" />
       <workItem from="1712796191928" duration="9872000" />
       <workItem from="1713065422279" duration="9741000" />
-      <workItem from="1713203877567" duration="33246000" />
+      <workItem from="1713203877567" duration="43873000" />
     </task>
     <servers />
   </component>

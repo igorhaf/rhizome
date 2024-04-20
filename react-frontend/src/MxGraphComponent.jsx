@@ -22,6 +22,7 @@ import bashIcon from './assets/images/icons/bash.svg';
 import javascriptIcon from './assets/images/icons/javascript.svg';
 import { addFragment } from './redux/actions/fragmentActions';
 import { addForm, removeForm } from './redux/actions/formActions';
+import { getLastGraph, saveGraph } from './api/graphService';
 
 const {
   mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants
@@ -378,6 +379,11 @@ const MxGraphComponent = () => {
     return false;
   };
   useEffect(() => {
+
+    getLastGraph()
+        .then(data => {
+          getLastGraph(data);
+        })
     if (!mxClient.isBrowserSupported()) {
       mxUtils.error('Browser não suportado!', 200, false);
       return;
