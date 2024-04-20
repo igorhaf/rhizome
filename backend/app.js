@@ -21,11 +21,11 @@ mongoose.connect(`mongodb://${user}:${password}@${host}/${database}?authSource=a
 }).then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 
-const userRoutes = require('./routes/api');
+const graphRoutes = require('./routes/graphsRoutes');
 const objectifRoutes = require('./routes/objectifRoutes');
-app.use('/api/api', userRoutes);
-app.use('/ifroutes', objectifRoutes);
-app.use('/tabs', tabsRoutes);
+app.use('/api/graphs', graphRoutes);
+app.use('/api/ifroutes', objectifRoutes);
+app.use('/api/tabs', tabsRoutes);
 app.get('/', (req, res) => res.send('Olá, Mundo!'));
 
 const sequelize = new Sequelize(config.development);
