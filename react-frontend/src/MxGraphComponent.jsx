@@ -22,15 +22,16 @@ import bashIcon from './assets/images/icons/bash.svg';
 import javascriptIcon from './assets/images/icons/javascript.svg';
 import { addFragment } from './redux/actions/fragmentActions';
 import { addForm, removeForm } from './redux/actions/formActions';
-import { getLastGraph, saveGraph } from './api/graphService';
+import { getLastGraph, sendGraphApi } from './api/graphService';
+var parseString = require('xml2js').parseString;
 
 const {
-  mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants
+  mxGraph, mxRubberband, mxKeyHandler, mxClient, mxUtils, mxEvent, mxConstants, mxCodec, mxGeometry, mxPoint
 } = mxgraph();
 
 const MxGraphComponent = () => {
   const graphContainer = useRef(null);
-  const [graph, setGraph] = useState(null);
+  const [graph, setGraph, graphData, setGraphData] = useState(null);
   const dispatch = useDispatch();
 
   const getIconURLFromClassName = (className) => {
@@ -94,10 +95,10 @@ const MxGraphComponent = () => {
     style[mxConstants.STYLE_FONTCOLOR] = '#dee0e4';  // Branco
 
 
-
     newGraph.getModel().beginUpdate();
     try {
       newGraph.getStylesheet().putDefaultVertexStyle(style);
+
     } finally {
       newGraph.getModel().endUpdate();
     }
@@ -106,7 +107,6 @@ const MxGraphComponent = () => {
       const keyHandler = new mxKeyHandler(newGraph);
       keyHandler.bindKey(46, (evt) => {
 
-          console.log(newGraph.isEnabled());
           if (newGraph.isEnabled()) {
 
               //newGraph.container.focus();
@@ -380,10 +380,7 @@ const MxGraphComponent = () => {
   };
   useEffect(() => {
 
-    getLastGraph()
-        .then(data => {
-          getLastGraph(data);
-        })
+
     if (!mxClient.isBrowserSupported()) {
       mxUtils.error('Browser não suportado!', 200, false);
       return;
@@ -401,11 +398,59 @@ const MxGraphComponent = () => {
     });
 
     const sendGraphDataToAPI = async () => {
-      // ... implementação de envio de dados para a API
+      const encoder = new mxCodec();
+      const result = encoder.encode(newGraph.getModel());
+      const xml = mxUtils.getXml(result);
+      try {
+        // Aqui chamamos a função sendPostData e passamos formData como argumento
+        const response = await sendGraphApi({data: xml});
+      } catch (error) {
+        console.error('Erro ao enviar:', error);
+      }
     };
 
     newGraph.getModel().addListener(mxEvent.CHANGE, sendGraphDataToAPI);
+    const parent = newGraph.getDefaultParent();
 
+    const fetchGraphData = async () => {
+      try {
+        const response = await getLastGraph();
+        console.log(response);
+        parseString(response.data, function (err, result) {
+          Object.values(result.mxGraphModel.root).forEach(val => {
+            Object.entries(val.mxCell).forEach(entry => {
+              const [key, value] = entry;
+              if(value.$.vertex === '1') {
+                if (key !== '0') {
+                  if (key !== '1') {
+                    console.log(value.$.parent);
+
+                    newGraph.insertVertex(parent, value.$.id, value.$.value, value.mxGeometry[0].$.x, value.mxGeometry[0].$.y, 48, 48, value.$.style);
+                  }
+                }
+              }
+              if (value.$.edge === '1') {
+                const edge = newGraph.insertEdge(parent, value.$.id, value.$.value, newGraph.model.getCell(value.$.source), newGraph.model.getCell(value.$.target));
+                if (value.Array && value.Array.mxPoint) {
+                  let geometry = new mxGeometry();
+                  geometry.relative = true;
+                  edge.geometry = geometry;
+                  geometry.points = value.Array.mxPoint.map(point => new mxPoint(point.$.x, point.$.y));
+                  newGraph.model.setGeometry(edge, geometry);
+                }
+              }
+
+            });
+          });
+        });
+        // Atualiza o estado com os dados recebidos
+        //setGraphData(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar o último gráfico:', error);
+      }
+    };
+
+    fetchGraphData();
     return () => {
       newGraph.destroy();
     };

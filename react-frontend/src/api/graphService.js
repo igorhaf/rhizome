@@ -9,8 +9,8 @@ const getLastGraph = () => {
         });
 };
 
-const sendGraphApi = () => {
-    return client.post(`/graphs/graph-data`)
+const sendGraphApi = (data) => {
+    return client.post(`/graphs/graph-data`, data)
         .then(response => response.data)
         .catch(error => {
             throw error;
