@@ -3,6 +3,8 @@ import ScheduleForm from './components/ScheduleForm'
 import {useSelector} from "react-redux";
 import SleepForm from "./components/SleepForm";
 import IfForm from "./components/IfForm";
+import LinkForm from "./components/LinkForm";
+import QueryForm from "./components/QueryForm";
 
 // Importe o componente StartTime que você converteu de StartTimeComponent.vue para React
 // import StartTime from './GraphComponents/StartTime';
@@ -27,6 +29,8 @@ const ColumnThree = () => {
             {activeForms.includes('SleepForm') && <SleepForm />}
             {activeForms.includes('ScheduleForm') && <ScheduleForm />}
             {activeForms.includes('IfForm') && <IfForm />}
+            {activeForms.includes('LinkForm') && <LinkForm />}
+            {activeForms.includes('QueryForm') && <QueryForm />}
           </>
       )}
     </div>

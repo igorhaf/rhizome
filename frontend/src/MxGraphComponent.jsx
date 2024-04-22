@@ -58,17 +58,17 @@ const MxGraphComponent = () => {
   };
 
   const initGraph = (container) => {
-    mxEvent.disableContextMenu(document.body);
+   /* mxEvent.disableContextMenu(document.body);
     mxConstants.HANDLE_FILLCOLOR = '#99ccff';
     mxConstants.HANDLE_STROKECOLOR = '#0088cf';
-    mxConstants.VERTEX_SELECTION_COLOR = '#00a8ff';
+    mxConstants.VERTEX_SELECTION_COLOR = '#00a8ff';*/
 
     const newGraph = new mxGraph(container);
     setGraph(newGraph);
     mxUtils.alert = (message) => {
       dispatch(setText("Emitindo evento de erro: " + message));
     };
-    newGraph.setTooltips(false);
+    //newGraph.setTooltips(false);
     newGraph.setCellsEditable(true);
     newGraph.setConnectable(true);
     newGraph.setMultigraph(false);
@@ -184,6 +184,12 @@ const MxGraphComponent = () => {
                 }
                 if(nodeType[1] === 'if'){
                   dispatch(addForm('IfForm'))
+                }
+                if(nodeType[1] === 'link'){
+                  dispatch(addForm('LinkForm'))
+                }
+                if(nodeType[1] === 'query'){
+                  dispatch(addForm('QueryForm'))
                 }
 
 

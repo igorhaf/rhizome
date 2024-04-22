@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { addFragment } from './redux/actions/fragmentActions';
 
@@ -6,7 +6,9 @@ import './QuickAccessBar.css';
 
 const QuickAccessBar = () => {
   const dispatch = useDispatch();
-  
+    useEffect(() => {
+        dispatch(addFragment('Elements'));
+    }, []);
   return (
     <div className="quick-access-bar">
       <div className="logo"></div>
