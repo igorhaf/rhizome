@@ -58,12 +58,17 @@ const MxGraphComponent = () => {
   };
 
   const initGraph = (container) => {
+    mxEvent.disableContextMenu(document.body);
+    mxConstants.HANDLE_FILLCOLOR = '#99ccff';
+    mxConstants.HANDLE_STROKECOLOR = '#0088cf';
+    mxConstants.VERTEX_SELECTION_COLOR = '#00a8ff';
+
     const newGraph = new mxGraph(container);
     setGraph(newGraph);
     mxUtils.alert = (message) => {
       dispatch(setText("Emitindo evento de erro: " + message));
     };
-
+    newGraph.setTooltips(false);
     newGraph.setCellsEditable(true);
     newGraph.setConnectable(true);
     newGraph.setMultigraph(false);
@@ -389,6 +394,7 @@ const MxGraphComponent = () => {
     const newGraph = initGraph(graphContainer.current);
     addClickEventListener(newGraph);
     addConsoleEventListener(newGraph);
+
 
     const initialWidth = graphContainer.current.offsetWidth;
     const initialHeight = graphContainer.current.offsetHeight;

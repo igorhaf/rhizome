@@ -4,6 +4,7 @@ import MxGraphComponent from './MxGraphComponent';
 import TabsComponent from './TabsComponent';
 import {useSelector} from "react-redux";
 import Frames from "./Frames";
+import WelcomeScreen from "./WelcomeScreen";
 
 const ColumnTwo = () => {
   const activeGraphs = useSelector(state => state.graphs.activeGraphs);

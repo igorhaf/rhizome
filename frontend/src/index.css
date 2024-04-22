@@ -180,3 +180,13 @@ body {
     color: #e5e7eb;
     background-image: url('./assets/images/icons/logo.svg');
 }
+
+.logo-welcome{
+    width: 128px;
+    height: 128px;
+    background-image: url('./assets/images/icons/logo.svg');
+    margin-top: 10px;
+    margin-bottom: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
