@@ -22,6 +22,16 @@ Assim como o Node-RED, a Nexabuild busca proporcionar uma ferramenta onde o flux
 
 ## Como Executar
 
+```bash
+→ ~ lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 22.04.2 LTS
+Release:        22.04
+Codename:       jammy
+→ ~ 
+```
+
 ### Backend
 
 No diretório `backend`, instale as dependências e inicie o servidor:
@@ -29,15 +39,16 @@ No diretório `backend`, instale as dependências e inicie o servidor:
 ```bash
 npm install
 npm run start
+```
 
 ### Frontend
 
-No diretório frontend, use o Yarn para instalar as dependências e iniciar o aplicativo:
+No diretório `frontend`, use o Yarn para instalar as dependências e iniciar o aplicativo:
 
 ```bash
-
 yarn install
 yarn start
+```
 
 ### Docker
 
@@ -45,11 +56,12 @@ Para construir e iniciar o projeto com Docker, utilize:
 
 ```bash
 docker-compose up --build
+```
 
 ### Contribuição
+
 Contribuições para melhorar Nexabuild são bem-vindas. Sinta-se à vontade para clonar, forkar e propor pull requests ou abrir issues para discutir melhorias.
 
 ### Licença
+
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para mais detalhes.
-
-
