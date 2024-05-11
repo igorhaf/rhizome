@@ -1,10 +1,6 @@
 {
 	"folders": [
 		{
-			"name": "typescript-backend",
-			"path": "typescript-backend"
-		},
-		{
 			"name": "backend",
 			"path": "backend"
 		},
