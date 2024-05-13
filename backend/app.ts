@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import { Sequelize } from 'sequelize';
+import { Dialect, Sequelize } from 'sequelize';
 import tabsRoutes from './routes/tabsRoutes';
 import graphRoutes from './routes/graphsRoutes';
 import objectifRoutes from './routes/objectifRoutes';
@@ -28,7 +28,17 @@ app.use('/api/tabs', tabsRoutes);
 
 app.get('/', (req: Request, res: Response) => res.send('Olá, Mundo!'));
 
-const sequelize = new Sequelize(config.development);
+const envConfig = config.development;
+
+const sequelize = new Sequelize(
+  envConfig.database,
+  envConfig.username,
+  envConfig.password,
+  {
+    host: envConfig.host,
+    dialect: envConfig.dialect as Dialect
+  }
+);
 
 app.listen(port, () => {
     console.log(`Aplicação Express rodando na porta ${port}`);
