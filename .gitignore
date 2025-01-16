@@ -1,9 +1,0 @@
-/backend/node_modules
-/backend/package-lock.json
-/frontend/node_modules
-/frontend/yarn.lock
-/frontend/yarn-error.log
-/react-frontend/node_modules
-/react-frontend/yarn.lock
-/react-frontend/yarn-error.log
-/data
