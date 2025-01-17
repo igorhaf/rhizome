@@ -2,6 +2,7 @@
   import TreeView from '$lib/components/TreeView.svelte';
   import DiagramArea from '$lib/components/DiagramArea.svelte';
   import SplitHandle from '$lib/components/SplitHandle.svelte';
+  import RightPanel from '$lib/components/RightPanel.svelte';
 
   let leftWidth = 300;
   let rightWidth = 300;
@@ -50,7 +51,8 @@
               <div class="card rounded-0 border-0">
                   <div class="card-body p-0">
                       <h5 class="card-title p-2 m-0">Properties</h5>
-                  </div>
+                      <RightPanel />
+                    </div>
               </div>
           </div>
       </div>
