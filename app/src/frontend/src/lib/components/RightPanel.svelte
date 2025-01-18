@@ -4,12 +4,12 @@
     export let selectedNode = null;
     export let width = 300;
 
-    $: componentToShow = selectedNode?.type === 'start' ? 'schedule' : null;
+    $: componentToShow = selectedNode?.type === 'start' ? 'start' : null;
 </script>
 
 <div class="right-panel" style="width: {width}px">
     <div class="panel-content">
-        {#if componentToShow === 'schedule'}
+        {#if selectedNode && componentToShow === 'start'}
             <ScheduleForm 
                 nodeId={selectedNode.id} 
                 on:save

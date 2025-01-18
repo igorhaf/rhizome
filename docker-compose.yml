@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: devops/Dockerfile
+    ports:
+      - "${PORT:-5173}:5173" # Porta padrão é 5173, mas pode ser alterada
+    volumes:
+      - ./app/src/frontend:/app/src/frontend:delegated # Mapeia o frontend no container
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
