@@ -376,16 +376,7 @@
 
     function handleDrop(event) {
         event.preventDefault();
-        try {
-        const rawData = event.dataTransfer.getData('application/json');
-        console.log('Raw transfer data:', rawData);
-        
-        if (!rawData) {
-            console.error('No data received in drop event');
-            return;
-        }
-        
-        const data = JSON.parse(rawData);
+        const data = JSON.parse(event.dataTransfer.getData('application/json'));
         const rect = diagramArea.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -396,9 +387,6 @@
             x,
             y
         }];
-    } catch (err) {
-        console.error('Error parsing drop data:', err);
-    }
     }
 </script>
 
