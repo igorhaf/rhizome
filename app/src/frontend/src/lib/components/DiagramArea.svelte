@@ -1,4 +1,7 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
+
     let diagramArea;
     let objects = [];
     let connections = [];
@@ -373,7 +376,16 @@
 
     function handleDrop(event) {
         event.preventDefault();
-        const data = JSON.parse(event.dataTransfer.getData('application/json'));
+        try {
+        const rawData = event.dataTransfer.getData('application/json');
+        console.log('Raw transfer data:', rawData);
+        
+        if (!rawData) {
+            console.error('No data received in drop event');
+            return;
+        }
+        
+        const data = JSON.parse(rawData);
         const rect = diagramArea.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -384,9 +396,13 @@
             x,
             y
         }];
+    } catch (err) {
+        console.error('Error parsing drop data:', err);
+    }
     }
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="diagram-area" 
      bind:this={diagramArea}
      on:dragover|preventDefault
@@ -436,6 +452,7 @@
     </svg>
 
     {#each objects as object (object.id)}
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
         <div class="diagram-object"
              data-object-id={object.id}
              style="left: {object.x}px; top: {object.y}px"
@@ -444,14 +461,19 @@
              on:dragend={(e) => handleObjectDragEnd(e, object)}
              on:click={() => {
                 if (object.type === 'start') {
-                    console.log('Start node clicked:', object);
+                    dispatch('selectNode', object);
+                    console.log(object)
                 }
             }}>
              
              {object.label}
+            <!-- svelte-ignore element_invalid_self_closing_tag -->
             <div class="connector north" on:mousedown={(e) => startConnection(e, object, 'north')}/>
+            <!-- svelte-ignore element_invalid_self_closing_tag -->
             <div class="connector south" on:mousedown={(e) => startConnection(e, object, 'south')}/>
+            <!-- svelte-ignore element_invalid_self_closing_tag -->
             <div class="connector east"  on:mousedown={(e) => startConnection(e, object, 'east')}/>
+            <!-- svelte-ignore element_invalid_self_closing_tag -->
             <div class="connector west"  on:mousedown={(e) => startConnection(e, object, 'west')}/>
         </div>
     {/each}

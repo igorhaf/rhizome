@@ -6,6 +6,7 @@
 
   let leftWidth = 300;
   let rightWidth = 300;
+  let selectedNode = null;
 
   function handleLeftResize(dx) {
       leftWidth = Math.max(200, Math.min(600, leftWidth + dx));
@@ -40,7 +41,9 @@
               <div class="card rounded-0 border-0">
                   <div class="card-body p-0">
                       <h5 class="card-title p-2 m-0">Flow Diagram</h5>
-                      <DiagramArea />
+                      <DiagramArea 
+                            on:selectNode={(event) => selectedNode = event.detail}
+                        />
                   </div>
               </div>
           </div>
@@ -51,7 +54,7 @@
               <div class="card rounded-0 border-0">
                   <div class="card-body p-0">
                       <h5 class="card-title p-2 m-0">Properties</h5>
-                      <RightPanel />
+                      <RightPanel {selectedNode} />
                     </div>
               </div>
           </div>
