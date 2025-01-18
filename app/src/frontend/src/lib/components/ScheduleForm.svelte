@@ -3,7 +3,6 @@
     const dispatch = createEventDispatcher();
 
     export let nodeId;
-
     let repeatEnabled = false;
     let repeatInterval = 1;
     let selectedDays = {

@@ -441,8 +441,14 @@
              style="left: {object.x}px; top: {object.y}px"
              draggable="true"
              on:dragstart={(e) => handleObjectDragStart(e, object)}
-             on:dragend={(e) => handleObjectDragEnd(e, object)}>
-            {object.label}
+             on:dragend={(e) => handleObjectDragEnd(e, object)}
+             on:click={() => {
+                if (object.type === 'start') {
+                    console.log('Start node clicked:', object);
+                }
+            }}>
+             
+             {object.label}
             <div class="connector north" on:mousedown={(e) => startConnection(e, object, 'north')}/>
             <div class="connector south" on:mousedown={(e) => startConnection(e, object, 'south')}/>
             <div class="connector east"  on:mousedown={(e) => startConnection(e, object, 'east')}/>
