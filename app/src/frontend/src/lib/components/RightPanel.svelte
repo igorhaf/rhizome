@@ -1,20 +1,15 @@
 <script>
     import ScheduleForm from './ScheduleForm.svelte';
 
-    export let selectedNode = null;
-    export let width = 300;
+    export let width = '100%';
 
-    $: componentToShow = selectedNode?.type === 'start' ? 'start' : null;
 </script>
 
 <div class="right-panel" style="width: {width}px">
     <div class="panel-content">
-        {#if selectedNode && componentToShow === 'start'}
             <ScheduleForm 
-                nodeId={selectedNode.id} 
                 on:save
             />
-        {/if}
     </div>
 </div>
 
