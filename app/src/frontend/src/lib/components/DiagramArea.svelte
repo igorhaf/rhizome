@@ -10,26 +10,48 @@
     let dragOffset = { x: 0, y: 0 };
 
     function isValidConnection(sourceObj, targetObj) {
+        // Se não existirem objetos, conexão inválida
         if (!sourceObj || !targetObj) return false;
         
+        // Se for objeto start
         if (sourceObj.type === 'start') {
+            // Verifica se já existe alguma conexão partindo do start
             const startConnections = connections.filter(conn => 
                 conn.sourceId === sourceObj.id
             );
             return startConnections.length === 0;
         }
 
-        const hasStart = objects.some(obj => 
-            obj.type === 'start' && 
-            connections.some(conn => conn.sourceId === obj.id)
-        );
-        
-        if (!hasStart) return false;
+        // Verifica se existe um caminho do start até o objeto fonte
+        return hasPathFromStart(sourceObj.id);
+    }
 
-        return !connections.some(conn => 
-            conn.sourceId === targetObj.id && 
-            conn.targetId === sourceObj.id
-        );
+    function hasPathFromStart(nodeId) {
+        const visited = new Set();
+        const queue = [nodeId];
+        
+        while (queue.length > 0) {
+            const currentId = queue.shift();
+            
+            // Se já visitamos este nó, pula
+            if (visited.has(currentId)) continue;
+            visited.add(currentId);
+            
+            // Encontra conexão que leva a este nó
+            const incomingConnection = connections.find(conn => conn.targetId === currentId);
+            if (!incomingConnection) continue;
+            
+            const sourceObject = objects.find(obj => obj.id === incomingConnection.sourceId);
+            if (!sourceObject) continue;
+            
+            // Se encontramos o start, caminho é válido
+            if (sourceObject.type === 'start') return true;
+            
+            // Adiciona o próximo nó para verificar
+            queue.push(sourceObject.id);
+        }
+        
+        return false;
     }
 
     function startConnection(event, object, position) {
@@ -131,6 +153,35 @@
         const targetObject = objects.find(obj => 
             obj.id === parseInt(targetConnector.parentElement.dataset.objectId)
         );
+
+        // Regra 1: Impedir conexões de entrada no start
+        if (targetObject?.type === 'start') {
+            console.log('Não é permitido conectar ao objeto start');
+            activeConnection = null;
+            return;
+        }
+
+        // Regra 2: Start só pode ter uma saída
+        if (sourceObject?.type === 'start') {
+            const startOutgoing = connections.find(conn => conn.sourceId === sourceObject.id);
+            if (startOutgoing) {
+                console.log('Start já possui uma conexão');
+                activeConnection = null;
+                return;
+            }
+        }
+
+        // Regra 3: Impedir conexões inversas
+        const existingConnection = connections.find(conn => 
+            (conn.sourceId === targetObject?.id && conn.targetId === sourceObject?.id) ||
+            (conn.targetId === targetObject?.id)
+        );
+
+        if (existingConnection) {
+            console.log('Conexão inválida: já existe conexão ou criaria ciclo');
+            activeConnection = null;
+            return;
+        }
 
         if (sourceObject && targetObject && sourceObject.id !== targetObject.id) {
             const { sourceConnector, targetConnector, sourcePoint, targetPoint } = 
