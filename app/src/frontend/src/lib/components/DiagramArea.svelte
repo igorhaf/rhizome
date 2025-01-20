@@ -26,7 +26,7 @@
                 selectedObject = null;
             }
             if (selectedConnection) {
-                // Remove selected connection
+                console.log('Deleting connection:', selectedConnection); // Debug log
                 connections = connections.filter(conn => 
                     conn.id !== selectedConnection.id
                 );
@@ -488,11 +488,12 @@
         }
     }
 
-    // Add connection click handler
+    // Update connection click handler
     function handleConnectionClick(conn, event) {
         event.stopPropagation();
-        selectedObject = null;
-        selectedConnection = conn;
+        selectedObject = null; // Clear object selection
+        selectedConnection = conn; // Set selected connection
+        console.log('Connection selected:', conn); // Debug log
     }
 
     // Add diagram area click handler to clear selection
@@ -526,24 +527,25 @@
         </defs>
 
         {#each connections as conn}
-            <g>
+            <g 
+                on:click|stopPropagation={(e) => {
+                    console.log('Connection group clicked:', conn.id);
+                    handleConnectionClick(conn, e);
+                }}
+                class="connection-group"
+            >
+                <!-- Add invisible wider path for better click detection -->
+                <path 
+                    d={calculateOrthogonalPath(conn)}
+                    class="connection-hitbox"
+                />
+                <!-- Visible path -->
                 <path 
                     d={calculateOrthogonalPath(conn)}
                     class="connection"
-                    class:selected={selectedConnection === conn}
-                    on:click|stopPropagation={(e) => handleConnectionClick(conn, e)}
-                    marker-end="url(#arrowhead)"/>
-                <foreignObject 
-                    x={(conn.sourceX + conn.targetX) / 2 - 50}
-                    y={(conn.sourceY + conn.targetY) / 2 - 10}
-                    width="100" 
-                    height="20">
-                    <input 
-                        type="text" 
-                        value={conn.label} 
-                        on:input={(e) => updateLabel(e, conn)}
-                        class="connection-label"/>
-                </foreignObject>
+                    class:selected={selectedConnection?.id === conn.id}
+                    marker-end="url(#arrowhead)"
+                />
             </g>
         {/each}
         
@@ -599,10 +601,27 @@
         pointer-events: none;
     }
 
-    .connection {
+    .connection-group {
+        cursor: pointer;
+    }
+
+    .connection-hitbox {
+        stroke: transparent;
+        stroke-width: 20;
         fill: none;
+        pointer-events: all;
+    }
+
+    .connection {
         stroke: #666;
         stroke-width: 2;
+        fill: none;
+        pointer-events: none;
+    }
+
+    .connection.selected {
+        stroke: #007bff;
+        stroke-width: 3;
     }
 
     .connection.active {
@@ -665,10 +684,5 @@
         left: -5px;
         top: 50%;
         transform: translateY(-50%);
-    }
-
-    .connection.selected {
-        stroke: #007bff;
-        stroke-width: 3;
     }
 </style>
