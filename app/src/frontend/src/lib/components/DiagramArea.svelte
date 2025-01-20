@@ -9,6 +9,32 @@
     let activeConnection = null;
     let dragOffset = { x: 0, y: 0 };
 
+    // Add new state variables
+    let selectedObject = null;
+    let selectedConnection = null;
+
+    // Add keyboard event listener
+    function handleKeyDown(event) {
+        if (event.key === 'Delete') {
+            if (selectedObject) {
+                // Remove object and its connections
+                connections = connections.filter(conn => 
+                    conn.sourceId !== selectedObject.id && 
+                    conn.targetId !== selectedObject.id
+                );
+                objects = objects.filter(obj => obj.id !== selectedObject.id);
+                selectedObject = null;
+            }
+            if (selectedConnection) {
+                // Remove selected connection
+                connections = connections.filter(conn => 
+                    conn.id !== selectedConnection.id
+                );
+                selectedConnection = null;
+            }
+        }
+    }
+
     function isValidConnection(sourceObj, targetObj) {
         // Se não existirem objetos, conexão inválida
         if (!sourceObj || !targetObj) return false;
@@ -451,13 +477,39 @@
             console.error('Error parsing drop data:', err);
         }
     }
+
+    // Update object click handler
+    function handleObjectClick(object, event) {
+        event.stopPropagation();
+        selectedConnection = null;
+        selectedObject = object;
+        if (object.type === 'start') {
+            dispatch('selectNode', object);
+        }
+    }
+
+    // Add connection click handler
+    function handleConnectionClick(conn, event) {
+        event.stopPropagation();
+        selectedObject = null;
+        selectedConnection = conn;
+    }
+
+    // Add diagram area click handler to clear selection
+    function handleDiagramClick() {
+        selectedObject = null;
+        selectedConnection = null;
+    }
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="diagram-area" 
      bind:this={diagramArea}
      on:dragover|preventDefault
-     on:drop={handleDrop}>
+     on:drop={handleDrop}
+     on:click={handleDiagramClick}
+     on:keydown={handleKeyDown}
+     tabindex="0">
     <svg class="connections-layer">
         <defs>
             <marker 
@@ -478,6 +530,8 @@
                 <path 
                     d={calculateOrthogonalPath(conn)}
                     class="connection"
+                    class:selected={selectedConnection === conn}
+                    on:click|stopPropagation={(e) => handleConnectionClick(conn, e)}
                     marker-end="url(#arrowhead)"/>
                 <foreignObject 
                     x={(conn.sourceX + conn.targetX) / 2 - 50}
@@ -505,17 +559,13 @@
     {#each objects as object (object.id)}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <div class="diagram-object"
+             class:selected={selectedObject === object}
              data-object-id={object.id}
              style="left: {object.x}px; top: {object.y}px"
              draggable="true"
              on:dragstart={(e) => handleObjectDragStart(e, object)}
              on:dragend={(e) => handleObjectDragEnd(e, object)}
-             on:click={() => {
-                if (object.type === 'start') {
-                    dispatch('selectNode', object);
-                    console.log(object)
-                }
-            }}>
+             on:click={(e) => handleObjectClick(object, e)}>
              
              {object.label}
             <!-- svelte-ignore element_invalid_self_closing_tag -->
@@ -537,6 +587,7 @@
         height: 100%;
         min-height: 600px;
         background: #fff;
+        outline: none; /* Remove focus outline if desired */
     }
 
     .connections-layer {
@@ -578,6 +629,11 @@
         user-select: none;
     }
 
+    .diagram-object.selected {
+        outline: 2px solid #007bff;
+        z-index: 1;
+    }
+
     .connector {
         position: absolute;
         width: 10px;
@@ -609,5 +665,10 @@
         left: -5px;
         top: 50%;
         transform: translateY(-50%);
+    }
+
+    .connection.selected {
+        stroke: #007bff;
+        stroke-width: 3;
     }
 </style>
