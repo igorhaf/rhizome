@@ -1,6 +1,6 @@
 # Baobá
 
-Nexabuild é uma plataforma de automação low-code inspirada na filosofia Node-RED, enfocando a capacidade do usuário de conectar diferentes sistemas e APIs de maneira visual e simplificada. A plataforma permite uma personalização extensa por meio de sua interface baseada em nós, tornando a automação acessível a desenvolvedores e não-desenvolvedores.
+Baobá é uma plataforma de automação low-code inspirada na filosofia Node-RED, enfocando a capacidade do usuário de conectar diferentes sistemas e APIs de maneira visual e simplificada. A plataforma permite uma personalização extensa por meio de sua interface baseada em nós, tornando a automação acessível a desenvolvedores e não-desenvolvedores.
 
 ## Estrutura do Projeto
 
