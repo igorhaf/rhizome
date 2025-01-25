@@ -1,28 +1,29 @@
+<mat-grid-list cols="12" rowHeight="5vh" gutterSize="0px">
+  <mat-grid-tile [colspan]=12 [rowspan]=2>
+    <span class="tile-container">
+      <app-header></app-header>
+    </span>
+  </mat-grid-tile>
+  
+  <mat-grid-tile [colspan]=12 [rowspan]=16>
+    <as-split direction="horizontal">
+      <as-split-area [size]="15">
+        <app-leftpane></app-leftpane>
+      </as-split-area>
+      
+      <as-split-area [size]="70">
+        <app-main></app-main>
+      </as-split-area>
+      
+      <as-split-area [size]="15">
+        <app-rightpane></app-rightpane>
+      </as-split-area>
+    </as-split>
+  </mat-grid-tile>
 
-<mat-grid-list class="split-container" cols="12" rowHeight="5vh" gutterSize="0px">
-  <mat-grid-tile  [colspan]=12 [rowspan]=2 >
+  <mat-grid-tile [colspan]=12 [rowspan]=2>
     <span class="tile-container">
-      <ng-container><app-header></app-header></ng-container>
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile class="split-area" [colspan]=2 [rowspan]=16 >
-    <span class="tile-container">
-      <ng-container><app-leftpane></app-leftpane></ng-container>
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile class="split-gutter" (mousedown)="onMouseDown($event)" [colspan]=9 [rowspan]=16 >
-    <span class="tile-container">
-      <ng-container><app-main></app-main></ng-container>
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile class="split-area" [colspan]=1 [rowspan]=16 >
-    <span class="tile-container">
-      <ng-container><app-rightpane></app-rightpane></ng-container>
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]=12 [rowspan]=2 >
-    <span class="tile-container">
-      <ng-container><app-footer></app-footer></ng-container>
+      <app-footer></app-footer>
     </span>
   </mat-grid-tile>
 </mat-grid-list>
