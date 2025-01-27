@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, Type } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+//import { RouterOutlet } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
 //import { AddCompDynDirective } from './add-comp-dyn.directive';
 import { HeaderComponent } from './header/header.component';
@@ -8,10 +8,6 @@ import { MainComponent } from './main/main.component';
 import { RightpaneComponent } from './rightpane/rightpane.component';
 import { FooterComponent } from './footer/footer.component';
 import { AngularSplitModule } from 'angular-split';
-
-interface DynLayOutComponentsType {
-  [key: string]: Type<any>;
-}
 
 @Component({
   selector: 'app-root',
@@ -24,7 +20,7 @@ interface DynLayOutComponentsType {
     RightpaneComponent,
     FooterComponent,
     //AddCompDynDirective,
-    RouterOutlet,
+    //RouterOutlet,
     AngularSplitModule
   ],
   templateUrl: './app.component.html',
