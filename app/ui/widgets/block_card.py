@@ -4,47 +4,63 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty, NumericProperty, ListProperty, ObjectProperty
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
+from kivy.graphics import Line, Color, Triangle
 
 KV = '''
 <BlockCard>:
     orientation: 'vertical'
     padding: "8dp"
-    spacing: "8dp"
+    spacing: "10dp"
     size_hint: None, None
-    size: "180dp", "80dp"
-    elevation: 1
-    radius: [8]
+    size: "200dp", "120dp"
+    elevation: 2
+    radius: [10]
     md_bg_color: app.theme_cls.bg_darkest if app else (0.1, 0.1, 0.1, 1)
-    
+
     canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            size: self.width + 2, self.height + 2
+            pos: self.x - 1, self.y - 1
+            radius: [8]
         Color:
             rgba: app.theme_cls.primary_color if root.is_dragging and app else (0.1, 0.1, 0.1, 1)
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: [8]
-    
+            radius: [6]
+
     MDLabel:
         text: root.title
         theme_text_color: "Custom"
         text_color: app.theme_cls.text_color if app else (1, 1, 1, 1)
-        font_style: "H6"
+        font_size: "18dp"
         size_hint_y: None
+        size_hint_x: 1
         height: self.texture_size[1]
-        
+        halign: "left"
+        shorten: True
+        shorten_from: "right"
+
     MDLabel:
         text: root.description
         theme_text_color: "Custom"
         text_color: app.theme_cls.text_color if app else (0.7, 0.7, 0.7, 1)
         font_style: "Body2"
         size_hint_y: None
+        size_hint_x: 1
         height: self.texture_size[1]
-        
+        halign: "left"
+        shorten: True
+        shorten_from: "right"
+
     BoxLayout:
         size_hint_y: None
-        height: "20dp"
+        height: "24dp"
         spacing: "4dp"
-        
+        padding: "4dp"
+
         BoxLayout:
             id: input_port
             size_hint_x: None
@@ -55,7 +71,7 @@ KV = '''
                 Ellipse:
                     size: self.size
                     pos: self.pos
-                    
+
         BoxLayout:
             id: output_port
             size_hint_x: None
