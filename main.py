@@ -37,7 +37,6 @@ class RhizomeApp(MDApp):
         # Check if blocks are visible
         for child in editor_screen.canvas_area.children:
             if isinstance(child, BlockCard):
-                print(f"Block found at {child.pos} with size {child.size}")
                 # Force render
                 child._force_render(0)
                 

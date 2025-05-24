@@ -131,11 +131,13 @@ class BlockCard(MDCard):
         self.update_canvas()
         for child in self.children:
             child.canvas.ask_update()
+        self.update_connections()
 
     def on_pos(self, *args):
         self.update_canvas()
         for child in self.children:
             child.canvas.ask_update()
+        self.update_connections()
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -183,7 +185,6 @@ class BlockCard(MDCard):
                 self._drag_offset_y = touch.y - self.y
                 return True
             except Exception as e:
-                print(f"Error in on_touch_down: {e}")
                 return False
         return False
 
@@ -225,20 +226,18 @@ class BlockCard(MDCard):
                 self._connection_start = None
                 return True
             except Exception as e:
-                print(f"Error in on_touch_up (connection): {e}")
                 return False
         return False
 
     def update_connections(self):
-        try:
-            for conn in self.output_connections:
-                if conn and hasattr(conn, 'update_start'):
-                    conn.update_start((self.center_x, self.center_y))
-            for conn in self.input_connections:
-                if conn and hasattr(conn, 'update_end'):
-                    conn.update_end((self.center_x, self.center_y))
-        except Exception as e:
-            print(f"Error updating connections: {e}")
+        print(f"[DEBUG] {self.title} output_connections: {self.output_connections}")
+        print(f"[DEBUG] {self.title} input_connections: {self.input_connections}")
+        for conn in self.output_connections:
+            if hasattr(conn, 'update'):
+                conn.update()
+        for conn in self.input_connections:
+            if hasattr(conn, 'update'):
+                conn.update()
 
     def on_drag_start(self, touch):
         pass
@@ -383,29 +382,24 @@ class BlockCard(MDCard):
     def validate_connection(self, target_block, target_port):
         """Validate BPMN connection rules"""
         if self.block_type == 'start' and target_block.block_type == 'end':
-            print("Error: Cannot connect Start Event directly to End Event")
             return False
             
         if self.block_type == 'end':
-            print("Error: End Event cannot be the source of a connection")
             return False
             
         if target_block.block_type == 'start':
-            print("Error: Start Event cannot be the target of a connection")
             return False
             
         if self.block_type == 'gateway':
             # Count existing outgoing connections
             outgoing = sum(1 for conn in self.output_connections if conn)
             if outgoing >= 2 and target_port == 'input':
-                print("Error: Gateway already has maximum number of outgoing connections")
                 return False
                 
         if target_block.block_type == 'gateway':
             # Count existing incoming connections
             incoming = sum(1 for conn in target_block.input_connections if conn)
             if incoming >= 2 and target_port == 'output':
-                print("Error: Gateway already has maximum number of incoming connections")
                 return False
                 
         return True
@@ -413,20 +407,12 @@ class BlockCard(MDCard):
     def end_connection(self, target_block, target_port):
         if not self.validate_connection(target_block, target_port):
             return
-            
-        # Create connection
         if self.connection_manager:
-            self.connection_manager.create_connection(self, target_block)
-            
-        # Update connection lists
-        if target_port == 'input':
-            target_block.input_connections.append(self)
-            self.output_connections.append(target_block)
-        else:
-            target_block.output_connections.append(self)
-            self.input_connections.append(target_block)
-            
-        # Validate gateway connections
+            conn = self.connection_manager.create_connection(self, target_block)
+            if conn not in self.output_connections:
+                self.output_connections.append(conn)
+            if conn not in target_block.input_connections:
+                target_block.input_connections.append(conn)
         if self.block_type == 'gateway':
             self.validate_gateway_connections()
         if target_block.block_type == 'gateway':
@@ -441,16 +427,16 @@ class BlockCard(MDCard):
         outgoing = sum(1 for conn in self.output_connections if conn)
         
         if incoming < 1:
-            print("Warning: Gateway should have at least one incoming connection")
+            pass
         if outgoing < 2:
-            print("Warning: Gateway should have at least two outgoing connections")
+            pass
 
     def validate_gateway(self, block):
         if block.block_type == 'gateway':
             outgoing = sum(1 for conn in self.connections if conn.start_block == block)
             incoming = sum(1 for conn in self.connections if conn.end_block == block)
             if outgoing < 2 and incoming < 2:
-                print("Gateway deve ter pelo menos duas conexões de entrada ou saída!")
+                pass
 
     def update_canvas(self, *args):
         self.canvas.before.clear()
