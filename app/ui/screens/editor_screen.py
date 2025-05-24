@@ -102,15 +102,24 @@ class EditorScreen(MDScreen):
         
         content.add_widget(toolbar_layout)
         
-        # Canvas area
-        self.canvas_area = MDBoxLayout(
+        # Canvas area container with padding
+        canvas_container = MDBoxLayout(
             size_hint_x=0.8,
             padding="8dp"
         )
-        content.add_widget(self.canvas_area)
+        
+        # Canvas area
+        self.canvas_area = MDFloatLayout(
+            size_hint=(1, 1)
+        )
+        canvas_container.add_widget(self.canvas_area)
+        content.add_widget(canvas_container)
         
         main_layout.add_widget(content)
         self.add_widget(main_layout)
+        
+        # Initialize connection manager
+        self.connection_manager = ConnectionManager(self.canvas_area)
         
         # Wait for the next frame to ensure widgets are created
         Clock.schedule_once(self._finish_init)
@@ -128,8 +137,7 @@ class EditorScreen(MDScreen):
             return
             
         print("Canvas area is ready, initializing managers...")
-        # Initialize managers
-        self.connection_manager = ConnectionManager(self.canvas_area)
+        # Initialize flow exporter
         self.flow_exporter = FlowExporter(self.canvas_area, self.connection_manager)
         
         # Add initial blocks
@@ -146,46 +154,46 @@ class EditorScreen(MDScreen):
             print("Canvas area not available for adding blocks")
             return
         
-        # Limpa todos os blocos antes de adicionar novos (evita duplicidade)
+        # Clear existing blocks
         for child in self.canvas_area.children[:]:
             if isinstance(child, BlockCard):
                 self.canvas_area.remove_widget(child)
         
-        print("Creating first block...")
-        block1 = BlockCard(
-            title="Input Block",
-            description="Reads data from a source"
+        # Create start event
+        start_block = BlockCard(
+            block_type="start",
+            title="Start Process",
+            description="Process begins here"
         )
-        block1.size_hint = (None, None)
-        block1.size = (180, 80)
-        block1.pos = (100, 300)
-        block1.connection_manager = self.connection_manager
-        self.canvas_area.add_widget(block1)
-        print(f"First block added at {block1.pos} with size {block1.size}")
+        start_block.size_hint = (None, None)
+        start_block.size = (180, 80)
+        start_block.pos = (100, 300)
+        start_block.connection_manager = self.connection_manager
+        self.canvas_area.add_widget(start_block)
         
-        print("Creating second block...")
-        block2 = BlockCard(
-            title="Process Block",
-            description="Processes the input data"
+        # Create task
+        task_block = BlockCard(
+            block_type="task",
+            title="Process Data",
+            description="Main processing step"
         )
-        block2.size_hint = (None, None)
-        block2.size = (180, 80)
-        block2.pos = (400, 300)
-        block2.connection_manager = self.connection_manager
-        self.canvas_area.add_widget(block2)
-        print(f"Second block added at {block2.pos} with size {block2.size}")
+        task_block.size_hint = (None, None)
+        task_block.size = (180, 80)
+        task_block.pos = (400, 300)
+        task_block.connection_manager = self.connection_manager
+        self.canvas_area.add_widget(task_block)
         
-        print("Creating third block...")
-        block3 = BlockCard(
-            title="Process Block",
-            description="Processes the input data"
+        # Create gateway
+        gateway_block = BlockCard(
+            block_type="gateway",
+            title="Decision Point",
+            description="Make a decision"
         )
-        block3.size_hint = (None, None)
-        block3.size = (180, 80)
-        block3.pos = (400, 180)  # Posição única
-        block3.connection_manager = self.connection_manager
-        self.canvas_area.add_widget(block3)
-        print(f"Third block added at {block3.pos} with size {block3.size}")
+        gateway_block.size_hint = (None, None)
+        gateway_block.size = (180, 80)
+        gateway_block.pos = (400, 180)
+        gateway_block.connection_manager = self.connection_manager
+        self.canvas_area.add_widget(gateway_block)
         
         self.print_canvas_hierarchy()
 
@@ -277,4 +285,5 @@ class EditorScreen(MDScreen):
         block.size_hint = (None, None)
         block.size = (180, 80)
         block.pos = (100, 100)  # Initial position
+        block.connection_manager = self.connection_manager  # Set connection manager
         self.canvas_area.add_widget(block) 
