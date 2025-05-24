@@ -147,60 +147,38 @@ class BlockCard(MDCard):
                     if self.connection_manager:
                         self.connection_manager.start_connection(self, 'input')
                     return True
-                else:
-                    self._touch_pos = touch.pos
-                    self._last_move_pos = touch.pos
-                    self._original_pos = list(self.pos)
-                    self._dragging = True
-                    self.is_dragging = True
-                    self.is_selected = 1
-                    self.dispatch('on_drag_start', touch)
-                    return True
+                # Se não for clique nos ports, ativa o drag manualmente
+                self._drag_touch = touch
+                self._drag_start_x = self.x
+                self._drag_start_y = self.y
+                self._drag_offset_x = touch.x - self.x
+                self._drag_offset_y = touch.y - self.y
+                return True
             except Exception as e:
                 print(f"Error in on_touch_down: {e}")
                 return False
-        return super().on_touch_down(touch)
+        return False
 
     def on_touch_move(self, touch):
-        if self._dragging:
-            try:
-                if self._last_move_pos is None:
-                    self._last_move_pos = touch.pos
-                    return True
-
-                dx = touch.pos[0] - self._last_move_pos[0]
-                dy = touch.pos[1] - self._last_move_pos[1]
-                self._last_move_pos = touch.pos
-                parent = self.parent
-                if parent:
-                    new_x = max(0, min(self.pos[0] + dx, parent.width - self.width))
-                    new_y = max(0, min(self.pos[1] + dy, parent.height - self.height))
-                    self.pos = (new_x, new_y)
-                    self.update_connections()
-                    self.dispatch('on_drag', touch)
-                    return True
-            except Exception as e:
-                print(f"Error in on_touch_move: {e}")
-                return False
+        if hasattr(self, '_drag_touch') and touch is self._drag_touch:
+            # Move o bloco
+            new_x = touch.x - self._drag_offset_x
+            new_y = touch.y - self._drag_offset_y
+            parent = self.parent
+            if parent:
+                new_x = max(0, min(new_x, parent.width - self.width))
+                new_y = max(0, min(new_y, parent.height - self.height))
+            self.pos = (new_x, new_y)
+            return True
         elif self.is_connecting and self.connection_manager:
             self.connection_manager.update_preview(touch.pos)
             return True
-        return super().on_touch_move(touch)
+        return False
 
     def on_touch_up(self, touch):
-        if self._dragging:
-            try:
-                self._dragging = False
-                self._touch_pos = None
-                self._original_pos = None
-                self._last_move_pos = None
-                self.is_dragging = False
-                self.is_selected = 0
-                self.dispatch('on_drag_end', touch)
-                return True
-            except Exception as e:
-                print(f"Error in on_touch_up: {e}")
-                return False
+        if hasattr(self, '_drag_touch') and touch is self._drag_touch:
+            del self._drag_touch
+            return True
         elif self.is_connecting and self.connection_manager:
             try:
                 for child in self.parent.children:
@@ -212,14 +190,13 @@ class BlockCard(MDCard):
                         else:
                             if child.ids.output_port.collide_point(*local_pos):
                                 self.connection_manager.end_connection(child, 'output')
-
                 self.is_connecting = 0
                 self._connection_start = None
                 return True
             except Exception as e:
                 print(f"Error in on_touch_up (connection): {e}")
                 return False
-        return super().on_touch_up(touch)
+        return False
 
     def update_connections(self):
         try:
