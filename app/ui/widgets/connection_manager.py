@@ -184,4 +184,70 @@ class Connection(Widget):
             if isinstance(child, BlockCard):
                 if child.collide_point(*self.preview_line.get_end_pos()):
                     return child
-        return None 
+        return None
+
+class ConnectionLine(Widget):
+    def __init__(self, start_block, end_block=None, **kwargs):
+        super().__init__(**kwargs)
+        self.start_block = start_block
+        self.end_block = end_block
+        self.points = []
+        with self.canvas:
+            Color(0.2, 0.5, 1, 1)
+            self.line = Line(points=self.points, width=2)
+            self.arrow = Triangle(points=[0, 0, 0, 0, 0, 0])
+        self.update()
+        # Atualiza a linha sempre que os blocos se movem
+        self.start_block.bind(pos=self._update_from_blocks, size=self._update_from_blocks)
+        if self.end_block:
+            self.end_block.bind(pos=self._update_from_blocks, size=self._update_from_blocks)
+
+    def _update_from_blocks(self, *args):
+        self.update()
+
+    def update(self, end_pos=None):
+        if self.end_block:
+            start = self.start_block.center
+            end = self.end_block.center
+        else:
+            start = self.start_block.center
+            end = end_pos if end_pos else start
+        self.line.points = [*start, *end]
+        # Arrow
+        arrow_length = 18
+        arrow_width = 10
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+        angle = atan2(dy, dx)
+        tip_x, tip_y = end
+        left_x = tip_x - arrow_length * cos(angle) + arrow_width * sin(angle) / 2
+        left_y = tip_y - arrow_length * sin(angle) - arrow_width * cos(angle) / 2
+        right_x = tip_x - arrow_length * cos(angle) - arrow_width * sin(angle) / 2
+        right_y = tip_y - arrow_length * sin(angle) + arrow_width * cos(angle) / 2
+        self.arrow.points = [tip_x, tip_y, left_x, left_y, right_x, right_y]
+
+class ConnectionManager:
+    def __init__(self, canvas_area):
+        self.canvas_area = canvas_area
+        self.preview_line = None
+        self.connections = []
+
+    def start_preview(self, start_block):
+        self.preview_line = ConnectionLine(start_block)
+        self.canvas_area.add_widget(self.preview_line)
+
+    def update_preview(self, pos):
+        if self.preview_line:
+            self.preview_line.update(end_pos=pos)
+
+    def end_preview(self, end_block):
+        if self.preview_line and end_block and end_block != self.preview_line.start_block:
+            self.preview_line.end_block = end_block
+            self.preview_line.update()
+            # Bind para atualizar a linha ao mover o bloco de destino
+            self.preview_line.end_block.bind(pos=self.preview_line._update_from_blocks, size=self.preview_line._update_from_blocks)
+            self.connections.append(self.preview_line)
+            self.preview_line = None
+        elif self.preview_line:
+            self.canvas_area.remove_widget(self.preview_line)
+            self.preview_line = None 

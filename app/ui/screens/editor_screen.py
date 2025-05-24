@@ -1,18 +1,27 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
 from app.ui.widgets.block_card import BlockCard
 from app.ui.widgets.toolbar import EditorToolbar
 from app.ui.widgets.connection_manager import ConnectionManager
 from app.core.flow_exporter import FlowExporter
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDFlatButton, MDIconButton
+from kivymd.uix.toolbar import MDTopAppBar
 from kivy.uix.filechooser import FileChooserListView
 from kivy.properties import ObjectProperty
 from kivy.clock import Clock
 from kivymd.app import MDApp
 import os
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.boxlayout import BoxLayout
+from app.ui.widgets.bpmn_toolbar import BPMNToolbar
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.graphics import Color, Rectangle
 
 KV = '''
 <EditorScreen>:
@@ -40,29 +49,68 @@ class EditorScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.register_event_type('on_canvas_ready')
+        self.setup_ui()
         
-        # Create the layout first
-        self.layout = MDBoxLayout(
+    def setup_ui(self):
+        # Main layout
+        main_layout = MDBoxLayout(orientation='vertical')
+        
+        # Toolbar
+        toolbar = MDTopAppBar(
+            title="BPMN Editor",
+            elevation=2
+        )
+        main_layout.add_widget(toolbar)
+        
+        # Content area with toolbar and canvas
+        content = MDBoxLayout(orientation='horizontal')
+        
+        # BPMN Toolbar
+        toolbar_layout = MDBoxLayout(
             orientation='vertical',
-            spacing="10dp",
-            padding="10dp"
+            size_hint_x=0.2,
+            padding="8dp",
+            spacing="8dp"
         )
         
-        # Create and add toolbar
-        self.toolbar = EditorToolbar()
-        self.toolbar.bind(on_save=self.save_flow)
-        self.toolbar.bind(on_open=self.show_open_dialog)
-        self.layout.add_widget(self.toolbar)
-        
-        # Create and add canvas area
-        self.canvas_area = MDFloatLayout(
-            size_hint=(1, 1),
-            md_bg_color=MDApp.get_running_app().theme_cls.bg_normal
+        # Toolbar title
+        toolbar_title = MDLabel(
+            text="BPMN Elements",
+            size_hint_y=None,
+            height="48dp",
+            halign="center"
         )
-        self.layout.add_widget(self.canvas_area)
+        toolbar_layout.add_widget(toolbar_title)
         
-        # Add layout to screen
-        self.add_widget(self.layout)
+        # BPMN Elements
+        bpmn_elements = [
+            ("Start Event", "play-circle", "start"),
+            ("End Event", "stop-circle", "end"),
+            ("Task", "file-document", "task"),
+            ("Gateway", "gate", "gateway")
+        ]
+        
+        for label, icon, block_type in bpmn_elements:
+            btn = MDIconButton(
+                icon=icon,
+                text=label,
+                size_hint_y=None,
+                height="48dp"
+            )
+            btn.bind(on_release=lambda x, bt=block_type: self.create_bpmn_block(bt))
+            toolbar_layout.add_widget(btn)
+        
+        content.add_widget(toolbar_layout)
+        
+        # Canvas area
+        self.canvas_area = MDBoxLayout(
+            size_hint_x=0.8,
+            padding="8dp"
+        )
+        content.add_widget(self.canvas_area)
+        
+        main_layout.add_widget(content)
+        self.add_widget(main_layout)
         
         # Wait for the next frame to ensure widgets are created
         Clock.schedule_once(self._finish_init)
@@ -218,4 +266,15 @@ class EditorScreen(MDScreen):
                 )
             ]
         )
-        dialog.open() 
+        dialog.open()
+
+    def create_bpmn_block(self, block_type):
+        block = BlockCard(
+            block_type=block_type,
+            title=f"{block_type.title()} Block",
+            description=f"This is a {block_type} block"
+        )
+        block.size_hint = (None, None)
+        block.size = (180, 80)
+        block.pos = (100, 100)  # Initial position
+        self.canvas_area.add_widget(block) 
