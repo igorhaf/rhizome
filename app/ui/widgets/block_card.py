@@ -147,10 +147,8 @@ class BlockCard(MDCard):
                     if self.connection_manager:
                         self.connection_manager.start_connection(self, 'input')
                     return True
-                # Se não for clique nos ports, ativa o drag manualmente
+                # Arrasto manual
                 self._drag_touch = touch
-                self._drag_start_x = self.x
-                self._drag_start_y = self.y
                 self._drag_offset_x = touch.x - self.x
                 self._drag_offset_y = touch.y - self.y
                 return True
@@ -161,7 +159,6 @@ class BlockCard(MDCard):
 
     def on_touch_move(self, touch):
         if hasattr(self, '_drag_touch') and touch is self._drag_touch:
-            # Move o bloco
             new_x = touch.x - self._drag_offset_x
             new_y = touch.y - self._drag_offset_y
             parent = self.parent
