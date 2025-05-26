@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import FlowCanvas from './components/FlowCanvas';
 import Toolbar from './components/Toolbar';
 import NodeSidebar from './components/NodeSidebar';
 import EndNodeSidebar from './components/EndNodeSidebar';
+import ActionNodeSidebar from './components/ActionNodeSidebar';
+import DecisionNodeSidebar from './components/DecisionNodeSidebar';
 import { Node, Edge, NodeType } from './types/flow';
 
 export default function Home() {
@@ -12,7 +14,7 @@ export default function Home() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
-  const handleNodeSelect = (type: NodeType) => {
+  const handleNodeAdd = (type: NodeType) => {
     const newNode: Node = {
       id: `node-${Date.now()}`,
       type,
@@ -26,9 +28,54 @@ export default function Home() {
           returnType: 'json',
           shouldLog: true,
         }),
+        ...(type === 'action' && {
+          actionType: 'function',
+          inputParams: '',
+          timeout: 30,
+          retryCount: 0,
+          retryInterval: 5,
+          isAsync: false,
+          shouldLog: true,
+        }),
       },
     };
     setNodes([...nodes, newNode]);
+  };
+
+  const handleNodeSelect = (node: Node) => {
+    // Inicializa campos específicos baseado no tipo do nó
+    const updatedNode = { ...node };
+    if (node.type === 'end') {
+      updatedNode.data = {
+        ...updatedNode.data,
+        returnStatus: updatedNode.data.returnStatus ?? 'success',
+        returnCode: updatedNode.data.returnCode ?? 200,
+        returnType: updatedNode.data.returnType ?? 'json',
+        shouldLog: updatedNode.data.shouldLog ?? true
+      };
+    }
+    if (node.type === 'action') {
+      updatedNode.data = {
+        ...updatedNode.data,
+        actionType: updatedNode.data.actionType ?? 'function',
+        inputParams: updatedNode.data.inputParams ?? '',
+        timeout: updatedNode.data.timeout ?? 30,
+        retryCount: updatedNode.data.retryCount ?? 0,
+        retryInterval: updatedNode.data.retryInterval ?? 5,
+        isAsync: updatedNode.data.isAsync ?? false,
+        shouldLog: updatedNode.data.shouldLog ?? true
+      };
+    }
+    if (node.type === 'decision') {
+      updatedNode.data = {
+        ...updatedNode.data,
+        conditionExpression: updatedNode.data.conditionExpression ?? '',
+        inputVars: updatedNode.data.inputVars ?? '',
+        outputVars: updatedNode.data.outputVars ?? '',
+        shouldLog: updatedNode.data.shouldLog ?? true
+      };
+    }
+    setSelectedNode(updatedNode);
   };
 
   const handleNodesChange = (newNodes: Node[]) => {
@@ -51,20 +98,32 @@ export default function Home() {
   };
 
   return (
-    <main className="flex h-screen bg-gray-50">
-      <Toolbar onNodeSelect={handleNodeSelect} />
+    <div className="flex h-screen bg-gray-900">
+      <Toolbar onNodeSelect={handleNodeAdd} />
       <div className="flex-1 relative">
         <FlowCanvas
           nodes={nodes}
           edges={edges}
           onNodesChange={handleNodesChange}
           onEdgesChange={handleEdgesChange}
-          onNodeClick={handleNodeClick}
+          onNodeClick={handleNodeSelect}
         />
       </div>
       {selectedNode && (
         selectedNode.type === 'end' ? (
           <EndNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'action' ? (
+          <ActionNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'decision' ? (
+          <DecisionNodeSidebar
             node={selectedNode}
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}
@@ -77,6 +136,6 @@ export default function Home() {
           />
         )
       )}
-    </main>
+    </div>
   );
 }

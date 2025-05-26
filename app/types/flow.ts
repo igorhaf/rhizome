@@ -30,6 +30,15 @@ export interface Node {
     finalMessage?: string;
     returnType?: 'json' | 'text' | 'html' | 'xml' | 'binary';
     shouldLog?: boolean;
+    actionType?: 'function' | 'api' | 'database' | 'file' | 'email' | 'notification';
+    inputParams?: string;
+    timeout?: number;
+    retryCount?: number;
+    retryInterval?: number;
+    isAsync?: boolean;
+    conditionExpression?: string;
+    inputVars?: string;
+    outputVars?: string;
   };
 }
 

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Node } from '../types/flow';
 
-interface EndNodeSidebarProps {
+interface ActionNodeSidebarProps {
   node: Node | null;
   onUpdate: (updated: Node) => void;
   onClose: () => void;
 }
 
-const EndNodeSidebar: React.FC<EndNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
+const ActionNodeSidebar: React.FC<ActionNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
   const [localNode, setLocalNode] = useState<Node | null>(node);
   const [visible, setVisible] = useState(false);
 
@@ -44,7 +44,7 @@ const EndNodeSidebar: React.FC<EndNodeSidebarProps> = ({ node, onUpdate, onClose
         ${visible ? 'translate-x-0' : 'translate-x-full'}`}
     >
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-xl font-semibold text-white">Configurações do Fim</h3>
+        <h3 className="text-xl font-semibold text-white">Configurações da Ação</h3>
         <button onClick={handleClose} className="text-gray-400 hover:text-red-400 text-2xl">×</button>
       </div>
       <div className="flex flex-col gap-3">
@@ -72,45 +72,60 @@ const EndNodeSidebar: React.FC<EndNodeSidebarProps> = ({ node, onUpdate, onClose
           value={localNode.id} 
           readOnly 
         />
-        <label className="text-sm font-medium text-gray-200">Status de Retorno</label>
+        <label className="text-sm font-medium text-gray-200">Tipo de Ação</label>
         <select
           className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white"
-          value={data['returnStatus'] || 'success'}
-          onChange={e => handleChange('returnStatus', e.target.value)}
+          value={data['actionType'] || 'function'}
+          onChange={e => handleChange('actionType', e.target.value)}
         >
-          <option value="success">Sucesso</option>
-          <option value="error">Erro</option>
-          <option value="warning">Aviso</option>
-          <option value="info">Informação</option>
+          <option value="function">Função</option>
+          <option value="api">API</option>
+          <option value="database">Banco de Dados</option>
+          <option value="file">Arquivo</option>
+          <option value="email">Email</option>
+          <option value="notification">Notificação</option>
         </select>
-        <label className="text-sm font-medium text-gray-200">Código de Retorno</label>
+        <label className="text-sm font-medium text-gray-200">Parâmetros de Entrada</label>
+        <textarea
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          value={data['inputParams'] || ''}
+          onChange={e => handleChange('inputParams', e.target.value)}
+          placeholder="Ex: { 'param1': 'valor1', 'param2': 'valor2' }"
+        />
+        <label className="text-sm font-medium text-gray-200">Timeout (ms)</label>
         <input
           type="number"
           className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white"
-          value={data['returnCode'] || 200}
-          onChange={e => handleChange('returnCode', parseInt(e.target.value))}
-          min="100"
-          max="599"
+          value={data['timeout'] || 30000}
+          onChange={e => handleChange('timeout', parseInt(e.target.value))}
+          min="0"
         />
-        <label className="text-sm font-medium text-gray-200">Mensagem Final</label>
-        <textarea
-          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
-          value={data['finalMessage'] || ''}
-          onChange={e => handleChange('finalMessage', e.target.value)}
-          placeholder="Mensagem que será exibida ao finalizar o fluxo..."
-        />
-        <label className="text-sm font-medium text-gray-200">Tipo de Retorno</label>
-        <select
+        <label className="text-sm font-medium text-gray-200">Tentativas</label>
+        <input
+          type="number"
           className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white"
-          value={data['returnType'] || 'json'}
-          onChange={e => handleChange('returnType', e.target.value)}
-        >
-          <option value="json">JSON</option>
-          <option value="text">Texto</option>
-          <option value="html">HTML</option>
-          <option value="xml">XML</option>
-          <option value="binary">Binário</option>
-        </select>
+          value={data['retryCount'] || 0}
+          onChange={e => handleChange('retryCount', parseInt(e.target.value))}
+          min="0"
+          max="5"
+        />
+        <label className="text-sm font-medium text-gray-200">Intervalo entre Tentativas (ms)</label>
+        <input
+          type="number"
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white"
+          value={data['retryInterval'] || 1000}
+          onChange={e => handleChange('retryInterval', parseInt(e.target.value))}
+          min="0"
+        />
+        <label className="flex items-center gap-2 mt-2 text-gray-200">
+          <input
+            type="checkbox"
+            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+            checked={!!data['isAsync']}
+            onChange={e => handleChange('isAsync', e.target.checked)}
+          />
+          Execução Assíncrona
+        </label>
         <label className="flex items-center gap-2 mt-2 text-gray-200">
           <input
             type="checkbox"
@@ -131,4 +146,4 @@ const EndNodeSidebar: React.FC<EndNodeSidebarProps> = ({ node, onUpdate, onClose
   );
 };
 
-export default EndNodeSidebar; 
+export default ActionNodeSidebar; 

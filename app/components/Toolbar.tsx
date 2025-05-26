@@ -7,11 +7,20 @@ interface ToolbarProps {
   onNodeSelect: (type: NodeType) => void;
 }
 
+// Novo tipo para grupos hierárquicos
+interface Group {
+  name: string;
+  iconClosed: string;
+  iconOpen: string;
+  color: string;
+  children?: Group[];
+}
+
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const [draggedNode, setDraggedNode] = useState<NodeType | null>(null);
   const [openFolders, setOpenFolders] = useState<{ [key: string]: boolean }>({
     Basic: true,
-    Logic: true,
+    'Basic/Logic': true,
     Advanced: true,
   });
 
@@ -26,14 +35,32 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     { type: 'api', label: 'API', icon: '🌐', group: 'Advanced' },
   ];
 
-  const groups = [
-    { name: 'Basic', iconClosed: '📁', iconOpen: '📂' },
-    { name: 'Logic', iconClosed: '📁', iconOpen: '📂' },
-    { name: 'Advanced', iconClosed: '📁', iconOpen: '📂' },
+  // Grupos hierárquicos
+  const groups: Group[] = [
+    {
+      name: 'Basic',
+      iconClosed: '',
+      iconOpen: '',
+      color: 'text-yellow-400',
+      children: [
+        {
+          name: 'Logic',
+          iconClosed: '',
+          iconOpen: '',
+          color: 'text-blue-400',
+        },
+      ],
+    },
+    {
+      name: 'Advanced',
+      iconClosed: '',
+      iconOpen: '',
+      color: 'text-green-400',
+    },
   ];
 
-  const toggleFolder = (group: string) => {
-    setOpenFolders((prev) => ({ ...prev, [group]: !prev[group] }));
+  const toggleFolder = (path: string) => {
+    setOpenFolders((prev) => ({ ...prev, [path]: !prev[path] }));
   };
 
   const handleDragStart = (e: React.DragEvent, type: NodeType) => {
@@ -63,40 +90,51 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     setDraggedNode(null);
   };
 
-  return (
-    <div className="bg-white border-r border-gray-200 p-4 w-64 h-full overflow-y-auto text-gray-900">
-      <h2 className="text-lg font-semibold mb-4 text-gray-800">Components</h2>
-      <div className="mb-4 ml-2">
-        <ul className="text-sm select-none">
-          {groups.map((group) => (
-            <li key={group.name} className="mb-1">
-              <button
-                type="button"
-                className="flex items-center gap-1 font-semibold focus:outline-none hover:text-blue-600"
-                onClick={() => toggleFolder(group.name)}
+  // Função recursiva para renderizar grupos e subgrupos
+  const renderGroup = (group: Group, parentPath = '') => {
+    const path = parentPath ? `${parentPath}/${group.name}` : group.name;
+    const isOpen = openFolders[path];
+    // Itens deste grupo
+    const items = nodeTypes.filter((n) => n.group === group.name);
+    return (
+      <li key={path}>
+        <button
+          type="button"
+          className={`flex items-center gap-2 w-full px-3 py-1.5 text-left hover:bg-[#23272e] ${isOpen ? 'bg-[#23272e]' : ''}`}
+          onClick={() => toggleFolder(path)}
+        >
+          <span className={`${group.color} flex items-center justify-center w-5 h-5 text-lg font-normal`}>{isOpen ? group.iconOpen : group.iconClosed}</span>
+          <span className="font-semibold text-gray-100">{group.name}</span>
+        </button>
+        {isOpen && (
+          <ul className="mt-1 border-l border-[#222] pl-4">
+            {items.map((node) => (
+              <li
+                key={node.type}
+                className="flex items-center gap-2 py-1 px-1 rounded cursor-pointer hover:bg-[#264f78] hover:text-blue-200 text-gray-300"
+                onClick={() => onNodeSelect(node.type)}
+                draggable
+                onDragStart={(e) => handleDragStart(e, node.type)}
+                onDragEnd={handleDragEnd}
               >
-                <span>{openFolders[group.name] ? group.iconOpen : group.iconClosed}</span>
-                <span>{group.name}</span>
-              </button>
-              {openFolders[group.name] && (
-                <ul className="ml-6 mt-1">
-                  {nodeTypes.filter((n) => n.group === group.name).map((node) => (
-                    <li key={node.type} className="flex items-center gap-2 py-1 cursor-pointer hover:text-blue-600"
-                        onClick={() => onNodeSelect(node.type)}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, node.type)}
-                        onDragEnd={handleDragEnd}
-                    >
-                      <span className="text-base">{node.icon}</span>
-                      <span>{node.label}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+                <span className="flex items-center justify-center w-5 h-5 text-base">{node.icon}</span>
+                <span className="text-sm font-normal">{node.label}</span>
+              </li>
+            ))}
+            {/* Renderiza subgrupos, se houver */}
+            {group.children && group.children.map((child) => renderGroup(child, path))}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
+  return (
+    <div className="bg-[#1e1e1e] border-r border-[#222] p-0 w-60 h-full overflow-y-auto text-gray-200 select-none text-[15px] font-mono">
+      <div className="px-4 py-3 border-b border-[#222] text-xs uppercase tracking-widest text-gray-400 font-bold">Explorer</div>
+      <ul className="mt-2">
+        {groups.map((group) => renderGroup(group))}
+      </ul>
     </div>
   );
 };

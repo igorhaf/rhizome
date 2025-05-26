@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Node } from '../types/flow';
 
-interface NodeSidebarProps {
+interface DecisionNodeSidebarProps {
   node: Node | null;
   onUpdate: (updated: Node) => void;
   onClose: () => void;
 }
 
-const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) => {
+const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
   const [localNode, setLocalNode] = useState<Node | null>(node);
   const [visible, setVisible] = useState(false);
 
@@ -44,7 +44,7 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
         ${visible ? 'translate-x-0' : 'translate-x-full'}`}
     >
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-xl font-semibold text-white">Propriedades do Nó</h3>
+        <h3 className="text-xl font-semibold text-white">Configurações da Decisão</h3>
         <button onClick={handleClose} className="text-gray-400 hover:text-red-400 text-2xl">×</button>
       </div>
       <div className="flex flex-col gap-3">
@@ -61,32 +61,47 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
           onChange={e => handleChange('description', e.target.value)}
         />
         <label className="text-sm font-medium text-gray-200">Tipo</label>
-        <input className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-gray-300" value={localNode.type} readOnly />
+        <input 
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-gray-300" 
+          value={localNode.type} 
+          readOnly 
+        />
         <label className="text-sm font-medium text-gray-200">ID</label>
-        <input className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-gray-300" value={localNode.id} readOnly />
-        <label className="text-sm font-medium text-gray-200">Cor</label>
+        <input 
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-gray-300" 
+          value={localNode.id} 
+          readOnly 
+        />
+        <label className="text-sm font-medium text-gray-200">Expressão de Condição</label>
         <input
-          type="color"
-          className="w-12 h-8 p-0 border-none bg-transparent cursor-pointer"
-          value={data['color'] || '#ffffff'}
-          onChange={e => handleChange('color', e.target.value)}
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          value={data['conditionExpression'] || ''}
+          onChange={e => handleChange('conditionExpression', e.target.value)}
+          placeholder="Ex: x > 10 && y < 5"
+        />
+        <label className="text-sm font-medium text-gray-200">Variáveis de Entrada</label>
+        <input
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          value={data['inputVars'] || ''}
+          onChange={e => handleChange('inputVars', e.target.value)}
+          placeholder="Ex: x, y"
+        />
+        <label className="text-sm font-medium text-gray-200">Variáveis de Saída</label>
+        <input
+          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          value={data['outputVars'] || ''}
+          onChange={e => handleChange('outputVars', e.target.value)}
+          placeholder="Ex: resultado"
         />
         <label className="flex items-center gap-2 mt-2 text-gray-200">
           <input
             type="checkbox"
             className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-            checked={!!data['active']}
-            onChange={e => handleChange('active', e.target.checked)}
+            checked={!!data['shouldLog']}
+            onChange={e => handleChange('shouldLog', e.target.checked)}
           />
-          Ativo
+          Registrar no Log
         </label>
-        <label className="text-sm font-medium mt-2 text-gray-200">Variáveis de saída</label>
-        <textarea
-          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
-          value={data['outputs'] || ''}
-          onChange={e => handleChange('outputs', e.target.value)}
-          placeholder="Ex: resultado, status, mensagem..."
-        />
         <label className="text-sm font-medium mt-2 text-gray-200">Notas</label>
         <textarea
           className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
@@ -98,4 +113,4 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
   );
 };
 
-export default NodeSidebar; 
+export default DecisionNodeSidebar; 
