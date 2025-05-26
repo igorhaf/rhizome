@@ -82,7 +82,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
+  const [startOffset, setStartOffset] = useState<{ x: number; y: number } | null>(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
@@ -96,45 +98,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       return Math.min(Math.max(0.1, newScale), 2);
     });
   }, []);
-
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button === 1 || (e.button === 0 && e.altKey)) {
-      setIsDragging(true);
-      setStartPoint({ x: e.clientX, y: e.clientY });
-    }
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (isDragging) {
-        const dx = e.clientX - startPoint.x;
-        const dy = e.clientY - startPoint.y;
-        setPosition((prev) => ({
-          x: prev.x + dx,
-          y: prev.y + dy,
-        }));
-        setStartPoint({ x: e.clientX, y: e.clientY });
-      }
-
-      if (connectionStart) {
-        const canvasRect = canvasRef.current?.getBoundingClientRect();
-        if (canvasRect) {
-          const x = (e.clientX - canvasRect.left - position.x) / scale;
-          const y = (e.clientY - canvasRect.top - position.y) / scale;
-          setTempEdge({ x, y });
-        }
-      }
-    },
-    [isDragging, startPoint, connectionStart, position, scale]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-    if (connectionStart) {
-      setConnectionStart(null);
-      setTempEdge(null);
-    }
-  }, [connectionStart]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -205,22 +168,51 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     setTempEdge(null);
   }, [connectionStart, edges, onEdgesChange]);
 
+  // Panning global
+  React.useEffect(() => {
+    if (!isPanning || !startPoint || !startOffset) return;
+    const handleMove = (e: MouseEvent) => {
+      const dx = e.clientX - startPoint.x;
+      const dy = e.clientY - startPoint.y;
+      setPosition({
+        x: startOffset.x + dx,
+        y: startOffset.y + dy,
+      });
+    };
+    const handleUp = () => {
+      setIsPanning(false);
+      setStartPoint(null);
+      setStartOffset(null);
+    };
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+    };
+  }, [isPanning, startPoint, startOffset]);
+
   return (
     <div
       ref={canvasRef}
-      className="w-full h-full bg-[#1e2228] overflow-hidden select-none"
+      className={`w-full h-full bg-[#1e2228] overflow-hidden select-none relative ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+      style={{}}
       onWheel={handleWheel}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      onMouseDown={e => {
+        // Só inicia panning se clicar fora de um nó (área vazia)
+        if ((e.button === 0 && e.target === e.currentTarget) || e.button === 1 || (e.button === 0 && e.altKey)) {
+          setIsPanning(true);
+          setStartPoint({ x: e.clientX, y: e.clientY });
+          setStartOffset({ x: position.x, y: position.y });
+        }
+      }}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      {/* Grid de fundo SVG */}
+      {/* Grid de fundo SVG infinito */}
       <svg
-        className="absolute top-0 left-0 w-full h-full pointer-events-none"
-        style={{ zIndex: 0 }}
+        className="absolute top-0 left-0 w-full h-full"
+        style={{ zIndex: 0, pointerEvents: 'none' }}
         width="100%"
         height="100%"
       >
@@ -237,11 +229,26 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         </defs>
         <rect width="100%" height="100%" fill="url(#smallGrid)" />
       </svg>
+      {/* Overlay invisível para panning */}
       <div
-        className="relative w-full h-full"
+        className="absolute inset-0 z-10"
+        style={{ pointerEvents: 'auto', background: 'transparent' }}
+        onMouseDown={e => {
+          if (e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) {
+            setIsPanning(true);
+            setStartPoint({ x: e.clientX, y: e.clientY });
+            setStartOffset({ x: position.x, y: position.y });
+          }
+        }}
+      />
+      <div
+        className="absolute top-0 left-0"
         style={{
-          transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+          width: '40000px',
+          height: '40000px',
+          transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
           transformOrigin: '0 0',
+          zIndex: 1,
         }}
       >
         {/* SVG das edges agora dentro do container transformado */}
