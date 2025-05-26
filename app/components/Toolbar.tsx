@@ -163,11 +163,26 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   };
 
   return (
-    <div className="bg-[#1e1e1e] border-r border-[#222] p-0 w-60 h-full overflow-y-auto text-gray-300 select-none text-[15px] font-mono">
-      <div className="px-4 py-3 border-b border-[#222] text-xs uppercase tracking-widest text-gray-400 font-bold">EXPLORER</div>
+    <div className="bg-[#1e1e1e] border-r border-[#222] p-0 w-60 h-full overflow-y-auto text-gray-300 select-none text-[15px] font-mono relative">
+      <div className="px-4 py-3 border-b border-[#222] text-xs uppercase tracking-widest text-gray-400 font-bold sticky top-0 bg-[#1e1e1e] z-10">EXPLORER</div>
       <ul className="mt-2">
         {groups.map((group) => renderGroup(group))}
       </ul>
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          width: 7px;
+        }
+        div::-webkit-scrollbar-thumb {
+          background: #23272e;
+          border-radius: 4px;
+        }
+        div:hover::-webkit-scrollbar-thumb {
+          background: #333842;
+        }
+        div::-webkit-scrollbar-track {
+          background: transparent;
+        }
+      `}</style>
     </div>
   );
 };
