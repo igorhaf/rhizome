@@ -10,11 +10,42 @@ interface ToolbarProps {
 // Novo tipo para grupos hierárquicos
 interface Group {
   name: string;
-  iconClosed: string;
-  iconOpen: string;
+  iconClosed: React.ReactNode;
+  iconOpen: React.ReactNode;
   color: string;
   children?: Group[];
 }
+
+// SVGs para pasta e arquivos
+const FolderClosedIcon = (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-gray-400" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 5.5A1.5 1.5 0 013.5 4h3.379a1.5 1.5 0 011.06.44l1.122 1.12A1.5 1.5 0 0010.121 6H16.5A1.5 1.5 0 0118 7.5v7A1.5 1.5 0 0116.5 16h-13A1.5 1.5 0 012 14.5v-9z" fill="#3c3c3c" stroke="#666"/>
+  </svg>
+);
+const FolderOpenIcon = (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-gray-400" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 5.5A1.5 1.5 0 013.5 4h3.379a1.5 1.5 0 011.06.44l1.122 1.12A1.5 1.5 0 0010.121 6H16.5A1.5 1.5 0 0118 7.5v1.5H3.5A1.5 1.5 0 002 10.5v-5z" fill="#3c3c3c" stroke="#666"/>
+    <path d="M3 10.5A1.5 1.5 0 014.5 9h13a1.5 1.5 0 011.415 2.01l-1.2 4A1.5 1.5 0 0116.28 16H4.5A1.5 1.5 0 013 14.5v-4z" fill="#23272e" stroke="#666"/>
+  </svg>
+);
+const ChevronRight = (
+  <svg width="16" height="16" fill="none" viewBox="0 0 16 16" className="text-gray-500"><path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+);
+const ChevronDown = (
+  <svg width="16" height="16" fill="none" viewBox="0 0 16 16" className="text-gray-500"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+);
+
+// Ícones de arquivos (exemplo simplificado)
+const icons: Record<string, React.ReactNode> = {
+  start: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#2d7ff9"/><polygon points="8,7 14,10 8,13" fill="#fff"/></svg>,
+  end: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#4b5563"/></svg>,
+  action: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#f59e42"/><path d="M10 6v4l2 2" stroke="#fff" strokeWidth="1.5"/></svg>,
+  decision: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="10" width="12" height="6" rx="2" fill="#e11d48"/><rect x="4" y="4" width="12" height="6" rx="2" fill="#fff" fillOpacity=".2"/></svg>,
+  loop: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="6" fill="#38bdf8"/><path d="M8 10h4" stroke="#fff" strokeWidth="1.5"/></svg>,
+  subprocess: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#bfa06a"/></svg>,
+  data: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#a78bfa"/></svg>,
+  api: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#38bdf8"/><circle cx="10" cy="10" r="4" fill="#fff" fillOpacity=".2"/></svg>,
+};
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const [draggedNode, setDraggedNode] = useState<NodeType | null>(null);
@@ -25,37 +56,37 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   });
 
   const nodeTypes: { type: NodeType; label: string; icon: string; group: string }[] = [
-    { type: 'start', label: 'Start', icon: '▶️', group: 'Basic' },
-    { type: 'end', label: 'End', icon: '⏹️', group: 'Basic' },
-    { type: 'action', label: 'Action', icon: '⚡', group: 'Logic' },
-    { type: 'decision', label: 'Decision', icon: '❓', group: 'Logic' },
-    { type: 'loop', label: 'Loop', icon: '🔄', group: 'Logic' },
-    { type: 'subprocess', label: 'Subprocess', icon: '📦', group: 'Advanced' },
-    { type: 'data', label: 'Data', icon: '💾', group: 'Advanced' },
-    { type: 'api', label: 'API', icon: '🌐', group: 'Advanced' },
+    { type: 'start', label: 'Start', icon: 'start', group: 'Basic' },
+    { type: 'end', label: 'End', icon: 'end', group: 'Basic' },
+    { type: 'action', label: 'Action', icon: 'action', group: 'Logic' },
+    { type: 'decision', label: 'Decision', icon: 'decision', group: 'Logic' },
+    { type: 'loop', label: 'Loop', icon: 'loop', group: 'Logic' },
+    { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
+    { type: 'data', label: 'Data', icon: 'data', group: 'Advanced' },
+    { type: 'api', label: 'API', icon: 'api', group: 'Advanced' },
   ];
 
   // Grupos hierárquicos
   const groups: Group[] = [
     {
       name: 'Basic',
-      iconClosed: '',
-      iconOpen: '',
-      color: 'text-yellow-400',
+      iconClosed: FolderClosedIcon,
+      iconOpen: FolderOpenIcon,
+      color: '',
       children: [
         {
           name: 'Logic',
-          iconClosed: '',
-          iconOpen: '',
-          color: 'text-blue-400',
+          iconClosed: FolderClosedIcon,
+          iconOpen: FolderOpenIcon,
+          color: '',
         },
       ],
     },
     {
       name: 'Advanced',
-      iconClosed: '',
-      iconOpen: '',
-      color: 'text-green-400',
+      iconClosed: FolderClosedIcon,
+      iconOpen: FolderOpenIcon,
+      color: '',
     },
   ];
 
@@ -67,23 +98,6 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     setDraggedNode(type);
     e.dataTransfer.setData('nodeType', type);
     e.dataTransfer.effectAllowed = 'copy';
-    
-    // Create a custom drag image
-    const dragImage = document.createElement('div');
-    dragImage.className = 'fixed -left-1000 top-0';
-    dragImage.innerHTML = `
-      <div class="bg-gray-700 text-white p-2 rounded shadow-lg flex items-center gap-2">
-        <span class="text-xl">${nodeTypes.find(n => n.type === type)?.icon}</span>
-        <span>${nodeTypes.find(n => n.type === type)?.label}</span>
-      </div>
-    `;
-    document.body.appendChild(dragImage);
-    e.dataTransfer.setDragImage(dragImage, 0, 0);
-    
-    // Remove the drag image after a short delay
-    setTimeout(() => {
-      document.body.removeChild(dragImage);
-    }, 0);
   };
 
   const handleDragEnd = () => {
@@ -98,14 +112,15 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     const items = nodeTypes.filter((n) => n.group === group.name);
     return (
       <li key={path}>
-        <button
-          type="button"
-          className={`flex items-center gap-2 w-full px-3 py-1.5 text-left hover:bg-[#23272e] ${isOpen ? 'bg-[#23272e]' : ''}`}
-          onClick={() => toggleFolder(path)}
-        >
-          <span className={`${group.color} flex items-center justify-center w-5 h-5 text-lg font-normal`}>{isOpen ? group.iconOpen : group.iconClosed}</span>
-          <span className="font-semibold text-gray-100">{group.name}</span>
-        </button>
+        <div className="flex items-center w-full px-3 py-1.5 cursor-pointer hover:bg-[#23272e] select-none">
+          <span onClick={() => toggleFolder(path)} className="flex items-center mr-1">
+            {isOpen ? ChevronDown : ChevronRight}
+          </span>
+          <span onClick={() => toggleFolder(path)} className="flex items-center mr-2">
+            {isOpen ? group.iconOpen : group.iconClosed}
+          </span>
+          <span onClick={() => toggleFolder(path)} className="font-semibold text-gray-300 text-[15px]">{group.name}</span>
+        </div>
         {isOpen && (
           <ul className="mt-1 border-l border-[#222] pl-4">
             {items.map((node) => (
@@ -117,8 +132,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
                 onDragStart={(e) => handleDragStart(e, node.type)}
                 onDragEnd={handleDragEnd}
               >
-                <span className="flex items-center justify-center w-5 h-5 text-base">{node.icon}</span>
-                <span className="text-sm font-normal">{node.label}</span>
+                <span className="flex items-center justify-center w-5 h-5">{icons[node.icon]}</span>
+                <span className="text-sm font-normal text-gray-300">{node.label}</span>
               </li>
             ))}
             {/* Renderiza subgrupos, se houver */}
@@ -130,8 +145,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   };
 
   return (
-    <div className="bg-[#1e1e1e] border-r border-[#222] p-0 w-60 h-full overflow-y-auto text-gray-200 select-none text-[15px] font-mono">
-      <div className="px-4 py-3 border-b border-[#222] text-xs uppercase tracking-widest text-gray-400 font-bold">Explorer</div>
+    <div className="bg-[#1e1e1e] border-r border-[#222] p-0 w-60 h-full overflow-y-auto text-gray-300 select-none text-[15px] font-mono">
+      <div className="px-4 py-3 border-b border-[#222] text-xs uppercase tracking-widest text-gray-400 font-bold">EXPLORER</div>
       <ul className="mt-2">
         {groups.map((group) => renderGroup(group))}
       </ul>
