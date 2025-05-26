@@ -215,34 +215,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
               const sourceNode = nodes.find(n => n.id === connectionStart.nodeId);
               if (!sourceNode) return null;
 
-              const sourceElement = document.getElementById(`node-${sourceNode.id}`);
-              if (!sourceElement) return null;
-
-              const sourceRect = sourceElement.getBoundingClientRect();
-              let startX, startY;
-
-              // Calculate source connector position
-              switch (connectionStart.connectorId) {
-                case 'top':
-                  startX = sourceRect.left + sourceRect.width / 2;
-                  startY = sourceRect.top;
-                  break;
-                case 'right':
-                  startX = sourceRect.right;
-                  startY = sourceRect.top + sourceRect.height / 2;
-                  break;
-                case 'bottom':
-                  startX = sourceRect.left + sourceRect.width / 2;
-                  startY = sourceRect.bottom;
-                  break;
-                case 'left':
-                  startX = sourceRect.left;
-                  startY = sourceRect.top + sourceRect.height / 2;
-                  break;
-                default:
-                  startX = sourceRect.left + sourceRect.width / 2;
-                  startY = sourceRect.top + sourceRect.height / 2;
-              }
+              const connectorId = connectionStart.connectorId;
+              const connectorElement = document.getElementById(`${sourceNode.id}-connector-${connectorId}`);
+              if (!connectorElement) return null;
+              const connectorRect = connectorElement.getBoundingClientRect();
+              const canvasRect = canvasRef.current?.getBoundingClientRect();
+              if (!canvasRect) return null;
+              const startX = connectorRect.left + connectorRect.width / 2 - canvasRect.left;
+              const startY = connectorRect.top + connectorRect.height / 2 - canvasRect.top;
 
               // Calculate control points for a smoother curve
               const dx = tempEdge.x - startX;
