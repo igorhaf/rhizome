@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { Edge } from '../types/flow';
+import { Edge, Node } from '../types/flow';
 
 interface FlowEdgeProps {
   edge: Edge;
   canvasRef: React.RefObject<HTMLDivElement | null>;
   sourcePosition?: { x: number; y: number };
   targetPosition?: { x: number; y: number };
+  nodes?: Node[];
 }
 
-const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition }) => {
+const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes }) => {
   const pathRef = useRef<SVGPathElement>(null);
   const [points, setPoints] = React.useState<string>('');
 
@@ -29,6 +30,66 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
         return 'stroke-gray-500';
     }
   };
+
+  // Função utilitária: grid, obstáculos e BFS ortogonal
+  function findOrthogonalPathAvoidingNodes(start: [number, number], end: [number, number], nodeRects: DOMRect[], gridSize = 20) {
+    // Limites do canvas
+    const minX = 0, minY = 0, maxX = 4000, maxY = 4000;
+    // Função para grid cell (garante tupla)
+    const toCell = (x: number, y: number): [number, number] => [Math.round(x / gridSize), Math.round(y / gridSize)];
+    const toCoord = (cell: [number, number]) => [cell[0] * gridSize, cell[1] * gridSize];
+    // Montar set de obstáculos
+    const obstacles = new Set<string>();
+    nodeRects.forEach(rect => {
+      const x0 = Math.floor(rect.left / gridSize), x1 = Math.ceil(rect.right / gridSize);
+      const y0 = Math.floor(rect.top / gridSize), y1 = Math.ceil(rect.bottom / gridSize);
+      for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) obstacles.add(`${x},${y}`);
+    });
+    // BFS
+    const startCell: [number, number] = toCell(start[0], start[1]);
+    const queue: Array<[[number, number], [number, number][]]> = [[startCell, [startCell]]];
+    const visited = new Set<string>();
+    const endCell = toCell(end[0], end[1]);
+    while (queue.length) {
+      const [cell, path] = queue.shift()!;
+      const key = `${cell[0]},${cell[1]}`;
+      if (visited.has(key)) continue;
+      visited.add(key);
+      if (cell[0] === endCell[0] && cell[1] === endCell[1]) {
+        return path.map(toCoord);
+      }
+      // 4 direções ortogonais
+      for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+        const nx = cell[0] + dx, ny = cell[1] + dy;
+        if (nx < minX || ny < minY || nx > maxX || ny > maxY) continue;
+        const nkey = `${nx},${ny}`;
+        if (obstacles.has(nkey)) continue;
+        queue.push([[nx, ny], [...path, [nx, ny]]]);
+      }
+    }
+    // fallback: caminho ortogonal (L/Z)
+    const [sx, sy] = start;
+    const [ex, ey] = end;
+    if (Math.abs(ex - sx) > Math.abs(ey - sy)) {
+      // L horizontal-vertical
+      const midX = sx + (ex - sx) / 2;
+      return [
+        [sx, sy],
+        [midX, sy],
+        [midX, ey],
+        [ex, ey],
+      ];
+    } else {
+      // L vertical-horizontal
+      const midY = sy + (ey - sy) / 2;
+      return [
+        [sx, sy],
+        [sx, midY],
+        [ex, midY],
+        [ex, ey],
+      ];
+    }
+  }
 
   useEffect(() => {
     // LOG: useEffect rodou
@@ -79,30 +140,19 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
           endX,
           endY,
         });
-        // Roteamento ortogonal simples (L ou Z)
-        let pts: [number, number][] = [];
-        const dx = endX - startX;
-        const dy = endY - startY;
-        // Se horizontalmente mais distante, faz L horizontal-vertical
-        if (Math.abs(dx) > Math.abs(dy)) {
-          const midX = startX + dx / 2;
-          pts = [
-            [startX, startY],
-            [midX, startY],
-            [midX, endY],
-            [endX, endY],
-          ];
-        } else {
-          // L vertical-horizontal
-          const midY = startY + dy / 2;
-          pts = [
-            [startX, startY],
-            [startX, midY],
-            [endX, midY],
-            [endX, endY],
-          ];
+        // Obstáculos: todos os nós menos source e target
+        let nodeRects: DOMRect[] = [];
+        if (nodes) {
+          nodeRects = nodes
+            .filter(n => n.id !== edge.source && n.id !== edge.target)
+            .map(n => {
+              const el = document.getElementById(n.id);
+              return el ? el.getBoundingClientRect() : null;
+            })
+            .filter(Boolean) as DOMRect[];
         }
-        setPoints(pts.map(([x, y]) => `${x},${y}`).join(' '));
+        const pathPoints = findOrthogonalPathAvoidingNodes([startX, startY], [endX, endY], nodeRects);
+        setPoints(pathPoints.map(([x, y]) => `${x},${y}`).join(' '));
       } else {
         // LOG de erro explícito
         console.error('[FlowEdge] Elemento faltando', {
@@ -114,7 +164,7 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
         });
       }
     });
-  }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, canvasRef, sourcePosition, targetPosition]);
+  }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, canvasRef, sourcePosition, targetPosition, nodes]);
 
   return (
     <svg

@@ -13,6 +13,66 @@ interface FlowCanvasProps {
   onNodeClick?: (node: Node) => void;
 }
 
+// Função utilitária: grid, obstáculos e BFS ortogonal (copiada do FlowEdge)
+function findOrthogonalPathAvoidingNodes(start: [number, number], end: [number, number], nodeRects: DOMRect[], gridSize = 20) {
+  // Limites do canvas
+  const minX = 0, minY = 0, maxX = 4000, maxY = 4000;
+  // Função para grid cell (garante tupla)
+  const toCell = (x: number, y: number): [number, number] => [Math.round(x / gridSize), Math.round(y / gridSize)];
+  const toCoord = (cell: [number, number]) => [cell[0] * gridSize, cell[1] * gridSize];
+  // Montar set de obstáculos
+  const obstacles = new Set<string>();
+  nodeRects.forEach(rect => {
+    const x0 = Math.floor(rect.left / gridSize), x1 = Math.ceil(rect.right / gridSize);
+    const y0 = Math.floor(rect.top / gridSize), y1 = Math.ceil(rect.bottom / gridSize);
+    for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) obstacles.add(`${x},${y}`);
+  });
+  // BFS
+  const startCell: [number, number] = toCell(start[0], start[1]);
+  const queue: Array<[[number, number], [number, number][]]> = [[startCell, [startCell]]];
+  const visited = new Set<string>();
+  const endCell = toCell(end[0], end[1]);
+  while (queue.length) {
+    const [cell, path] = queue.shift()!;
+    const key = `${cell[0]},${cell[1]}`;
+    if (visited.has(key)) continue;
+    visited.add(key);
+    if (cell[0] === endCell[0] && cell[1] === endCell[1]) {
+      return path.map(toCoord);
+    }
+    // 4 direções ortogonais
+    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+      const nx = cell[0] + dx, ny = cell[1] + dy;
+      if (nx < minX || ny < minY || nx > maxX || ny > maxY) continue;
+      const nkey = `${nx},${ny}`;
+      if (obstacles.has(nkey)) continue;
+      queue.push([[nx, ny], [...path, [nx, ny]]]);
+    }
+  }
+  // fallback: caminho ortogonal (L/Z)
+  const [sx, sy] = start;
+  const [ex, ey] = end;
+  if (Math.abs(ex - sx) > Math.abs(ey - sy)) {
+    // L horizontal-vertical
+    const midX = sx + (ex - sx) / 2;
+    return [
+      [sx, sy],
+      [midX, sy],
+      [midX, ey],
+      [ex, ey],
+    ];
+  } else {
+    // L vertical-horizontal
+    const midY = sy + (ey - sy) / 2;
+    return [
+      [sx, sy],
+      [sx, midY],
+      [ex, midY],
+      [ex, ey],
+    ];
+  }
+}
+
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
   nodes,
   edges,
@@ -209,6 +269,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
                 canvasRef={canvasRef}
                 sourcePosition={sourceNode?.position}
                 targetPosition={targetNode?.position}
+                nodes={nodes}
               />
             );
           })}
@@ -246,30 +307,21 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
               const startX = connectorRect.left + connectorRect.width / 2 - canvasRect.left;
               const startY = connectorRect.top + connectorRect.height / 2 - canvasRect.top;
 
-              // Roteamento ortogonal simples (L ou Z)
-              const endX = tempEdge.x;
-              const endY = tempEdge.y;
-              const dx = endX - startX;
-              const dy = endY - startY;
-              let pts: [number, number][] = [];
-              if (Math.abs(dx) > Math.abs(dy)) {
-                const midX = startX + dx / 2;
-                pts = [
-                  [startX, startY],
-                  [midX, startY],
-                  [midX, endY],
-                  [endX, endY],
-                ];
-              } else {
-                const midY = startY + dy / 2;
-                pts = [
-                  [startX, startY],
-                  [startX, midY],
-                  [endX, midY],
-                  [endX, endY],
-                ];
-              }
-              const pointsStr = pts.map(([x, y]) => `${x},${y}`).join(' ');
+              // Obstáculos: todos os nós menos o source
+              const nodeRects = nodes
+                .filter(n => n.id !== sourceNode.id)
+                .map(n => {
+                  const el = document.getElementById(n.id);
+                  return el ? el.getBoundingClientRect() : null;
+                })
+                .filter(Boolean) as DOMRect[];
+
+              const pathPoints = findOrthogonalPathAvoidingNodes(
+                [startX, startY],
+                [tempEdge.x, tempEdge.y],
+                nodeRects
+              );
+              const pointsStr = pathPoints.map(([x, y]) => `${x},${y}`).join(' ');
               return (
                 <polyline
                   points={pointsStr}
