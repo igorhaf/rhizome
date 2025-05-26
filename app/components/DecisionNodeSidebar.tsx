@@ -61,8 +61,6 @@ const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdat
           value={data['description'] || ''}
           onChange={e => handleChange('description', e.target.value)}
         />
-        <label className="text-xs text-gray-400">ID</label>
-        <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
         <label className="text-xs text-gray-400">Expressão de Condição</label>
         <input
           className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
@@ -99,6 +97,8 @@ const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdat
           value={data['notes'] || ''}
           onChange={e => handleChange('notes', e.target.value)}
         />
+        <label className="text-xs text-gray-400">ID</label>
+        <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
       </div>
       <style jsx>{`
         aside::-webkit-scrollbar {

@@ -129,6 +129,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   }, [nodes, onNodesChange, position, scale]);
 
   const handleConnectionStart = useCallback((nodeId: string, connectorId: string) => {
+    setIsPanning(false);
     setConnectionStart({ nodeId, connectorId });
   }, []);
 
@@ -170,22 +171,36 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (connectionStart) {
-        const canvasRect = canvasRef.current?.getBoundingClientRect();
-        if (canvasRect) {
-          const x = (e.clientX - canvasRect.left - position.x) / scale;
-          const y = (e.clientY - canvasRect.top - position.y) / scale;
+      if (connectionStart && !isPanning) {
+        const container = canvasRef.current;
+        if (container) {
+          const rect = container.getBoundingClientRect();
+          const x = (e.clientX - rect.left - position.x) / scale;
+          const y = (e.clientY - rect.top - position.y) / scale;
           setTempEdge({ x, y });
         }
       }
     },
-    [connectionStart, position, scale]
+    [connectionStart, position, scale, isPanning]
   );
 
-  // Panning global
+  // Limpa tempEdge explicitamente ao finalizar drag de conexão
+  const handleMouseUp = useCallback(() => {
+    if (connectionStart) {
+      setTempEdge(null);
+      setConnectionStart(null);
+    }
+    setIsPanning(false);
+    setStartPoint(null);
+    setStartOffset(null);
+  }, [connectionStart]);
+
   React.useEffect(() => {
-    if (!isPanning || !startPoint || !startOffset) return;
+    // Só ativa panning global se NÃO estiver em drag de conexão
+    if (!isPanning || !startPoint || !startOffset || connectionStart) return;
     const handleMove = (e: MouseEvent) => {
+      // Proteção extra: nunca panning durante drag de conexão
+      if (connectionStart) return;
       const dx = e.clientX - startPoint.x;
       const dy = e.clientY - startPoint.y;
       setPosition({
@@ -204,7 +219,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleUp);
     };
-  }, [isPanning, startPoint, startOffset]);
+  }, [isPanning, startPoint, startOffset, connectionStart]);
 
   return (
     <div
@@ -213,8 +228,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       style={{}}
       onWheel={handleWheel}
       onMouseDown={e => {
-        // Só inicia panning se clicar fora de um nó (área vazia)
-        if ((e.button === 0 && e.target === e.currentTarget) || e.button === 1 || (e.button === 0 && e.altKey)) {
+        if (connectionStart) return;
+        if ((e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) && e.target === e.currentTarget) {
           setIsPanning(true);
           setStartPoint({ x: e.clientX, y: e.clientY });
           setStartOffset({ x: position.x, y: position.y });
@@ -223,6 +238,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
     >
       {/* Grid de fundo SVG infinito */}
       <svg
@@ -252,14 +268,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
           transformOrigin: '0 0',
           zIndex: 1,
-        }}
-        onMouseDown={e => {
-          // Só inicia panning se clicar em área vazia (não em nó)
-          if ((e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) && e.target === e.currentTarget) {
-            setIsPanning(true);
-            setStartPoint({ x: e.clientX, y: e.clientY });
-            setStartOffset({ x: position.x, y: position.y });
-          }
         }}
       >
         {/* SVG das edges agora dentro do container transformado */}
