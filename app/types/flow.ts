@@ -25,6 +25,11 @@ export interface Node {
     active?: boolean;
     outputs?: string;
     notes?: string;
+    returnStatus?: 'success' | 'error' | 'warning' | 'info';
+    returnCode?: number;
+    finalMessage?: string;
+    returnType?: 'json' | 'text' | 'html' | 'xml' | 'binary';
+    shouldLog?: boolean;
   };
 }
 

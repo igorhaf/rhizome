@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FlowCanvas from './components/FlowCanvas';
 import Toolbar from './components/Toolbar';
 import NodeSidebar from './components/NodeSidebar';
+import EndNodeSidebar from './components/EndNodeSidebar';
 import { Node, Edge, NodeType } from './types/flow';
 
 export default function Home() {
@@ -19,6 +20,12 @@ export default function Home() {
       data: {
         label: `${type.charAt(0).toUpperCase() + type.slice(1)} Node`,
         description: `This is a ${type} node`,
+        ...(type === 'end' && {
+          returnStatus: 'success',
+          returnCode: 200,
+          returnType: 'json',
+          shouldLog: true,
+        }),
       },
     };
     setNodes([...nodes, newNode]);
@@ -55,11 +62,21 @@ export default function Home() {
           onNodeClick={handleNodeClick}
         />
       </div>
-      <NodeSidebar
-        node={selectedNode}
-        onUpdate={handleNodeUpdate}
-        onClose={() => setSelectedNode(null)}
-      />
+      {selectedNode && (
+        selectedNode.type === 'end' ? (
+          <EndNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : (
+          <NodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        )
+      )}
     </main>
   );
 }
