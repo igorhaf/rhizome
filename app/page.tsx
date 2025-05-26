@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import FlowCanvas from './components/FlowCanvas';
 import Toolbar from './components/Toolbar';
+import NodeSidebar from './components/NodeSidebar';
 import { Node, Edge, NodeType } from './types/flow';
 
 export default function Home() {
@@ -31,6 +32,17 @@ export default function Home() {
     setEdges(newEdges);
   };
 
+  const handleNodeClick = (node: Node) => {
+    setSelectedNode(node);
+  };
+
+  const handleNodeUpdate = (updatedNode: Node) => {
+    const newNodes = nodes.map(node => 
+      node.id === updatedNode.id ? updatedNode : node
+    );
+    setNodes(newNodes);
+  };
+
   return (
     <main className="flex h-screen bg-gray-50">
       <Toolbar onNodeSelect={handleNodeSelect} />
@@ -40,55 +52,14 @@ export default function Home() {
           edges={edges}
           onNodesChange={handleNodesChange}
           onEdgesChange={handleEdgesChange}
+          onNodeClick={handleNodeClick}
         />
       </div>
-      {selectedNode && (
-        <div className="w-64 bg-white border-l border-gray-200 p-4">
-          <h2 className="text-lg font-semibold mb-4">Properties</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Label</label>
-              <input
-                type="text"
-                value={selectedNode.data.label}
-                onChange={(e) => {
-                  const updatedNodes = nodes.map((node) =>
-                    node.id === selectedNode.id
-                      ? {
-                          ...node,
-                          data: { ...node.data, label: e.target.value },
-                        }
-                      : node
-                  );
-                  setNodes(updatedNodes);
-                }}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <textarea
-                value={selectedNode.data.description}
-                onChange={(e) => {
-                  const updatedNodes = nodes.map((node) =>
-                    node.id === selectedNode.id
-                      ? {
-                          ...node,
-                          data: { ...node.data, description: e.target.value },
-                        }
-                      : node
-                  );
-                  setNodes(updatedNodes);
-                }}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                rows={3}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      <NodeSidebar
+        node={selectedNode}
+        onUpdate={handleNodeUpdate}
+        onClose={() => setSelectedNode(null)}
+      />
     </main>
   );
 }

@@ -10,6 +10,7 @@ interface FlowCanvasProps {
   edges: Edge[];
   onNodesChange: (nodes: Node[]) => void;
   onEdgesChange: (edges: Edge[]) => void;
+  onNodeClick?: (node: Node) => void;
 }
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
@@ -17,6 +18,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   edges,
   onNodesChange,
   onEdgesChange,
+  onNodeClick,
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -268,6 +270,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             }}
             onConnectionStart={handleConnectionStart}
             onConnectionEnd={handleConnectionEnd}
+            onClick={() => onNodeClick?.(node)}
           />
         ))}
       </div>

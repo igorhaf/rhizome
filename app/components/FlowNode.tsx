@@ -8,6 +8,7 @@ interface FlowNodeProps {
   onPositionChange: (position: Position) => void;
   onConnectionStart?: (nodeId: string, connectorId: string) => void;
   onConnectionEnd?: (nodeId: string, connectorId: string) => void;
+  onClick?: () => void;
 }
 
 const FlowNode: React.FC<FlowNodeProps> = ({
@@ -15,6 +16,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   onPositionChange,
   onConnectionStart,
   onConnectionEnd,
+  onClick,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const dragOffsetRef = useRef({ x: 0, y: 0 });
@@ -24,6 +26,9 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button === 0) {
+        if (!isDragging) {
+          onClick?.();
+        }
         setIsDragging(true);
         dragOffsetRef.current = {
           x: e.clientX - node.position.x,
@@ -46,7 +51,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         window.addEventListener('mouseup', handleGlobalMouseUp);
       }
     },
-    [node.position, onPositionChange]
+    [node.position, onPositionChange, isDragging, onClick]
   );
 
   const getNodeStyle = (type: Node['type']) => {

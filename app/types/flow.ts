@@ -21,6 +21,10 @@ export interface Node {
     label: string;
     description?: string;
     properties?: Record<string, any>;
+    color?: string;
+    active?: boolean;
+    outputs?: string;
+    notes?: string;
   };
 }
 
