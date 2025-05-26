@@ -98,9 +98,9 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900">
+    <div className="flex h-screen bg-[#e5e7eb]">
       <Toolbar onNodeSelect={handleNodeAdd} />
-      <div className="flex-1 relative">
+      <div className="flex-1 flex items-center justify-center relative bg-[#1e2228]">
         <FlowCanvas
           nodes={nodes}
           edges={edges}

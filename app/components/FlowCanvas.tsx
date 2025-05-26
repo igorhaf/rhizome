@@ -148,7 +148,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   return (
     <div
       ref={canvasRef}
-      className="w-full h-full bg-gray-100 overflow-hidden"
+      className="w-full h-full bg-[#1e2228] overflow-hidden"
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
