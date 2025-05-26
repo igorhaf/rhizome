@@ -139,12 +139,13 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <div
           key={connector.id}
           id={`${node.id}-connector-${connector.id}`}
-          className={`absolute w-4 h-4 rounded-full bg-white border-2 border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
-            activeConnector === connector.id ? 'bg-blue-400 border-blue-600 scale-125' : ''
+          className={`absolute w-3 h-3 rounded-full bg-white border border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
+            activeConnector === connector.id ? 'bg-blue-400 border-blue-600 scale-110' : ''
           }`}
           onMouseDown={(e) => handleConnectorMouseDown(e, connector.id)}
           onMouseUp={(e) => handleConnectorMouseUp(e, connector.id)}
           title={`Connect from ${connector.id}`}
+          style={{ zIndex: 2 }}
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-1 h-1 bg-gray-400 rounded-full" />
@@ -165,6 +166,60 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   // Log do id do nó
   console.log('[FlowNode] render node', node.id);
 
+  // SVGs para cada tipo de nó
+  const nodeIcons: Record<string, React.ReactNode> = {
+    start: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="28" fill="#2563eb" />
+        <polygon points="22,18 42,28 22,38" fill="#fff" />
+      </svg>
+    ),
+    end: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="28" fill="#ef4444" />
+        <rect x="18" y="18" width="20" height="20" rx="4" fill="#fff" />
+      </svg>
+    ),
+    action: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="28" fill="#f59e42" />
+        <path d="M28 16v16l10 10" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    decision: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="28" fill="#eab308" />
+        <text x="28" y="38" textAnchor="middle" fontSize="32" fill="#fff" fontWeight="bold">?</text>
+      </svg>
+    ),
+    loop: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="28" fill="#6366f1" />
+        <path d="M18 36a10 10 0 1 0 4-16" stroke="#fff" strokeWidth="3" fill="none" />
+        <polygon points="18,18 26,18 22,26" fill="#fff" />
+      </svg>
+    ),
+    subprocess: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <rect x="8" y="8" width="40" height="40" rx="8" fill="#f59e42" />
+        <rect x="18" y="26" width="20" height="4" rx="2" fill="#fff" />
+      </svg>
+    ),
+    data: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <rect x="8" y="8" width="40" height="40" rx="8" fill="#a78bfa" />
+        <ellipse cx="28" cy="28" rx="16" ry="8" fill="#fff" fillOpacity=".7" />
+      </svg>
+    ),
+    api: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="28" fill="#38bdf8" />
+        <circle cx="28" cy="28" r="14" fill="#fff" fillOpacity=".2" />
+        <circle cx="28" cy="28" r="6" fill="#fff" fillOpacity=".5" />
+      </svg>
+    ),
+  };
+
   return (
     <div
       id={node.id}
@@ -178,16 +233,25 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         top: node.position.y,
         transform: 'translate(-50%, -50%)',
         zIndex: isDragging ? 10 : 1,
+        background: 'none',
+        boxShadow: 'none',
+        padding: 0,
+        minWidth: 0,
       }}
       onMouseDown={handleMouseDown}
     >
       {renderConnectors()}
-      <div className="flex items-center gap-2 pointer-events-none">
-        <div className="font-semibold pointer-events-none">{node.data.label}</div>
+      <div className="flex flex-col items-center">
+        <div
+          className={`flex items-center justify-center ${['data','subprocess'].includes(node.type) ? 'w-24 h-24 rounded-md' : 'w-24 h-24 rounded-full'} shadow-md`}
+          style={{ background: 'none' }}
+        >
+          {nodeIcons[node.type]}
+        </div>
+        <div className="mt-2 text-sm font-semibold text-white text-center pointer-events-none">
+          {node.data.label}
+        </div>
       </div>
-      {node.data.description && (
-        <div className="text-sm mt-1 opacity-80 pointer-events-none">{node.data.description}</div>
-      )}
     </div>
   );
 };
