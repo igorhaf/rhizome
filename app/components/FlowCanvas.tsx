@@ -168,6 +168,20 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     setTempEdge(null);
   }, [connectionStart, edges, onEdgesChange]);
 
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (connectionStart) {
+        const canvasRect = canvasRef.current?.getBoundingClientRect();
+        if (canvasRect) {
+          const x = (e.clientX - canvasRect.left - position.x) / scale;
+          const y = (e.clientY - canvasRect.top - position.y) / scale;
+          setTempEdge({ x, y });
+        }
+      }
+    },
+    [connectionStart, position, scale]
+  );
+
   // Panning global
   React.useEffect(() => {
     if (!isPanning || !startPoint || !startOffset) return;
@@ -208,6 +222,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       }}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      onMouseMove={handleMouseMove}
     >
       {/* Grid de fundo SVG infinito */}
       <svg
@@ -229,18 +244,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         </defs>
         <rect width="100%" height="100%" fill="url(#smallGrid)" />
       </svg>
-      {/* Overlay invisível para panning */}
-      <div
-        className="absolute inset-0 z-10"
-        style={{ pointerEvents: 'auto', background: 'transparent' }}
-        onMouseDown={e => {
-          if (e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) {
-            setIsPanning(true);
-            setStartPoint({ x: e.clientX, y: e.clientY });
-            setStartOffset({ x: position.x, y: position.y });
-          }
-        }}
-      />
       <div
         className="absolute top-0 left-0"
         style={{
@@ -249,6 +252,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
           transformOrigin: '0 0',
           zIndex: 1,
+        }}
+        onMouseDown={e => {
+          // Só inicia panning se clicar em área vazia (não em nó)
+          if ((e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) && e.target === e.currentTarget) {
+            setIsPanning(true);
+            setStartPoint({ x: e.clientX, y: e.clientY });
+            setStartOffset({ x: position.x, y: position.y });
+          }
         }}
       >
         {/* SVG das edges agora dentro do container transformado */}
