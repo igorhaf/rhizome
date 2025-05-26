@@ -12,7 +12,7 @@ interface FlowEdgeProps {
 
 const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition }) => {
   const pathRef = useRef<SVGPathElement>(null);
-  const [path, setPath] = React.useState('');
+  const [points, setPoints] = React.useState<string>('');
 
   // LOG: Render do FlowEdge
   console.log('[FlowEdge] Render', { edge, canvasRef });
@@ -79,28 +79,30 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
           endX,
           endY,
         });
-        // Calculate control points for a smoother curve
+        // Roteamento ortogonal simples (L ou Z)
+        let pts: [number, number][] = [];
         const dx = endX - startX;
         const dy = endY - startY;
-        let controlPointX, controlPointY;
-        if (sourceConnector === 'right' && targetConnector === 'left') {
-          controlPointX = startX + dx / 2;
-          controlPointY = startY;
-        } else if (sourceConnector === 'left' && targetConnector === 'right') {
-          controlPointX = startX + dx / 2;
-          controlPointY = startY;
-        } else if (sourceConnector === 'top' && targetConnector === 'bottom') {
-          controlPointX = startX;
-          controlPointY = startY + dy / 2;
-        } else if (sourceConnector === 'bottom' && targetConnector === 'top') {
-          controlPointX = startX;
-          controlPointY = startY + dy / 2;
+        // Se horizontalmente mais distante, faz L horizontal-vertical
+        if (Math.abs(dx) > Math.abs(dy)) {
+          const midX = startX + dx / 2;
+          pts = [
+            [startX, startY],
+            [midX, startY],
+            [midX, endY],
+            [endX, endY],
+          ];
         } else {
-          controlPointX = startX + dx / 2;
-          controlPointY = startY + dy / 2;
+          // L vertical-horizontal
+          const midY = startY + dy / 2;
+          pts = [
+            [startX, startY],
+            [startX, midY],
+            [endX, midY],
+            [endX, endY],
+          ];
         }
-        const pathData = `M ${startX} ${startY} Q ${controlPointX} ${controlPointY} ${endX} ${endY}`;
-        setPath(pathData);
+        setPoints(pts.map(([x, y]) => `${x},${y}`).join(' '));
       } else {
         // LOG de erro explícito
         console.error('[FlowEdge] Elemento faltando', {
@@ -136,16 +138,15 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
           />
         </marker>
       </defs>
-      <path
-        ref={pathRef}
-        d={path}
+      <polyline
+        points={points}
         className={`${getEdgeStyle(edge.type)} stroke-2 fill-none`}
         markerEnd="url(#arrowhead)"
       />
       {edge.label && (
         <text
-          x={pathRef.current?.getPointAtLength(pathRef.current.getTotalLength() / 2).x}
-          y={pathRef.current?.getPointAtLength(pathRef.current.getTotalLength() / 2).y}
+          x={points.split(' ')[1]?.split(',')[0] || 0}
+          y={points.split(' ')[1]?.split(',')[1] || 0}
           className="text-sm fill-gray-700"
           textAnchor="middle"
           dominantBaseline="middle"

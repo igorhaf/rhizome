@@ -127,14 +127,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({
 
   const renderConnectors = () => {
     const connectors = [
-      { id: 'top', position: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2' },
-      { id: 'right', position: 'right-0 top-1/2 translate-x-1/2 -translate-y-1/2' },
-      { id: 'bottom', position: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2' },
-      { id: 'left', position: 'left-0 top-1/2 -translate-x-1/2 -translate-y-1/2' },
+      { id: 'top', position: 'top-0 left-1/2', style: { transform: 'translateX(-50%)' } },
+      { id: 'right', position: 'right-0 top-1/2', style: { transform: 'translateY(-50%)' } },
+      { id: 'bottom', position: 'bottom-0 left-1/2', style: { transform: 'translateX(-50%)' } },
+      { id: 'left', position: 'left-0 top-1/2', style: { transform: 'translateY(-50%)' } },
     ];
-
     return connectors.map((connector) => {
-      console.log('[FlowNode] render connector', `${node.id}-connector-${connector.id}`);
       return (
         <div
           key={connector.id}
@@ -142,10 +140,10 @@ const FlowNode: React.FC<FlowNodeProps> = ({
           className={`absolute w-3 h-3 rounded-full bg-white border border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
             activeConnector === connector.id ? 'bg-blue-400 border-blue-600 scale-110' : ''
           }`}
+          style={{ zIndex: 2, ...connector.style }}
           onMouseDown={(e) => handleConnectorMouseDown(e, connector.id)}
           onMouseUp={(e) => handleConnectorMouseUp(e, connector.id)}
           title={`Connect from ${connector.id}`}
-          style={{ zIndex: 2 }}
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-1 h-1 bg-gray-400 rounded-full" />

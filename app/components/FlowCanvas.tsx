@@ -246,31 +246,33 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
               const startX = connectorRect.left + connectorRect.width / 2 - canvasRect.left;
               const startY = connectorRect.top + connectorRect.height / 2 - canvasRect.top;
 
-              // Calculate control points for a smoother curve
-              const dx = tempEdge.x - startX;
-              const dy = tempEdge.y - startY;
-              let controlPointX, controlPointY;
-
-              if (connectionStart.connectorId === 'right') {
-                controlPointX = startX + dx / 2;
-                controlPointY = startY;
-              } else if (connectionStart.connectorId === 'left') {
-                controlPointX = startX + dx / 2;
-                controlPointY = startY;
-              } else if (connectionStart.connectorId === 'top') {
-                controlPointX = startX;
-                controlPointY = startY + dy / 2;
-              } else if (connectionStart.connectorId === 'bottom') {
-                controlPointX = startX;
-                controlPointY = startY + dy / 2;
+              // Roteamento ortogonal simples (L ou Z)
+              const endX = tempEdge.x;
+              const endY = tempEdge.y;
+              const dx = endX - startX;
+              const dy = endY - startY;
+              let pts: [number, number][] = [];
+              if (Math.abs(dx) > Math.abs(dy)) {
+                const midX = startX + dx / 2;
+                pts = [
+                  [startX, startY],
+                  [midX, startY],
+                  [midX, endY],
+                  [endX, endY],
+                ];
               } else {
-                controlPointX = startX + dx / 2;
-                controlPointY = startY + dy / 2;
+                const midY = startY + dy / 2;
+                pts = [
+                  [startX, startY],
+                  [startX, midY],
+                  [endX, midY],
+                  [endX, endY],
+                ];
               }
-
+              const pointsStr = pts.map(([x, y]) => `${x},${y}`).join(' ');
               return (
-                <path
-                  d={`M ${startX} ${startY} Q ${controlPointX} ${controlPointY} ${tempEdge.x} ${tempEdge.y}`}
+                <polyline
+                  points={pointsStr}
                   className="stroke-gray-500 stroke-2 fill-none stroke-dasharray-4"
                   markerEnd="url(#temp-arrowhead)"
                 />
