@@ -105,14 +105,24 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   };
 
   // Função recursiva para renderizar grupos e subgrupos
-  const renderGroup = (group: Group, parentPath = '') => {
+  const renderGroup = (group: Group, parentPath = '', depth = 0, isLast = false) => {
     const path = parentPath ? `${parentPath}/${group.name}` : group.name;
     const isOpen = openFolders[path];
-    // Itens deste grupo
     const items = nodeTypes.filter((n) => n.group === group.name);
     return (
-      <li key={path}>
-        <div className="flex items-center w-full px-3 py-1.5 cursor-pointer hover:bg-[#23272e] select-none">
+      <li key={path} className="relative">
+        {/* Linha vertical (guide) para subníveis */}
+        {depth > 0 && (
+          <span
+            className="absolute left-0 top-0 h-full border-l border-[#333]"
+            style={{ left: `${(depth - 1) * 16 + 10}px`, width: '1px' }}
+            aria-hidden="true"
+          />
+        )}
+        <div
+          className="flex items-center w-full py-1.5 cursor-pointer hover:bg-[#23272e] select-none"
+          style={{ paddingLeft: `${depth * 16 + 12}px` }}
+        >
           <span onClick={() => toggleFolder(path)} className="flex items-center mr-1">
             {isOpen ? ChevronDown : ChevronRight}
           </span>
@@ -122,22 +132,30 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
           <span onClick={() => toggleFolder(path)} className="font-semibold text-gray-300 text-[15px]">{group.name}</span>
         </div>
         {isOpen && (
-          <ul className="mt-1 border-l border-[#222] pl-4">
-            {items.map((node) => (
+          <ul className="">
+            {items.map((node, idx) => (
               <li
                 key={node.type}
                 className="flex items-center gap-2 py-1 px-1 rounded cursor-pointer hover:bg-[#264f78] hover:text-blue-200 text-gray-300"
+                style={{ paddingLeft: `${(depth + 1) * 16 + 12}px` }}
                 onClick={() => onNodeSelect(node.type)}
                 draggable
                 onDragStart={(e) => handleDragStart(e, node.type)}
                 onDragEnd={handleDragEnd}
               >
+                {/* Linha vertical para arquivos, se não for o último */}
+                {depth > 0 && idx !== items.length - 1 && (
+                  <span
+                    className="absolute left-0 top-0 h-full border-l border-[#333]"
+                    style={{ left: `${depth * 16 + 10}px`, width: '1px' }}
+                    aria-hidden="true"
+                  />
+                )}
                 <span className="flex items-center justify-center w-5 h-5">{icons[node.icon]}</span>
                 <span className="text-sm font-normal text-gray-300">{node.label}</span>
               </li>
             ))}
-            {/* Renderiza subgrupos, se houver */}
-            {group.children && group.children.map((child) => renderGroup(child, path))}
+            {group.children?.map((child, idx) => renderGroup(child, path, depth + 1, idx === ((group.children?.length ?? 0) - 1)))}
           </ul>
         )}
       </li>
