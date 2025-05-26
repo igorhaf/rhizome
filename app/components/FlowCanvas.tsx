@@ -109,17 +109,35 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
   const handleConnectionEnd = useCallback((nodeId: string, connectorId: string) => {
     if (connectionStart && connectionStart.nodeId !== nodeId) {
-      const newEdge: Edge = {
-        id: `edge-${Date.now()}`,
-        source: connectionStart.nodeId,
-        target: nodeId,
-        type: 'default',
-        data: {
+      // Permitir todas as conexões, exceto ida e volta entre os mesmos conectores
+      const bidirectionalExists = edges.some(
+        edge =>
+          edge.source === nodeId &&
+          edge.target === connectionStart.nodeId &&
+          edge.data?.sourceConnector === connectorId &&
+          edge.data?.targetConnector === connectionStart.connectorId
+      );
+
+      if (!bidirectionalExists) {
+        // LOG: detalhes da conexão
+        console.log('[FlowCanvas] Criando conexão', {
+          source: connectionStart.nodeId,
+          target: nodeId,
           sourceConnector: connectionStart.connectorId,
           targetConnector: connectorId,
-        },
-      };
-      onEdgesChange([...edges, newEdge]);
+        });
+        const newEdge: Edge = {
+          id: `edge-${Date.now()}`,
+          source: connectionStart.nodeId,
+          target: nodeId,
+          type: 'default',
+          data: {
+            sourceConnector: connectionStart.connectorId,
+            targetConnector: connectorId,
+          },
+        };
+        onEdgesChange([...edges, newEdge]);
+      }
     }
     setConnectionStart(null);
     setTempEdge(null);
@@ -144,23 +162,118 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           transformOrigin: '0 0',
         }}
       >
-        {edges.map((edge) => (
-          <FlowEdge key={edge.id} edge={edge} />
-        ))}
+        {/* SVG das edges agora dentro do container transformado */}
+        <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="10"
+              markerHeight="7"
+              refX="9"
+              refY="3.5"
+              orient="auto"
+              className="stroke-gray-500"
+            >
+              <polygon points="0 0, 10 3.5, 0 7" className="fill-gray-500" />
+            </marker>
+          </defs>
+          {edges.map((edge) => {
+            const sourceNode = nodes.find(n => n.id === edge.source);
+            const targetNode = nodes.find(n => n.id === edge.target);
+            return (
+              <FlowEdge
+                key={edge.id}
+                edge={edge}
+                canvasRef={canvasRef}
+                sourcePosition={sourceNode?.position}
+                targetPosition={targetNode?.position}
+              />
+            );
+          })}
+        </svg>
         {tempEdge && connectionStart && (
           <svg
             className="absolute top-0 left-0 w-full h-full pointer-events-none"
             style={{ zIndex: -1 }}
           >
-            <path
-              d={`M ${nodes.find(n => n.id === connectionStart.nodeId)?.position.x} ${
-                nodes.find(n => n.id === connectionStart.nodeId)?.position.y
-              } Q ${(nodes.find(n => n.id === connectionStart.nodeId)?.position.x! + tempEdge.x) / 2} ${
-                (nodes.find(n => n.id === connectionStart.nodeId)?.position.y! + tempEdge.y) / 2
-              } ${tempEdge.x} ${tempEdge.y}`}
-              className="stroke-gray-500 stroke-2 fill-none"
-              markerEnd="url(#arrowhead)"
-            />
+            <defs>
+              <marker
+                id="temp-arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon
+                  points="0 0, 10 3.5, 0 7"
+                  className="fill-gray-500"
+                />
+              </marker>
+            </defs>
+            {(() => {
+              const sourceNode = nodes.find(n => n.id === connectionStart.nodeId);
+              if (!sourceNode) return null;
+
+              const sourceElement = document.getElementById(`node-${sourceNode.id}`);
+              if (!sourceElement) return null;
+
+              const sourceRect = sourceElement.getBoundingClientRect();
+              let startX, startY;
+
+              // Calculate source connector position
+              switch (connectionStart.connectorId) {
+                case 'top':
+                  startX = sourceRect.left + sourceRect.width / 2;
+                  startY = sourceRect.top;
+                  break;
+                case 'right':
+                  startX = sourceRect.right;
+                  startY = sourceRect.top + sourceRect.height / 2;
+                  break;
+                case 'bottom':
+                  startX = sourceRect.left + sourceRect.width / 2;
+                  startY = sourceRect.bottom;
+                  break;
+                case 'left':
+                  startX = sourceRect.left;
+                  startY = sourceRect.top + sourceRect.height / 2;
+                  break;
+                default:
+                  startX = sourceRect.left + sourceRect.width / 2;
+                  startY = sourceRect.top + sourceRect.height / 2;
+              }
+
+              // Calculate control points for a smoother curve
+              const dx = tempEdge.x - startX;
+              const dy = tempEdge.y - startY;
+              let controlPointX, controlPointY;
+
+              if (connectionStart.connectorId === 'right') {
+                controlPointX = startX + dx / 2;
+                controlPointY = startY;
+              } else if (connectionStart.connectorId === 'left') {
+                controlPointX = startX + dx / 2;
+                controlPointY = startY;
+              } else if (connectionStart.connectorId === 'top') {
+                controlPointX = startX;
+                controlPointY = startY + dy / 2;
+              } else if (connectionStart.connectorId === 'bottom') {
+                controlPointX = startX;
+                controlPointY = startY + dy / 2;
+              } else {
+                controlPointX = startX + dx / 2;
+                controlPointY = startY + dy / 2;
+              }
+
+              return (
+                <path
+                  d={`M ${startX} ${startY} Q ${controlPointX} ${controlPointY} ${tempEdge.x} ${tempEdge.y}`}
+                  className="stroke-gray-500 stroke-2 fill-none stroke-dasharray-4"
+                  markerEnd="url(#temp-arrowhead)"
+                />
+              );
+            })()}
           </svg>
         )}
         {nodes.map((node) => (

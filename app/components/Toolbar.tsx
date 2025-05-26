@@ -9,17 +9,32 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const [draggedNode, setDraggedNode] = useState<NodeType | null>(null);
+  const [openFolders, setOpenFolders] = useState<{ [key: string]: boolean }>({
+    Basic: true,
+    Logic: true,
+    Advanced: true,
+  });
 
-  const nodeTypes: { type: NodeType; label: string; icon: string }[] = [
-    { type: 'start', label: 'Start', icon: '▶️' },
-    { type: 'end', label: 'End', icon: '⏹️' },
-    { type: 'action', label: 'Action', icon: '⚡' },
-    { type: 'decision', label: 'Decision', icon: '❓' },
-    { type: 'loop', label: 'Loop', icon: '🔄' },
-    { type: 'subprocess', label: 'Subprocess', icon: '📦' },
-    { type: 'data', label: 'Data', icon: '💾' },
-    { type: 'api', label: 'API', icon: '🌐' },
+  const nodeTypes: { type: NodeType; label: string; icon: string; group: string }[] = [
+    { type: 'start', label: 'Start', icon: '▶️', group: 'Basic' },
+    { type: 'end', label: 'End', icon: '⏹️', group: 'Basic' },
+    { type: 'action', label: 'Action', icon: '⚡', group: 'Logic' },
+    { type: 'decision', label: 'Decision', icon: '❓', group: 'Logic' },
+    { type: 'loop', label: 'Loop', icon: '🔄', group: 'Logic' },
+    { type: 'subprocess', label: 'Subprocess', icon: '📦', group: 'Advanced' },
+    { type: 'data', label: 'Data', icon: '💾', group: 'Advanced' },
+    { type: 'api', label: 'API', icon: '🌐', group: 'Advanced' },
   ];
+
+  const groups = [
+    { name: 'Basic', iconClosed: '📁', iconOpen: '📂' },
+    { name: 'Logic', iconClosed: '📁', iconOpen: '📂' },
+    { name: 'Advanced', iconClosed: '📁', iconOpen: '📂' },
+  ];
+
+  const toggleFolder = (group: string) => {
+    setOpenFolders((prev) => ({ ...prev, [group]: !prev[group] }));
+  };
 
   const handleDragStart = (e: React.DragEvent, type: NodeType) => {
     setDraggedNode(type);
@@ -49,26 +64,38 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   };
 
   return (
-    <div className="bg-gray-800 border-r border-gray-700 p-4 w-64 h-full overflow-y-auto text-white">
-      <h2 className="text-lg font-semibold mb-4 text-gray-100">Components</h2>
-      <div className="space-y-2">
-        {nodeTypes.map((node) => (
-          <button
-            key={node.type}
-            className={`w-full flex items-center gap-2 p-3 rounded transition-all duration-200 ${
-              draggedNode === node.type
-                ? 'bg-gray-600 scale-95'
-                : 'bg-gray-700 hover:bg-gray-600'
-            }`}
-            onClick={() => onNodeSelect(node.type)}
-            draggable
-            onDragStart={(e) => handleDragStart(e, node.type)}
-            onDragEnd={handleDragEnd}
-          >
-            <span className="text-xl">{node.icon}</span>
-            <span className="font-medium">{node.label}</span>
-          </button>
-        ))}
+    <div className="bg-white border-r border-gray-200 p-4 w-64 h-full overflow-y-auto text-gray-900">
+      <h2 className="text-lg font-semibold mb-4 text-gray-800">Components</h2>
+      <div className="mb-4 ml-2">
+        <ul className="text-sm select-none">
+          {groups.map((group) => (
+            <li key={group.name} className="mb-1">
+              <button
+                type="button"
+                className="flex items-center gap-1 font-semibold focus:outline-none hover:text-blue-600"
+                onClick={() => toggleFolder(group.name)}
+              >
+                <span>{openFolders[group.name] ? group.iconOpen : group.iconClosed}</span>
+                <span>{group.name}</span>
+              </button>
+              {openFolders[group.name] && (
+                <ul className="ml-6 mt-1">
+                  {nodeTypes.filter((n) => n.group === group.name).map((node) => (
+                    <li key={node.type} className="flex items-center gap-2 py-1 cursor-pointer hover:text-blue-600"
+                        onClick={() => onNodeSelect(node.type)}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, node.type)}
+                        onDragEnd={handleDragEnd}
+                    >
+                      <span className="text-base">{node.icon}</span>
+                      <span>{node.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
