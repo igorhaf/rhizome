@@ -148,7 +148,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   return (
     <div
       ref={canvasRef}
-      className="w-full h-full bg-[#1e2228] overflow-hidden"
+      className="w-full h-full bg-[#1e2228] overflow-hidden select-none"
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -157,6 +157,26 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
+      {/* Grid de fundo SVG */}
+      <svg
+        className="absolute top-0 left-0 w-full h-full pointer-events-none"
+        style={{ zIndex: 0 }}
+        width="100%"
+        height="100%"
+      >
+        <defs>
+          <pattern
+            id="smallGrid"
+            width={32 * scale}
+            height={32 * scale}
+            patternUnits="userSpaceOnUse"
+            patternTransform={`translate(${position.x % (32 * scale)},${position.y % (32 * scale)})`}
+          >
+            <path d={`M ${32 * scale} 0 L 0 0 0 ${32 * scale}`} fill="none" stroke="#23272e" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#smallGrid)" />
+      </svg>
       <div
         className="relative w-full h-full"
         style={{
