@@ -22,18 +22,17 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   const dragOffsetRef = useRef({ x: 0, y: 0 });
   const [isConnecting, setIsConnecting] = useState(false);
   const [activeConnector, setActiveConnector] = useState<string | null>(null);
+  const mouseDownPos = useRef<{x: number, y: number} | null>(null);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button === 0) {
-        if (!isDragging) {
-          onClick?.();
-        }
         setIsDragging(true);
         dragOffsetRef.current = {
           x: e.clientX - node.position.x,
           y: e.clientY - node.position.y,
         };
+        mouseDownPos.current = { x: e.clientX, y: e.clientY };
         const handleGlobalMouseMove = (ev: MouseEvent) => {
           setIsDragging(true);
           const offset = dragOffsetRef.current;
@@ -42,8 +41,17 @@ const FlowNode: React.FC<FlowNodeProps> = ({
             y: ev.clientY - offset.y,
           });
         };
-        const handleGlobalMouseUp = () => {
+        const handleGlobalMouseUp = (ev: MouseEvent) => {
           setIsDragging(false);
+          if (
+            mouseDownPos.current &&
+            Math.abs(ev.clientX - mouseDownPos.current.x) < 5 &&
+            Math.abs(ev.clientY - mouseDownPos.current.y) < 5 &&
+            !isConnecting
+          ) {
+            onClick?.();
+          }
+          mouseDownPos.current = null;
           window.removeEventListener('mousemove', handleGlobalMouseMove);
           window.removeEventListener('mouseup', handleGlobalMouseUp);
         };
@@ -51,7 +59,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         window.addEventListener('mouseup', handleGlobalMouseUp);
       }
     },
-    [node.position, onPositionChange, isDragging, onClick]
+    [node.position, onPositionChange, isDragging, onClick, isConnecting]
   );
 
   const getNodeStyle = (type: Node['type']) => {
