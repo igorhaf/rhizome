@@ -34,62 +34,62 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
 
   const handleClose = () => {
     setVisible(false);
-    setTimeout(() => onClose(), 300);
+    setTimeout(() => onClose(), 200);
   };
 
   return (
     <aside
-      className={`fixed top-0 right-0 h-full w-96 bg-gray-800 border-l border-gray-700 shadow-lg p-6 z-50 flex flex-col gap-4
-        transform transition-transform duration-300 ease-in-out
+      className={`fixed top-0 right-0 h-full w-96 bg-[#1e1e1e] border-l border-[#222] p-6 z-50 flex flex-col gap-2
+        transform transition-transform duration-200 ease-in-out
         ${visible ? 'translate-x-0' : 'translate-x-full'}`}
     >
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-xl font-semibold text-white">Propriedades do Nó</h3>
-        <button onClick={handleClose} className="text-gray-400 hover:text-red-400 text-2xl">×</button>
+      <div className="flex justify-between items-center mb-1">
+        <h3 className="text-base font-semibold text-gray-200">Propriedades do Nó</h3>
+        <button onClick={handleClose} className="text-gray-500 hover:text-red-400 text-lg px-1">×</button>
       </div>
-      <div className="flex flex-col gap-3">
-        <label className="text-sm font-medium text-gray-200">Nome</label>
+      <div className="flex flex-col gap-2">
+        <label className="text-xs text-gray-400">Nome</label>
         <input
-          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
           value={data['label']}
           onChange={e => handleChange('label', e.target.value)}
         />
-        <label className="text-sm font-medium text-gray-200">Descrição</label>
+        <label className="text-xs text-gray-400">Descrição</label>
         <textarea
-          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
           value={data['description'] || ''}
           onChange={e => handleChange('description', e.target.value)}
         />
-        <label className="text-sm font-medium text-gray-200">Tipo</label>
-        <input className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-gray-300" value={localNode.type} readOnly />
-        <label className="text-sm font-medium text-gray-200">ID</label>
-        <input className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-gray-300" value={localNode.id} readOnly />
-        <label className="text-sm font-medium text-gray-200">Cor</label>
+        <label className="text-xs text-gray-400">Tipo</label>
+        <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.type} readOnly />
+        <label className="text-xs text-gray-400">ID</label>
+        <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
+        <label className="text-xs text-gray-400">Cor</label>
         <input
           type="color"
           className="w-12 h-8 p-0 border-none bg-transparent cursor-pointer"
           value={data['color'] || '#ffffff'}
           onChange={e => handleChange('color', e.target.value)}
         />
-        <label className="flex items-center gap-2 mt-2 text-gray-200">
+        <label className="flex items-center gap-2 mt-1 text-gray-400 text-xs">
           <input
             type="checkbox"
-            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+            className="w-4 h-4 rounded border-[#222] bg-[#23272e] text-blue-500 focus:ring-blue-500"
             checked={!!data['active']}
             onChange={e => handleChange('active', e.target.checked)}
           />
           Ativo
         </label>
-        <label className="text-sm font-medium mt-2 text-gray-200">Variáveis de saída</label>
+        <label className="text-xs font-medium mt-1 text-gray-400">Variáveis de saída</label>
         <textarea
-          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
           value={data['outputs'] || ''}
           onChange={e => handleChange('outputs', e.target.value)}
           placeholder="Ex: resultado, status, mensagem..."
         />
-        <label className="text-sm font-medium mt-2 text-gray-200">Notas</label>
+        <label className="text-xs font-medium mt-1 text-gray-400">Notas</label>
         <textarea
-          className="border border-gray-600 rounded px-3 py-2 bg-gray-700 text-white placeholder-gray-400"
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
           value={data['notes'] || ''}
           onChange={e => handleChange('notes', e.target.value)}
         />
