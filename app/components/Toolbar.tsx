@@ -167,6 +167,9 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
         </div>
         {isOpen && (
           <ul className="">
+            {/* Primeiro renderiza subgrupos (children) */}
+            {group.children?.map((child, idx) => renderGroup(child, path, depth + 1, idx === ((group.children?.length ?? 0) - 1)))}
+            {/* Depois renderiza os itens diretos do grupo */}
             {items.map((node, idx) => (
               <li
                 key={node.type}
@@ -189,7 +192,6 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
                 <span className="text-sm font-normal text-gray-300">{node.label}</span>
               </li>
             ))}
-            {group.children?.map((child, idx) => renderGroup(child, path, depth + 1, idx === ((group.children?.length ?? 0) - 1)))}
           </ul>
         )}
       </li>
