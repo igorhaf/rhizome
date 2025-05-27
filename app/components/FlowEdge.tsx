@@ -11,6 +11,9 @@ interface FlowEdgeProps {
   nodes?: Node[];
 }
 
+// Tamanho visual do nó (deve bater com o SVG e o CSS)
+const NODE_SIZE = 56; // ajuste conforme necessário
+
 const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes }) => {
   const pathRef = useRef<SVGPathElement>(null);
   const [points, setPoints] = React.useState<string>('');
@@ -53,30 +56,33 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     }
   }
 
+  // Função para calcular a posição do conector baseado no estado do nó
+  function getConnectorPosition(node: Node, connectorId: string) {
+    // node.position já é o centro do nó
+    const { x, y } = node.position;
+    switch (connectorId) {
+      case 'top': return { x, y: y - NODE_SIZE / 2 };
+      case 'right': return { x: x + NODE_SIZE / 2, y };
+      case 'bottom': return { x, y: y + NODE_SIZE / 2 };
+      case 'left': return { x: x - NODE_SIZE / 2, y };
+      default: return { x, y };
+    }
+  }
+
   useEffect(() => {
     const sourceConnector = edge.data?.sourceConnector || 'right';
     const targetConnector = edge.data?.targetConnector || 'left';
-    const sourceId = `${edge.source}-connector-${sourceConnector}`;
-    const targetId = `${edge.target}-connector-${targetConnector}`;
-    const sourceElement = document.getElementById(sourceId);
-    const targetElement = document.getElementById(targetId);
-    const canvasCurrent = canvasRef.current;
-    requestAnimationFrame(() => {
-      if (sourceElement && targetElement && canvasCurrent) {
-        const sourceRect = sourceElement.getBoundingClientRect();
-        const targetRect = targetElement.getBoundingClientRect();
-        const canvasRect = canvasCurrent.getBoundingClientRect();
-        // Posição central do conector relativa ao canvas
-        let startX = sourceRect.left + sourceRect.width / 2 - canvasRect.left;
-        let startY = sourceRect.top + sourceRect.height / 2 - canvasRect.top;
-        let endX = targetRect.left + targetRect.width / 2 - canvasRect.left;
-        let endY = targetRect.top + targetRect.height / 2 - canvasRect.top;
-        // Sempre desenha apenas caminho ortogonal simples (L/Z) para edges
-        const fallbackPoints = fallbackOrthogonal([startX, startY], [endX, endY]);
-        setPoints(fallbackPoints.map(([x, y]) => `${x},${y}`).join(' '));
-      }
-    });
-  }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, canvasRef, sourcePosition, targetPosition, nodes]);
+    // Busca os nós pelo estado
+    const sourceNode = nodes?.find(n => n.id === edge.source);
+    const targetNode = nodes?.find(n => n.id === edge.target);
+    if (!sourceNode || !targetNode) return;
+    // Calcula a posição dos conectores sem depender do DOM
+    const start = getConnectorPosition(sourceNode, sourceConnector);
+    const end = getConnectorPosition(targetNode, targetConnector);
+    // NÃO aplica panning/scale aqui, pois o container já está transformado
+    const fallbackPoints = fallbackOrthogonal([start.x, start.y], [end.x, end.y]);
+    setPoints(fallbackPoints.map(([x, y]) => `${x},${y}`).join(' '));
+  }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, nodes]);
 
   return (
     <svg
