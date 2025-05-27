@@ -414,18 +414,22 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             {(() => {
               const sourceNode = nodes.find(n => n.id === connectionStart.nodeId);
               if (!sourceNode) return null;
-
               const connectorId = connectionStart.connectorId;
-              const connectorElement = document.getElementById(`${sourceNode.id}-connector-${connectorId}`);
-              if (!connectorElement) return null;
-              const connectorRect = connectorElement.getBoundingClientRect();
-              const canvasRect = canvasRef.current?.getBoundingClientRect();
-              if (!canvasRect) return null;
-              const startX = connectorRect.left + connectorRect.width / 2 - canvasRect.left;
-              const startY = connectorRect.top + connectorRect.height / 2 - canvasRect.top;
-
-              // Sempre desenha apenas caminho ortogonal simples (L/Z) no preview
-              const fallbackPoints = fallbackOrthogonal([startX, startY], [tempEdge.x, tempEdge.y]);
+              // Calcule a posição do conector igual ao FlowEdge
+              function getConnectorPosition(node: Node, connectorId: string) {
+                const { x, y } = node.position;
+                const size = 56;
+                switch (connectorId) {
+                  case 'top': return { x, y: y - size / 2 };
+                  case 'right': return { x: x + size / 2, y };
+                  case 'bottom': return { x, y: y + size / 2 };
+                  case 'left': return { x: x - size / 2, y };
+                  default: return { x, y };
+                }
+              }
+              const start = getConnectorPosition(sourceNode, connectorId);
+              const end = tempEdge;
+              const fallbackPoints = fallbackOrthogonal([start.x, start.y], [end.x, end.y]);
               const pointsStr = fallbackPoints.map(([x, y]) => `${x},${y}`).join(' ');
               return (
                 <polyline
