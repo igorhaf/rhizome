@@ -63,7 +63,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   );
 
   const getNodeStyle = (type: Node['type']) => {
-    const baseStyle = 'rounded-lg shadow-md p-4 min-w-[150px] cursor-move relative';
+    const baseStyle = 'rounded-lg shadow-md p-2 min-w-[105px] cursor-move relative';
     switch (type) {
       case 'start':
         return `${baseStyle} bg-green-500 text-white`;
@@ -71,6 +71,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         return `${baseStyle} bg-red-500 text-white`;
       case 'action':
         return `${baseStyle} bg-blue-500 text-white`;
+      case 'function':
+        return `${baseStyle} bg-green-400 text-white`;
+      case 'email':
+        return `${baseStyle} bg-blue-400 text-white`;
+      case 'webhook':
+        return `${baseStyle} bg-orange-400 text-white`;
       case 'decision':
         return `${baseStyle} bg-yellow-500 text-white`;
       case 'loop':
@@ -128,7 +134,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       <div
         key={connector.id}
           id={`${node.id}-connector-${connector.id}`}
-          className={`absolute w-3 h-3 rounded-full bg-white border border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
+          className={`absolute w-2 h-2 rounded-full bg-white border border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
             activeConnector === connector.id ? 'bg-blue-400 border-blue-600 scale-110' : ''
         }`}
           style={{ zIndex: 2, ...connector.style }}
@@ -137,7 +143,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
           title={`Connect from ${connector.id}`}
         >
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-1 h-1 bg-gray-400 rounded-full" />
+            <div className="w-0.5 h-0.5 bg-gray-400 rounded-full" />
           </div>
         </div>
       );
@@ -155,71 +161,71 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   // SVGs para cada tipo de nó
   const nodeIcons: Record<string, React.ReactNode> = {
     start: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="28" fill="#2563eb" />
-        <polygon points="22,18 42,28 22,38" fill="#fff" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#2563eb" />
+        <polygon points="14,13 30,20 14,27" fill="#fff" />
       </svg>
     ),
     end: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="28" fill="#ef4444" />
-        <rect x="18" y="18" width="20" height="20" rx="4" fill="#fff" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#ef4444" />
+        <rect x="13" y="13" width="14" height="14" rx="3" fill="#fff" />
       </svg>
     ),
     action: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="28" fill="#f59e42" />
-        <path d="M28 16v16l10 10" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#f59e42" />
+        <path d="M20 10v12l8 8" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
     function: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <rect x="12" y="12" width="32" height="32" rx="8" fill="#10b981" />
-        <rect x="22" y="22" width="12" height="12" rx="2" fill="#fff" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="8" y="8" width="24" height="24" rx="6" fill="#10b981" />
+        <rect x="14" y="14" width="12" height="12" rx="2" fill="#fff" />
       </svg>
     ),
     email: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <rect x="10" y="18" width="36" height="20" rx="4" fill="#2563eb" />
-        <polyline points="10,18 28,34 46,18" fill="none" stroke="#fff" strokeWidth="3" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="7" y="13" width="26" height="14" rx="3" fill="#2563eb" />
+        <polyline points="7,13 20,27 33,13" fill="none" stroke="#fff" strokeWidth="2" />
       </svg>
     ),
     webhook: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="24" fill="#f59e42" />
-        <path d="M18 28a10 10 0 0 1 20 0" stroke="#fff" strokeWidth="3" fill="none" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="17" fill="#f59e42" />
+        <path d="M12 20a8 8 0 0 1 16 0" stroke="#fff" strokeWidth="2" fill="none" />
       </svg>
     ),
     decision: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="28" fill="#eab308" />
-        <text x="28" y="38" textAnchor="middle" fontSize="32" fill="#fff" fontWeight="bold">?</text>
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#eab308" />
+        <text x="20" y="28" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
       </svg>
     ),
     loop: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="28" fill="#6366f1" />
-        <path d="M18 36a10 10 0 1 0 4-16" stroke="#fff" strokeWidth="3" fill="none" />
-        <polygon points="18,18 26,18 22,26" fill="#fff" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#6366f1" />
+        <path d="M13 27a7 7 0 1 0 3-11" stroke="#fff" strokeWidth="2" fill="none" />
+        <polygon points="13,13 19,13 16,19" fill="#fff" />
       </svg>
     ),
     subprocess: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <rect x="8" y="8" width="40" height="40" rx="8" fill="#f59e42" />
-        <rect x="18" y="26" width="20" height="4" rx="2" fill="#fff" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="6" y="6" width="28" height="28" rx="6" fill="#f59e42" />
+        <rect x="14" y="18" width="12" height="3" rx="1.5" fill="#fff" />
       </svg>
     ),
     data: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <rect x="8" y="8" width="40" height="40" rx="8" fill="#a78bfa" />
-        <ellipse cx="28" cy="28" rx="16" ry="8" fill="#fff" fillOpacity=".7" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="6" y="6" width="28" height="28" rx="6" fill="#a78bfa" />
+        <ellipse cx="20" cy="20" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
       </svg>
     ),
     api: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="28" fill="#38bdf8" />
-        <circle cx="28" cy="28" r="14" fill="#fff" fillOpacity=".2" />
-        <circle cx="28" cy="28" r="6" fill="#fff" fillOpacity=".5" />
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#38bdf8" />
+        <circle cx="20" cy="20" r="10" fill="#fff" fillOpacity=".2" />
+        <circle cx="20" cy="20" r="4" fill="#fff" fillOpacity=".5" />
       </svg>
     ),
   };
@@ -246,12 +252,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       {renderConnectors()}
       <div className="flex flex-col items-center">
         <div
-          className={`flex items-center justify-center ${['data','subprocess'].includes(node.type) ? 'w-24 h-24 rounded-md' : 'w-24 h-24 rounded-full'} shadow-md`}
+          className={`flex items-center justify-center ${['data','subprocess'].includes(node.type) ? 'w-16 h-16 rounded-md' : 'w-16 h-16 rounded-full'} shadow-md`}
           style={{ background: 'none' }}
         >
           {nodeIcons[node.type]}
         </div>
-        <div className="mt-2 text-sm font-semibold text-white text-center pointer-events-none">
+        <div className="mt-1 text-xs font-semibold text-white text-center pointer-events-none">
           {node.data.label}
         </div>
       </div>
