@@ -172,6 +172,24 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <path d="M28 16v16l10 10" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
+    function: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <rect x="12" y="12" width="32" height="32" rx="8" fill="#10b981" />
+        <rect x="22" y="22" width="12" height="12" rx="2" fill="#fff" />
+      </svg>
+    ),
+    email: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <rect x="10" y="18" width="36" height="20" rx="4" fill="#2563eb" />
+        <polyline points="10,18 28,34 46,18" fill="none" stroke="#fff" strokeWidth="3" />
+      </svg>
+    ),
+    webhook: (
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="24" fill="#f59e42" />
+        <path d="M18 28a10 10 0 0 1 20 0" stroke="#fff" strokeWidth="3" fill="none" />
+      </svg>
+    ),
     decision: (
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
         <circle cx="28" cy="28" r="28" fill="#eab308" />
