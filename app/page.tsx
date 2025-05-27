@@ -7,6 +7,9 @@ import NodeSidebar from './components/NodeSidebar';
 import EndNodeSidebar from './components/EndNodeSidebar';
 import ActionNodeSidebar from './components/ActionNodeSidebar';
 import DecisionNodeSidebar from './components/DecisionNodeSidebar';
+import FunctionNodeSidebar from './components/advanced/FunctionNodeSidebar';
+import EmailNodeSidebar from './components/advanced/EmailNodeSidebar';
+import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
 import { Node, Edge, NodeType } from './types/flow';
 
 export default function Home() {
@@ -118,8 +121,20 @@ export default function Home() {
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}
           />
-        ) : selectedNode.type === 'action' ? (
-          <ActionNodeSidebar
+        ) : selectedNode.type === 'function' ? (
+          <FunctionNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'email' ? (
+          <EmailNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'webhook' ? (
+          <WebhookNodeSidebar
             node={selectedNode}
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}

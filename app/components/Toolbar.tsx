@@ -39,7 +39,6 @@ const ChevronDown = (
 const icons: Record<string, React.ReactNode> = {
   start: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#2d7ff9"/><polygon points="8,7 14,10 8,13" fill="#fff"/></svg>,
   end: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#4b5563"/></svg>,
-  action: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#f59e42"/><path d="M10 6v4l2 2" stroke="#fff" strokeWidth="1.5"/></svg>,
   decision: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="10" width="12" height="6" rx="2" fill="#e11d48"/><rect x="4" y="4" width="12" height="6" rx="2" fill="#fff" fillOpacity=".2"/></svg>,
   loop: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="6" fill="#38bdf8"/><path d="M8 10h4" stroke="#fff" strokeWidth="1.5"/></svg>,
   subprocess: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#bfa06a"/></svg>,
@@ -58,12 +57,14 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const nodeTypes: { type: NodeType; label: string; icon: string; group: string }[] = [
     { type: 'start', label: 'Start', icon: 'start', group: 'Basic' },
     { type: 'end', label: 'End', icon: 'end', group: 'Basic' },
-    { type: 'action', label: 'Action', icon: 'action', group: 'Logic' },
     { type: 'decision', label: 'Decision', icon: 'decision', group: 'Logic' },
     { type: 'loop', label: 'Loop', icon: 'loop', group: 'Logic' },
     { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
     { type: 'data', label: 'Data', icon: 'data', group: 'Advanced' },
     { type: 'api', label: 'API', icon: 'api', group: 'Advanced' },
+    { type: 'function', label: 'Função', icon: 'function', group: 'Advanced' },
+    { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced' },
+    { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced' },
   ];
 
   // Grupos hierárquicos

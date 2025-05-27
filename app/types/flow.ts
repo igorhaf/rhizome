@@ -1,7 +1,9 @@
 export type NodeType = 
   | 'start'
   | 'end'
-  | 'action'
+  | 'function'
+  | 'email'
+  | 'webhook'
   | 'decision'
   | 'loop'
   | 'subprocess'
