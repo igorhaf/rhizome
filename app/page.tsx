@@ -40,6 +40,31 @@ export default function Home() {
           isAsync: false,
           shouldLog: true,
         }),
+        ...(type === 'function' && {
+          functionName: '',
+          inputParams: '',
+          timeout: 30000,
+          retryCount: 0,
+          retryInterval: 1000,
+          isAsync: false,
+          shouldLog: true,
+          notes: '',
+        }),
+        ...(type === 'email' && {
+          to: '',
+          subject: '',
+          body: '',
+          inputParams: '',
+          notes: '',
+        }),
+        ...(type === 'webhook' && {
+          webhookUrl: '',
+          httpMethod: 'POST',
+          headers: '',
+          payload: '',
+          inputParams: '',
+          notes: '',
+        }),
       },
     };
     setNodes([...nodes, newNode]);

@@ -44,6 +44,24 @@ const icons: Record<string, React.ReactNode> = {
   subprocess: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#bfa06a"/></svg>,
   data: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#a78bfa"/></svg>,
   api: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#38bdf8"/><circle cx="10" cy="10" r="4" fill="#fff" fillOpacity=".2"/></svg>,
+  function: (
+    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
+      <rect x="4" y="4" width="12" height="12" rx="3" fill="#10b981"/>
+      <path d="M8 8h4v4H8z" fill="#fff"/>
+    </svg>
+  ),
+  email: (
+    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
+      <rect x="3" y="5" width="14" height="10" rx="2" fill="#2563eb"/>
+      <path d="M3 5l7 6 7-6" stroke="#fff" strokeWidth="1.5"/>
+    </svg>
+  ),
+  webhook: (
+    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
+      <circle cx="10" cy="10" r="8" fill="#f59e42"/>
+      <path d="M6 10a4 4 0 0 1 8 0" stroke="#fff" strokeWidth="1.5"/>
+    </svg>
+  ),
 };
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
