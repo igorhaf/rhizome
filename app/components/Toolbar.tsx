@@ -18,12 +18,12 @@ interface Group {
 
 // SVGs para pasta e arquivos
 const FolderClosedIcon = (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-gray-400" xmlns="http://www.w3.org/2000/svg">
+  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" className="text-gray-400" xmlns="http://www.w3.org/2000/svg">
     <path d="M2 5.5A1.5 1.5 0 013.5 4h3.379a1.5 1.5 0 011.06.44l1.122 1.12A1.5 1.5 0 0010.121 6H16.5A1.5 1.5 0 0118 7.5v7A1.5 1.5 0 0116.5 16h-13A1.5 1.5 0 012 14.5v-9z" fill="#3c3c3c" stroke="#666"/>
   </svg>
 );
 const FolderOpenIcon = (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-gray-400" xmlns="http://www.w3.org/2000/svg">
+  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" className="text-gray-400" xmlns="http://www.w3.org/2000/svg">
     <path d="M2 5.5A1.5 1.5 0 013.5 4h3.379a1.5 1.5 0 011.06.44l1.122 1.12A1.5 1.5 0 0010.121 6H16.5A1.5 1.5 0 0118 7.5v1.5H3.5A1.5 1.5 0 002 10.5v-5z" fill="#3c3c3c" stroke="#666"/>
     <path d="M3 10.5A1.5 1.5 0 014.5 9h13a1.5 1.5 0 011.415 2.01l-1.2 4A1.5 1.5 0 0116.28 16H4.5A1.5 1.5 0 013 14.5v-4z" fill="#23272e" stroke="#666"/>
   </svg>
@@ -148,7 +148,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
           <span onClick={() => toggleFolder(path)} className="flex items-center mr-2">
             {isOpen ? group.iconOpen : group.iconClosed}
           </span>
-          <span onClick={() => toggleFolder(path)} className="font-semibold text-gray-300 text-[15px]">{group.name}</span>
+          <span onClick={() => toggleFolder(path)} className="font-semibold text-gray-300 text-xs">{group.name}</span>
         </div>
         {isOpen && (
           <ul className="">
