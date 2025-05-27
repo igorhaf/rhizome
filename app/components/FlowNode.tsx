@@ -125,15 +125,15 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ];
     return connectors.map((connector) => {
       return (
-        <div
-          key={connector.id}
+      <div
+        key={connector.id}
           id={`${node.id}-connector-${connector.id}`}
           className={`absolute w-3 h-3 rounded-full bg-white border border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
             activeConnector === connector.id ? 'bg-blue-400 border-blue-600 scale-110' : ''
-          }`}
+        }`}
           style={{ zIndex: 2, ...connector.style }}
-          onMouseDown={(e) => handleConnectorMouseDown(e, connector.id)}
-          onMouseUp={(e) => handleConnectorMouseUp(e, connector.id)}
+        onMouseDown={(e) => handleConnectorMouseDown(e, connector.id)}
+        onMouseUp={(e) => handleConnectorMouseUp(e, connector.id)}
           title={`Connect from ${connector.id}`}
         >
           <div className="absolute inset-0 flex items-center justify-center">
