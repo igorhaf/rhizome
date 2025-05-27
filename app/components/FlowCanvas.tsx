@@ -239,8 +239,11 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       if (connectionStart) return;
       const dx = e.clientX - startPoint.x;
       const dy = e.clientY - startPoint.y;
+      const sidebarWidth = 240;
+      let newX = startOffset.x + dx;
+      newX = Math.max(newX, -sidebarWidth); // Bloqueia panning para a esquerda do limite do sidebar
       setPosition({
-        x: startOffset.x + dx,
+        x: newX,
         y: startOffset.y + dy,
       });
     };
@@ -336,8 +339,18 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           zIndex: 1,
         }}
       >
-        {/* SVG das edges agora dentro do container transformado */}
-        <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
+        {/* SVG das edges agora com dimensões fixas */}
+        <svg
+          width="40000"
+          height="40000"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            pointerEvents: 'none',
+            zIndex: 10
+          }}
+        >
           <defs>
             <marker
               id="arrowhead"
@@ -417,8 +430,13 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             key={node.id}
             node={node}
             onPositionChange={(newPosition) => {
+              // Bloqueia a posição do nó para não passar do limite esquerdo (x >= 0) e do topo (y >= 0)
+              const limitedPosition = {
+                x: Math.max(newPosition.x, 0),
+                y: Math.max(newPosition.y, 0)
+              };
               const updatedNodes = nodes.map((n) =>
-                n.id === node.id ? { ...n, position: newPosition } : n
+                n.id === node.id ? { ...n, position: limitedPosition } : n
               );
               onNodesChange(updatedNodes);
             }}
