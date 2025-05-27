@@ -44,7 +44,7 @@ const icons: Record<string, React.ReactNode> = {
   subprocess: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#bfa06a"/></svg>,
   data: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#a78bfa"/></svg>,
   api: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#38bdf8"/><circle cx="10" cy="10" r="4" fill="#fff" fillOpacity=".2"/></svg>,
-  function: (
+  funcion: (
     <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
       <rect x="4" y="4" width="12" height="12" rx="3" fill="#10b981"/>
       <path d="M8 8h4v4H8z" fill="#fff"/>
@@ -75,14 +75,14 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const nodeTypes: { type: NodeType; label: string; icon: string; group: string }[] = [
     { type: 'start', label: 'Start', icon: 'start', group: 'Basic' },
     { type: 'end', label: 'End', icon: 'end', group: 'Basic' },
-    { type: 'decision', label: 'Decision', icon: 'decision', group: 'Logic' },
-    { type: 'loop', label: 'Loop', icon: 'loop', group: 'Logic' },
+    { type: 'decision', label: 'Decision', icon: 'decision', group: 'Basic/Logic' },
+    { type: 'loop', label: 'Loop', icon: 'loop', group: 'Basic/Logic' },
+    { type: 'Database', label: 'Database', icon: 'data', group: 'Advanced/Actions' },
+    { type: 'api', label: 'API', icon: 'api', group: 'Advanced/Actions' },
+    { type: 'funcion', label: 'Função', icon: 'funcion', group: 'Advanced/Actions' },
+    { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced/Actions' },
+    { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced/Actions' },
     { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
-    { type: 'data', label: 'Data', icon: 'data', group: 'Advanced' },
-    { type: 'api', label: 'API', icon: 'api', group: 'Advanced' },
-    { type: 'function', label: 'Função', icon: 'function', group: 'Advanced' },
-    { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced' },
-    { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced' },
   ];
 
   // Grupos hierárquicos
@@ -106,6 +106,14 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
       iconClosed: FolderClosedIcon,
       iconOpen: FolderOpenIcon,
       color: '',
+      children: [
+        {
+          name: 'Actions',
+          iconClosed: FolderClosedIcon,
+          iconOpen: FolderOpenIcon,
+          color: '',
+        },
+      ],
     },
   ];
 
@@ -127,7 +135,14 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const renderGroup = (group: Group, parentPath = '', depth = 0, isLast = false) => {
     const path = parentPath ? `${parentPath}/${group.name}` : group.name;
     const isOpen = openFolders[path];
-    const items = nodeTypes.filter((n) => n.group === group.name);
+    const items = nodeTypes.filter((n) => {
+      // Se for um grupo raiz (Basic ou Advanced), pega os itens diretos
+      if (!parentPath) {
+        return n.group === group.name;
+      }
+      // Se for um subgrupo (Logic ou Actions), pega os itens do caminho completo
+      return n.group === path;
+    });
     return (
       <li key={path} className="relative">
         {/* Linha vertical (guide) para subníveis */}

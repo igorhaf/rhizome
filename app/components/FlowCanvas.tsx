@@ -366,14 +366,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           <defs>
             <marker
               id="arrowhead"
-              markerWidth="10"
-              markerHeight="7"
-              refX="9"
-              refY="3.5"
+              markerWidth="6"
+              markerHeight="4"
+              refX="5.5"
+              refY="2"
               orient="auto"
               className="stroke-gray-500"
             >
-              <polygon points="0 0, 10 3.5, 0 7" className="fill-gray-500" />
+              <polygon points="0 0, 6 2, 0 4" className="fill-gray-500" />
             </marker>
           </defs>
           {edges.map((edge) => {
@@ -399,16 +399,13 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             <defs>
               <marker
                 id="temp-arrowhead"
-                markerWidth="10"
-                markerHeight="7"
-                refX="9"
-                refY="3.5"
+                markerWidth="6"
+                markerHeight="4"
+                refX="5.5"
+                refY="2"
                 orient="auto"
               >
-                <polygon
-                  points="0 0, 10 3.5, 0 7"
-                  className="fill-gray-500"
-                />
+                <polygon points="0 0, 6 2, 0 4" className="fill-gray-500" />
               </marker>
             </defs>
             {(() => {

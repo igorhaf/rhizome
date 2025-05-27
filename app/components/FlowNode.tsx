@@ -69,9 +69,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         return `${baseStyle} bg-green-500 text-white`;
       case 'end':
         return `${baseStyle} bg-red-500 text-white`;
-      case 'action':
-        return `${baseStyle} bg-blue-500 text-white`;
-      case 'function':
+      case 'funcion':
         return `${baseStyle} bg-green-400 text-white`;
       case 'email':
         return `${baseStyle} bg-blue-400 text-white`;
@@ -83,7 +81,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         return `${baseStyle} bg-purple-500 text-white`;
       case 'subprocess':
         return `${baseStyle} bg-orange-500 text-white`;
-      case 'data':
+      case 'Database':
         return `${baseStyle} bg-teal-500 text-white`;
       case 'api':
         return `${baseStyle} bg-indigo-500 text-white`;
@@ -172,13 +170,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <rect x="13" y="13" width="14" height="14" rx="3" fill="#fff" />
       </svg>
     ),
-    action: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#f59e42" />
-        <path d="M20 10v12l8 8" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    function: (
+    funcion: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
         <rect x="8" y="8" width="24" height="24" rx="6" fill="#10b981" />
         <rect x="14" y="14" width="12" height="12" rx="2" fill="#fff" />

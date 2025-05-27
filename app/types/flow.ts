@@ -1,13 +1,13 @@
 export type NodeType = 
   | 'start'
   | 'end'
-  | 'function'
+  | 'funcion'
   | 'email'
   | 'webhook'
   | 'decision'
   | 'loop'
   | 'subprocess'
-  | 'data'
+  | 'Database'
   | 'api';
 
 export interface Position {
