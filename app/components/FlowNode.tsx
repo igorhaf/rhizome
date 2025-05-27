@@ -97,15 +97,6 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       const canvasRect = canvasElement?.getBoundingClientRect();
       const nodeRect = nodeElement?.getBoundingClientRect();
       const connectorRect = connectorElement?.getBoundingClientRect();
-      console.log('[FlowNode] handleConnectorMouseDown', {
-        mouseX,
-        mouseY,
-        canvasRect,
-        nodeRect,
-        connectorRect,
-        nodeId: node.id,
-        connectorId,
-      });
       setIsConnecting(true);
       setActiveConnector(connectorId);
       onConnectionStart?.(node.id, connectorId);
@@ -160,9 +151,6 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       window.removeEventListener('mouseup', () => {});
     };
   }, []);
-
-  // Log do id do nó
-  console.log('[FlowNode] render node', node.id);
 
   // SVGs para cada tipo de nó
   const nodeIcons: Record<string, React.ReactNode> = {
@@ -221,7 +209,6 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   return (
     <div
       id={node.id}
-      {...(() => { console.log('[FlowNode] render node', node.id); return {}; })()}
       className={`${getNodeStyle(node.type)} transition-shadow duration-200 select-none ${
         isDragging ? 'shadow-lg' : ''
       }`}

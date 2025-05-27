@@ -17,6 +17,13 @@ interface FlowCanvasProps {
 function findOrthogonalPathAvoidingNodes(start: [number, number], end: [number, number], nodeRects: DOMRect[], gridSize = 20) {
   // Limites do canvas
   const minX = 0, minY = 0, maxX = 4000, maxY = 4000;
+  // Sanitizar coordenadas de entrada
+  const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
+  function safeNum(n: number) {
+    return isNaN(n) || !isFinite(n) ? 0 : n;
+  }
+  const safeStart: [number, number] = [clamp(safeNum(start[0]), minX, maxX), clamp(safeNum(start[1]), minY, maxY)];
+  const safeEnd: [number, number] = [clamp(safeNum(end[0]), minX, maxX), clamp(safeNum(end[1]), minY, maxY)];
   // Função para grid cell (garante tupla)
   const toCell = (x: number, y: number): [number, number] => [Math.round(x / gridSize), Math.round(y / gridSize)];
   const toCoord = (cell: [number, number]) => [cell[0] * gridSize, cell[1] * gridSize];
@@ -27,21 +34,39 @@ function findOrthogonalPathAvoidingNodes(start: [number, number], end: [number, 
     const y0 = Math.floor(rect.top / gridSize), y1 = Math.ceil(rect.bottom / gridSize);
     for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) obstacles.add(`${x},${y}`);
   });
-  // BFS
-  const startCell: [number, number] = toCell(start[0], start[1]);
+  // Timeout global para o BFS
+  const startTime = typeof performance !== 'undefined' ? performance.now() : Date.now();
+  // BFS com limite de iterações
+  const startCell: [number, number] = toCell(safeStart[0], safeStart[1]);
+  const endCell = toCell(safeEnd[0], safeEnd[1]);
+  // Fallback imediato se destino está em obstáculo
+  if (obstacles.has(`${endCell[0]},${endCell[1]}`)) {
+    return fallbackOrthogonal(safeStart, safeEnd);
+  }
+  // Fallback imediato se destino está cercado por obstáculos nas 4 direções
+  const directions = [[1,0],[-1,0],[0,1],[0,-1]];
+  const surrounded = directions.every(([dx, dy]) => obstacles.has(`${endCell[0]+dx},${endCell[1]+dy}`));
+  if (surrounded) {
+    return fallbackOrthogonal(safeStart, safeEnd);
+  }
   const queue: Array<[[number, number], [number, number][]]> = [[startCell, [startCell]]];
   const visited = new Set<string>();
-  const endCell = toCell(end[0], end[1]);
+  let steps = 0;
+  const MAX_STEPS = 500;
   while (queue.length) {
+    // Timeout global: se passar de 5ms, faz fallback
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (now - startTime > 5) return fallbackOrthogonal(safeStart, safeEnd);
+    if (++steps > MAX_STEPS) break; // Proteção contra loop infinito
     const [cell, path] = queue.shift()!;
     const key = `${cell[0]},${cell[1]}`;
     if (visited.has(key)) continue;
     visited.add(key);
     if (cell[0] === endCell[0] && cell[1] === endCell[1]) {
+      if (path.length > 20) return fallbackOrthogonal(safeStart, safeEnd);
       return path.map(toCoord);
     }
-    // 4 direções ortogonais
-    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+    for (const [dx, dy] of directions) {
       const nx = cell[0] + dx, ny = cell[1] + dy;
       if (nx < minX || ny < minY || nx > maxX || ny > maxY) continue;
       const nkey = `${nx},${ny}`;
@@ -50,8 +75,18 @@ function findOrthogonalPathAvoidingNodes(start: [number, number], end: [number, 
     }
   }
   // fallback: caminho ortogonal (L/Z)
-  const [sx, sy] = start;
-  const [ex, ey] = end;
+  return fallbackOrthogonal(safeStart, safeEnd);
+}
+
+// Fallback ortogonal simples extraído para função
+function fallbackOrthogonal(safeStart: [number, number], safeEnd: [number, number]) {
+  const [sx, sy] = safeStart;
+  const [ex, ey] = safeEnd;
+  // Se o caminho ortogonal teria mais de 10 pontos, desenhe só uma linha reta
+  const dist = Math.abs(ex - sx) + Math.abs(ey - sy);
+  if (dist / 20 > 10) {
+    return [safeStart, safeEnd];
+  }
   if (Math.abs(ex - sx) > Math.abs(ey - sy)) {
     // L horizontal-vertical
     const midX = sx + (ex - sx) / 2;
@@ -89,6 +124,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
   const [tempEdge, setTempEdge] = useState<{ x: number; y: number } | null>(null);
+  // Ref para throttle do preview da seta
+  const lastPreviewUpdateRef = useRef(0);
+  const lastPreviewPosRef = useRef<{x: number, y: number} | null>(null);
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
@@ -145,13 +183,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       );
 
       if (!bidirectionalExists) {
-        // LOG: detalhes da conexão
-        console.log('[FlowCanvas] Criando conexão', {
-          source: connectionStart.nodeId,
-          target: nodeId,
-          sourceConnector: connectionStart.connectorId,
-          targetConnector: connectorId,
-        });
         const newEdge: Edge = {
           id: `edge-${Date.now()}`,
           source: connectionStart.nodeId,
@@ -172,11 +203,18 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (connectionStart && !isPanning) {
+        const now = Date.now();
+        if (now - lastPreviewUpdateRef.current < 100) return; // throttle 100ms
         const container = canvasRef.current;
         if (container) {
           const rect = container.getBoundingClientRect();
           const x = (e.clientX - rect.left - position.x) / scale;
           const y = (e.clientY - rect.top - position.y) / scale;
+          // Só atualiza se mudou mais de 5px
+          const last = lastPreviewPosRef.current;
+          if (last && Math.abs(x - last.x) < 5 && Math.abs(y - last.y) < 5) return;
+          lastPreviewUpdateRef.current = now;
+          lastPreviewPosRef.current = { x, y };
           setTempEdge({ x, y });
         }
       }
@@ -184,16 +222,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     [connectionStart, position, scale, isPanning]
   );
 
-  // Limpa tempEdge explicitamente ao finalizar drag de conexão
   const handleMouseUp = useCallback(() => {
-    if (connectionStart) {
-      setTempEdge(null);
-      setConnectionStart(null);
-    }
+    // Sempre limpa estados de interação
+    setTempEdge(null);
+    setConnectionStart(null);
     setIsPanning(false);
     setStartPoint(null);
     setStartOffset(null);
-  }, [connectionStart]);
+  }, []);
 
   React.useEffect(() => {
     // Só ativa panning global se NÃO estiver em drag de conexão
@@ -221,6 +257,19 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     };
   }, [isPanning, startPoint, startOffset, connectionStart]);
 
+  // Listener global para garantir que drag de conexão sempre termina
+  React.useEffect(() => {
+    if (!connectionStart) return;
+    const handleUp = () => {
+      setTempEdge(null);
+      setConnectionStart(null);
+    };
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mouseup', handleUp);
+    };
+  }, [connectionStart]);
+
   return (
     <div
       ref={canvasRef}
@@ -228,8 +277,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       style={{}}
       onWheel={handleWheel}
       onMouseDown={e => {
+        // Só bloqueia panning se estiver realmente em drag de conexão
         if (connectionStart) return;
-        if ((e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) && e.target === e.currentTarget) {
+        // Não inicia panning se clicar em nó ou conector
+        const target = e.target as HTMLElement;
+        const isNode = target.closest('[id^="node-"]');
+        const isConnector = target.id && target.id.includes('-connector-');
+        if (isNode || isConnector) return;
+        if (e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) {
           setIsPanning(true);
           setStartPoint({ x: e.clientX, y: e.clientY });
           setStartOffset({ x: position.x, y: position.y });
@@ -240,6 +295,17 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
+      {/* Botão de debug para resetar interação */}
+      <button
+        style={{ position: 'absolute', top: 8, right: 8, zIndex: 1000, background: '#23272e', color: '#fff', border: '1px solid #444', borderRadius: 4, padding: '2px 8px', fontSize: 12 }}
+        onClick={() => {
+          setTempEdge(null);
+          setConnectionStart(null);
+          setIsPanning(false);
+          setStartPoint(null);
+          setStartOffset(null);
+        }}
+      >Resetar Interação</button>
       {/* Grid de fundo SVG infinito */}
       <svg
         className="absolute top-0 left-0 w-full h-full"
@@ -333,21 +399,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
               const startX = connectorRect.left + connectorRect.width / 2 - canvasRect.left;
               const startY = connectorRect.top + connectorRect.height / 2 - canvasRect.top;
 
-              // Obstáculos: todos os nós menos o source
-              const nodeRects = nodes
-                .filter(n => n.id !== sourceNode.id)
-                .map(n => {
-                  const el = document.getElementById(n.id);
-                  return el ? el.getBoundingClientRect() : null;
-                })
-                .filter(Boolean) as DOMRect[];
-
-              const pathPoints = findOrthogonalPathAvoidingNodes(
-                [startX, startY],
-                [tempEdge.x, tempEdge.y],
-                nodeRects
-              );
-              const pointsStr = pathPoints.map(([x, y]) => `${x},${y}`).join(' ');
+              // Sempre desenha apenas caminho ortogonal simples (L/Z) no preview
+              const fallbackPoints = fallbackOrthogonal([startX, startY], [tempEdge.x, tempEdge.y]);
+              const pointsStr = fallbackPoints.map(([x, y]) => `${x},${y}`).join(' ');
               return (
                 <polyline
                   points={pointsStr}
