@@ -240,8 +240,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       const dx = e.clientX - startPoint.x;
       const dy = e.clientY - startPoint.y;
       const sidebarWidth = 240;
+      const canvasWidth = canvasRef.current?.clientWidth || 0;
       let newX = startOffset.x + dx;
-      newX = Math.max(newX, -sidebarWidth); // Bloqueia panning para a esquerda do limite do sidebar
       setPosition({
         x: newX,
         y: startOffset.y + dy,
@@ -272,6 +272,18 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       window.removeEventListener('mouseup', handleUp);
     };
   }, [connectionStart]);
+
+  // Centralizar o canvas no primeiro render
+  useEffect(() => {
+    if (canvasRef.current) {
+      const width = canvasRef.current.clientWidth;
+      const height = canvasRef.current.clientHeight;
+      setPosition({
+        x: -20000 + width / 2,
+        y: -20000 + height / 2,
+      });
+    }
+  }, []);
 
   return (
     <div
