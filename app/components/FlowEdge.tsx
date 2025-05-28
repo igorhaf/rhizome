@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Edge, Node } from '../types/flow';
 
 interface FlowEdgeProps {
@@ -11,14 +11,24 @@ interface FlowEdgeProps {
   nodes?: Node[];
   onSelect?: (edge: Edge) => void;
   selected?: boolean;
+  labelSelected?: boolean;
+  onLabelSelect?: () => void;
+  onLabelDeselect?: () => void;
+  onLabelEdit?: () => void;
+  editingLabel?: boolean;
+  editingLabelValue?: string;
+  setEditingLabelValue?: (v: string) => void;
+  onLabelEditSave?: () => void;
 }
 
 // Tamanho visual do nó (deve bater com o SVG e o CSS)
 const NODE_SIZE = 56; // ajuste conforme necessário
 
-const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes, onSelect, selected }) => {
+const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes, onSelect, selected, labelSelected, onLabelSelect, onLabelDeselect, onLabelEdit, editingLabel, editingLabelValue, setEditingLabelValue, onLabelEditSave }) => {
   const pathRef = useRef<SVGPathElement>(null);
   const [points, setPoints] = React.useState<string>('');
+  const [dragging, setDragging] = useState(false);
+  const [dragStart, setDragStart] = useState<{mx: number, my: number, offset: number} | null>(null);
 
   const getEdgeStyle = (type: Edge['type']) => {
     switch (type) {
@@ -86,6 +96,51 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     setPoints(fallbackPoints.map(([x, y]) => `${x},${y}`).join(' '));
   }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, nodes]);
 
+  // Função para atualizar o offset do label
+  const updateLabelOffset = (newOffset: number) => {
+    if (typeof window === 'undefined') return;
+    const event = new CustomEvent('updateEdgeLabelOffset', { detail: { edgeId: edge.id, offset: newOffset } });
+    window.dispatchEvent(event);
+  };
+
+  // Handler de drag do label
+  const handleLabelMouseDown = (e: React.MouseEvent<SVGTextElement, MouseEvent>) => {
+    e.stopPropagation();
+    setDragging(true);
+    setDragStart({ mx: e.clientX, my: e.clientY, offset: edge.data?.labelOffset || 0 });
+  };
+
+  useEffect(() => {
+    if (!dragging) return;
+    const handleMove = (e: MouseEvent) => {
+      if (!dragStart) return;
+      // Calcule o deslocamento perpendicular ao segmento principal da seta
+      const pts = points.split(' ').map(p => p.split(',').map(Number));
+      if (pts.length < 2) return;
+      const [x1, y1] = pts[0];
+      const [x2, y2] = pts[pts.length-1];
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.sqrt(dx*dx + dy*dy) || 1;
+      // Perpendicular normalizada
+      const nx = -dy / len;
+      const ny = dx / len;
+      const delta = ((e.clientX - dragStart.mx) * nx + (e.clientY - dragStart.my) * ny);
+      const newOffset = dragStart.offset + delta;
+      updateLabelOffset(newOffset);
+    };
+    const handleUp = () => {
+      setDragging(false);
+      setDragStart(null);
+    };
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+    };
+  }, [dragging, dragStart, points]);
+
   return (
     <svg
       className="absolute top-0 left-0 w-full h-full pointer-events-none"
@@ -115,19 +170,106 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
         style={{ cursor: 'pointer', pointerEvents: 'all' }}
         onClick={e => {
           e.stopPropagation();
+          console.log('edge click', { edgeId: edge.id });
           onSelect?.(edge);
         }}
       />
       {edge.label && (
-        <text
-          x={points.split(' ')[1]?.split(',')[0] || 0}
-          y={points.split(' ')[1]?.split(',')[1] || 0}
-          className="text-sm fill-gray-700"
-          textAnchor="middle"
-          dominantBaseline="middle"
-        >
-          {edge.label}
-        </text>
+        (() => {
+          // Posição base do label (meio da linha)
+          const pts = points.split(' ').map(p => p.split(',').map(Number));
+          let lx = 0, ly = 0;
+          if (pts.length >= 2) {
+            const [x1, y1] = pts[0];
+            const [x2, y2] = pts[pts.length-1];
+            lx = (x1 + x2) / 2;
+            ly = (y1 + y2) / 2;
+            // Offset perpendicular
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const len = Math.sqrt(dx*dx + dy*dy) || 1;
+            const nx = -dy / len;
+            const ny = dx / len;
+            const offset = edge.data?.labelOffset || 0;
+            lx += nx * offset;
+            ly += ny * offset;
+          }
+          if (editingLabel && typeof editingLabelValue === 'string' && setEditingLabelValue) {
+            // Renderiza input para edição
+            return (
+              <foreignObject x={lx - 60} y={ly - 16} width={120} height={32} style={{ overflow: 'visible' }}>
+                <input
+                  id={`label-input-${edge.id}`}
+                  name={`label-input-${edge.id}`}
+                  type="text"
+                  value={editingLabelValue}
+                  onChange={e => setEditingLabelValue(e.target.value)}
+                  onBlur={onLabelEditSave}
+                  onKeyDown={e => { if (e.key === 'Enter') onLabelEditSave?.(); }}
+                  style={{ width: '100%', fontSize: 16, fontWeight: 'bold', color: '#fff', background: '#23272e', border: '1px solid #4b5563', borderRadius: 4, padding: '2px 8px', outline: 'none' }}
+                  autoFocus
+                />
+              </foreignObject>
+            );
+          }
+          console.log('render label', { edgeId: edge.id, labelSelected, editingLabel });
+          return (
+            <g>
+              {labelSelected && (
+                <rect
+                  x={lx - 40}
+                  y={ly - 16}
+                  width={80}
+                  height={32}
+                  rx={8}
+                  fill="#23272e"
+                  stroke="#38bdf8"
+                  strokeWidth={2}
+                  opacity={0.7}
+                />
+              )}
+              <text
+                x={lx}
+                y={ly}
+                fontSize="16"
+                fill="#fff"
+                fontWeight="bold"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                style={{ 
+                  textShadow: '0 1px 4px #23272e, 0 0 2px #23272e', 
+                  cursor: labelSelected ? 'grab' : 'pointer', 
+                  userSelect: 'none',
+                  pointerEvents: 'all' // Garante que o texto recebe eventos
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  console.log('label click', { edgeId: edge.id, labelSelected });
+                  onLabelSelect?.();
+                }}
+                onDoubleClick={e => {
+                  e.stopPropagation();
+                  console.log('label double click', { edgeId: edge.id });
+                  onLabelEdit?.();
+                }}
+                onMouseDown={e => {
+                  if (labelSelected) {
+                    e.stopPropagation();
+                    handleLabelMouseDown(e);
+                  }
+                }}
+                onMouseUp={e => {
+                  if (labelSelected) {
+                    e.stopPropagation();
+                    onLabelDeselect?.();
+                  }
+                }}
+              >
+                {edge.label}
+              </text>
+            </g>
+          );
+        })()
       )}
     </svg>
   );

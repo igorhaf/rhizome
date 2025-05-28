@@ -55,5 +55,6 @@ export interface Edge {
     properties?: Record<string, any>;
     sourceConnector?: string;
     targetConnector?: string;
+    labelOffset?: number;
   };
 } 

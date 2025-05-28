@@ -126,6 +126,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [tempEdge, setTempEdge] = useState<{ x: number; y: number } | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [editingLabel, setEditingLabel] = useState<string>('');
+  const [selectedLabelEdgeId, setSelectedLabelEdgeId] = useState<string | null>(null);
+  const [editingLabelEdgeId, setEditingLabelEdgeId] = useState<string | null>(null);
+  const [editingLabelValue, setEditingLabelValue] = useState<string>('');
   // Ref para throttle do preview da seta
   const lastPreviewUpdateRef = useRef(0);
   const lastPreviewPosRef = useRef<{x: number, y: number} | null>(null);
@@ -302,6 +305,56 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     setSelectedEdgeId(null);
   };
 
+  // Atualiza o labelOffset da edge ao arrastar o label
+  useEffect(() => {
+    function handleUpdateEdgeLabelOffset(e: any) {
+      const { edgeId, offset } = e.detail;
+      const updatedEdges = edges.map((edge: Edge) =>
+        edge.id === edgeId
+          ? { ...edge, data: { ...edge.data, labelOffset: offset } }
+          : edge
+      );
+      onEdgesChange(updatedEdges);
+    }
+    window.addEventListener('updateEdgeLabelOffset', handleUpdateEdgeLabelOffset);
+    return () => {
+      window.removeEventListener('updateEdgeLabelOffset', handleUpdateEdgeLabelOffset);
+    };
+  }, [onEdgesChange]);
+
+  // Handler para selecionar label para arrasto
+  const handleLabelSelect = (edge: Edge) => {
+    console.log('handleLabelSelect', edge.id);
+    setSelectedEdgeId(null); // Desmarca a seta
+    setSelectedLabelEdgeId(edge.id);
+  };
+
+  // Handler para deselecionar label
+  const handleLabelDeselect = () => {
+    console.log('handleLabelDeselect');
+    setSelectedLabelEdgeId(null);
+  };
+
+  // Handler para iniciar edição do label
+  const handleLabelEdit = (edge: Edge) => {
+    console.log('handleLabelEdit', edge.id);
+    setEditingLabelEdgeId(edge.id);
+    setEditingLabelValue(edge.label || '');
+  };
+
+  // Handler para salvar edição do label
+  const handleLabelEditSave = () => {
+    console.log('handleLabelEditSave', editingLabelEdgeId);
+    if (editingLabelEdgeId) {
+      const updatedEdges = edges.map(edge =>
+        edge.id === editingLabelEdgeId ? { ...edge, label: editingLabelValue } : edge
+      );
+      onEdgesChange(updatedEdges);
+      setEditingLabelEdgeId(null);
+      setSelectedLabelEdgeId(null); // Desmarca o label após salvar
+    }
+  };
+
   return (
     <div
       ref={canvasRef}
@@ -315,6 +368,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         const target = e.target as HTMLElement;
         const isNode = target.closest('[id^="node-"]');
         const isConnector = target.id && target.id.includes('-connector-');
+        // Só desmarca label se clicar no fundo do canvas (não em filhos)
+        if (e.currentTarget === e.target) {
+          handleLabelDeselect();
+        }
         if (isNode || isConnector) return;
         if (e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) {
           setIsPanning(true);
@@ -402,6 +459,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           {edges.map((edge) => {
             const sourceNode = nodes.find(n => n.id === edge.source);
             const targetNode = nodes.find(n => n.id === edge.target);
+            console.log('render edge', { edgeId: edge.id, selectedLabelEdgeId });
             return (
               <FlowEdge
                 key={edge.id}
@@ -412,6 +470,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
                 nodes={nodes}
                 onSelect={handleEdgeSelect}
                 selected={selectedEdgeId === edge.id}
+                labelSelected={selectedLabelEdgeId === edge.id}
+                onLabelSelect={() => handleLabelSelect(edge)}
+                onLabelDeselect={handleLabelDeselect}
+                onLabelEdit={() => handleLabelEdit(edge)}
+                editingLabel={editingLabelEdgeId === edge.id}
+                editingLabelValue={editingLabelValue}
+                setEditingLabelValue={setEditingLabelValue}
+                onLabelEditSave={handleLabelEditSave}
               />
             );
           })}
