@@ -28,7 +28,13 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   const pathRef = useRef<SVGPathElement>(null);
   const [points, setPoints] = React.useState<string>('');
   const [dragging, setDragging] = useState(false);
-  const [dragStart, setDragStart] = useState<{mx: number, my: number, offset: number} | null>(null);
+  const [dragStart, setDragStart] = useState<{
+    mx: number;
+    my: number;
+    offset: { x: number; y: number };
+    baseX: number;
+    baseY: number;
+  } | null>(null);
 
   const getEdgeStyle = (type: Edge['type']) => {
     switch (type) {
@@ -97,7 +103,7 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, nodes]);
 
   // Função para atualizar o offset do label
-  const updateLabelOffset = (newOffset: number) => {
+  const updateLabelOffset = (newOffset: { x: number; y: number }) => {
     if (typeof window === 'undefined') return;
     const event = new CustomEvent('updateEdgeLabelOffset', { detail: { edgeId: edge.id, offset: newOffset } });
     window.dispatchEvent(event);
@@ -106,30 +112,49 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   // Handler de drag do label
   const handleLabelMouseDown = (e: React.MouseEvent<SVGTextElement, MouseEvent>) => {
     e.stopPropagation();
+    const pts = points.split(' ').map(p => p.split(',').map(Number));
+    if (pts.length < 2 || !canvasRef.current) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const scale = parseFloat(getComputedStyle(canvasRef.current).transform.split(',')[0].split('(')[1]) || 1;
+    const mx = (e.clientX - rect.left) / scale;
+    const my = (e.clientY - rect.top) / scale;
+    // Posição base do label (meio da linha)
+    const [x1, y1] = pts[0];
+    const [x2, y2] = pts[pts.length-1];
+    const baseX = (x1 + x2) / 2;
+    const baseY = (y1 + y2) / 2;
+    const offsetRaw = edge.data?.labelOffset;
+    const offset = (typeof offsetRaw === 'object' && offsetRaw !== null && 'x' in offsetRaw && 'y' in offsetRaw)
+      ? offsetRaw
+      : { x: 0, y: 0 };
     setDragging(true);
-    setDragStart({ mx: e.clientX, my: e.clientY, offset: edge.data?.labelOffset || 0 });
+    setDragStart({
+      mx,
+      my,
+      offset,
+      baseX,
+      baseY
+    });
   };
 
   useEffect(() => {
     if (!dragging) return;
     const handleMove = (e: MouseEvent) => {
-      if (!dragStart) return;
-      // Calcule o deslocamento perpendicular ao segmento principal da seta
-      const pts = points.split(' ').map(p => p.split(',').map(Number));
-      if (pts.length < 2) return;
-      const [x1, y1] = pts[0];
-      const [x2, y2] = pts[pts.length-1];
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const len = Math.sqrt(dx*dx + dy*dy) || 1;
-      // Perpendicular normalizada
-      const nx = -dy / len;
-      const ny = dx / len;
-      const delta = ((e.clientX - dragStart.mx) * nx + (e.clientY - dragStart.my) * ny);
-      const newOffset = dragStart.offset + delta;
+      if (!dragStart || !canvasRef.current) return;
+      const rect = canvasRef.current.getBoundingClientRect();
+      const scale = parseFloat(getComputedStyle(canvasRef.current).transform.split(',')[0].split('(')[1]) || 1;
+      const worldX = (e.clientX - rect.left) / scale;
+      const worldY = (e.clientY - rect.top) / scale;
+      const dx = worldX - dragStart.mx;
+      const dy = worldY - dragStart.my;
+      const newOffset = {
+        x: dragStart.offset.x + dx,
+        y: dragStart.offset.y + dy
+      };
       updateLabelOffset(newOffset);
     };
     const handleUp = () => {
+      console.log('[LABEL DRAG END]');
       setDragging(false);
       setDragStart(null);
     };
@@ -139,7 +164,7 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleUp);
     };
-  }, [dragging, dragStart, points]);
+  }, [dragging, dragStart, points, canvasRef]);
 
   return (
     <svg
@@ -184,16 +209,13 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
             const [x2, y2] = pts[pts.length-1];
             lx = (x1 + x2) / 2;
             ly = (y1 + y2) / 2;
-            // Offset perpendicular
-            const dx = x2 - x1;
-            const dy = y2 - y1;
-            const len = Math.sqrt(dx*dx + dy*dy) || 1;
-            const nx = -dy / len;
-            const ny = dx / len;
-            const offset = edge.data?.labelOffset || 0;
-            lx += nx * offset;
-            ly += ny * offset;
           }
+          const offsetRaw = edge.data?.labelOffset;
+          const offset = (typeof offsetRaw === 'object' && offsetRaw !== null && 'x' in offsetRaw && 'y' in offsetRaw)
+            ? offsetRaw
+            : { x: 0, y: 0 };
+          lx += offset.x;
+          ly += offset.y;
           if (editingLabel && typeof editingLabelValue === 'string' && setEditingLabelValue) {
             // Renderiza input para edição
             return (
@@ -240,28 +262,20 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
                   textShadow: '0 1px 4px #23272e, 0 0 2px #23272e', 
                   cursor: labelSelected ? 'grab' : 'pointer', 
                   userSelect: 'none',
-                  pointerEvents: 'all' // Garante que o texto recebe eventos
+                  pointerEvents: 'all'
                 }}
                 onClick={e => {
                   e.stopPropagation();
-                  console.log('label click', { edgeId: edge.id, labelSelected });
                   onLabelSelect?.();
                 }}
                 onDoubleClick={e => {
                   e.stopPropagation();
-                  console.log('label double click', { edgeId: edge.id });
                   onLabelEdit?.();
                 }}
                 onMouseDown={e => {
                   if (labelSelected) {
                     e.stopPropagation();
                     handleLabelMouseDown(e);
-                  }
-                }}
-                onMouseUp={e => {
-                  if (labelSelected) {
-                    e.stopPropagation();
-                    onLabelDeselect?.();
                   }
                 }}
               >
