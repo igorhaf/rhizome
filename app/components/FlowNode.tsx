@@ -85,6 +85,8 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         return `${baseStyle} bg-teal-500 text-white`;
       case 'api':
         return `${baseStyle} bg-indigo-500 text-white`;
+      case 'spreadsheet':
+        return `${baseStyle} bg-green-500 text-white`;
       default:
         return `${baseStyle} bg-gray-500 text-white`;
     }
@@ -223,6 +225,14 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <circle cx="20" cy="20" r="20" fill="#38bdf8" />
         <circle cx="20" cy="20" r="10" fill="#fff" fillOpacity=".2" />
         <circle cx="20" cy="20" r="4" fill="#fff" fillOpacity=".5" />
+      </svg>
+    ),
+    spreadsheet: (
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="7" y="7" width="26" height="26" rx="4" fill="#a3e635" />
+        <rect x="13" y="14" width="14" height="3" rx="1.5" fill="#fff" />
+        <rect x="13" y="20" width="14" height="3" rx="1.5" fill="#fff" />
+        <rect x="13" y="26" width="14" height="3" rx="1.5" fill="#fff" />
       </svg>
     ),
   };

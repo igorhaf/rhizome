@@ -62,6 +62,14 @@ const icons: Record<string, React.ReactNode> = {
       <path d="M6 10a4 4 0 0 1 8 0" stroke="#fff" strokeWidth="1.5"/>
     </svg>
   ),
+  spreadsheet: (
+    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
+      <rect x="3" y="3" width="14" height="14" rx="2" fill="#a3e635" />
+      <rect x="6" y="6" width="8" height="2" rx="1" fill="#fff" />
+      <rect x="6" y="10" width="8" height="2" rx="1" fill="#fff" />
+      <rect x="6" y="14" width="8" height="2" rx="1" fill="#fff" />
+    </svg>
+  ),
 };
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
@@ -83,6 +91,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced/Actions' },
     { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced/Actions' },
     { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
+    { type: 'spreadsheet', label: 'Spreadsheet', icon: 'spreadsheet', group: 'Advanced/Actions/Files' },
   ];
 
   // Grupos hierárquicos
@@ -112,6 +121,14 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
           iconClosed: FolderClosedIcon,
           iconOpen: FolderOpenIcon,
           color: '',
+          children: [
+            {
+              name: 'Files',
+              iconClosed: FolderClosedIcon,
+              iconOpen: FolderOpenIcon,
+              color: '',
+            },
+          ],
         },
       ],
     },

@@ -8,7 +8,8 @@ export type NodeType =
   | 'loop'
   | 'subprocess'
   | 'Database'
-  | 'api';
+  | 'api'
+  | 'spreadsheet';
 
 export interface Position {
   x: number;
