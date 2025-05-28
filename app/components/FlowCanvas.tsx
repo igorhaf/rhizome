@@ -362,13 +362,11 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       style={{}}
       onWheel={handleWheel}
       onMouseDown={e => {
-        // Só bloqueia panning se estiver realmente em drag de conexão
         if (connectionStart) return;
-        // Não inicia panning se clicar em nó ou conector
         const target = e.target as HTMLElement;
         const isNode = target.closest('[id^="node-"]');
         const isConnector = target.id && target.id.includes('-connector-');
-        // Só desmarca label se clicar no fundo do canvas (não em filhos)
+        // Sempre desmarca label se clicar no fundo do canvas
         if (e.currentTarget === e.target) {
           handleLabelDeselect();
         }
@@ -468,7 +466,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
                 sourcePosition={sourceNode?.position}
                 targetPosition={targetNode?.position}
                 nodes={nodes}
-                onSelect={handleEdgeSelect}
+                onSelect={e => {
+                  handleLabelDeselect();
+                  handleEdgeSelect(e);
+                }}
                 selected={selectedEdgeId === edge.id}
                 labelSelected={selectedLabelEdgeId === edge.id}
                 onLabelSelect={() => handleLabelSelect(edge)}
@@ -548,7 +549,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             key={node.id}
             node={node}
             onPositionChange={(newPosition) => {
-              // Bloqueia a posição do nó para não passar do limite esquerdo (x >= 0) e do topo (y >= 0)
               const limitedPosition = {
                 x: Math.max(newPosition.x, 0),
                 y: Math.max(newPosition.y, 0)
@@ -560,7 +560,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             }}
             onConnectionStart={handleConnectionStart}
             onConnectionEnd={handleConnectionEnd}
-            onClick={() => onNodeClick?.(node)}
+            onClick={() => {
+              handleLabelDeselect();
+              onNodeClick?.(node);
+            }}
           />
         ))}
       </div>
