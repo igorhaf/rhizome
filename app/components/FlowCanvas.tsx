@@ -173,28 +173,17 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
   const handleConnectionEnd = useCallback((nodeId: string, connectorId: string) => {
     if (connectionStart && connectionStart.nodeId !== nodeId) {
-      // Permitir todas as conexões, exceto ida e volta entre os mesmos conectores
-      const bidirectionalExists = edges.some(
-        edge =>
-          edge.source === nodeId &&
-          edge.target === connectionStart.nodeId &&
-          edge.data?.sourceConnector === connectorId &&
-          edge.data?.targetConnector === connectionStart.connectorId
-      );
-
-      if (!bidirectionalExists) {
-        const newEdge: Edge = {
-          id: `edge-${Date.now()}`,
-          source: connectionStart.nodeId,
-          target: nodeId,
-          type: 'default',
-          data: {
-            sourceConnector: connectionStart.connectorId,
-            targetConnector: connectorId,
-          },
-        };
-        onEdgesChange([...edges, newEdge]);
-      }
+      const newEdge: Edge = {
+        id: `edge-${Date.now()}`,
+        source: connectionStart.nodeId,
+        target: nodeId,
+        type: 'default',
+        data: {
+          sourceConnector: connectionStart.connectorId,
+          targetConnector: connectorId,
+        },
+      };
+      onEdgesChange([...edges, newEdge]);
     }
     setConnectionStart(null);
     setTempEdge(null);

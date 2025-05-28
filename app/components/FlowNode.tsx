@@ -111,13 +111,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   const handleConnectorMouseUp = useCallback(
     (e: React.MouseEvent, connectorId: string) => {
       e.stopPropagation();
-      if (isConnecting) {
-        setIsConnecting(false);
-        setActiveConnector(null);
-        onConnectionEnd?.(node.id, connectorId);
-      }
+      // Sempre tente finalizar a conexão, mesmo se isConnecting for falso
+      onConnectionEnd?.(node.id, connectorId);
+      setIsConnecting(false);
+      setActiveConnector(null);
     },
-    [isConnecting, node.id, onConnectionEnd]
+    [node.id, onConnectionEnd]
   );
 
   const renderConnectors = () => {
