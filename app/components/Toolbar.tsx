@@ -125,6 +125,19 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     setDraggedNode(type);
     e.dataTransfer.setData('nodeType', type);
     e.dataTransfer.effectAllowed = 'copy';
+    // Custom drag image igual ao item
+    const target = e.currentTarget as HTMLElement;
+    const dragImage = target.cloneNode(true) as HTMLElement;
+    dragImage.style.position = 'absolute';
+    dragImage.style.top = '-1000px';
+    dragImage.style.left = '-1000px';
+    dragImage.style.pointerEvents = 'none';
+    dragImage.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+    document.body.appendChild(dragImage);
+    e.dataTransfer.setDragImage(dragImage, 24, 16);
+    setTimeout(() => {
+      document.body.removeChild(dragImage);
+    }, 0);
   };
 
   const handleDragEnd = () => {
@@ -156,6 +169,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
         <div
           className="flex items-center w-full py-1.5 cursor-pointer hover:bg-[#23272e] select-none"
           style={{ paddingLeft: `${depth * 16 + 12}px` }}
+          draggable={false}
         >
           <span onClick={() => toggleFolder(path)} className="flex items-center mr-1">
             {isOpen ? ChevronDown : ChevronRight}
@@ -188,8 +202,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
                     aria-hidden="true"
                   />
                 )}
-                <span className="flex items-center justify-center w-5 h-5">{icons[node.icon]}</span>
-                <span className="text-sm font-normal text-gray-300">{node.label}</span>
+                <span className="flex items-center justify-center w-5 h-5" draggable={false}>{icons[node.icon]}</span>
+                <span className="text-sm font-normal text-gray-300" draggable={false}>{node.label}</span>
               </li>
             ))}
           </ul>
