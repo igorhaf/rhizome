@@ -133,9 +133,25 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
     const delta = e.deltaY;
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    // Posição do mouse relativa ao canvas
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
     setScale((prevScale) => {
-      const newScale = prevScale - delta * 0.001;
-      return Math.min(Math.max(0.1, newScale), 2);
+      let newScale = prevScale - delta * 0.001;
+      newScale = Math.min(Math.max(0.1, newScale), 2);
+      setPosition((prevPos) => {
+        // Corrigir cálculo: posição do mouse no mundo antes do zoom
+        const worldX = (mouseX - prevPos.x) / prevScale;
+        const worldY = (mouseY - prevPos.y) / prevScale;
+        // Nova posição para manter o ponto do mouse fixo
+        return {
+          x: mouseX - worldX * newScale,
+          y: mouseY - worldY * newScale,
+        };
+      });
+      return newScale;
     });
   }, []);
 
@@ -264,18 +280,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     };
   }, [connectionStart]);
 
-  // Centralizar o canvas no primeiro render
-  useEffect(() => {
-    if (canvasRef.current) {
-      const width = canvasRef.current.clientWidth;
-      const height = canvasRef.current.clientHeight;
-      setPosition({
-        x: -20000 + width / 2,
-        y: -20000 + height / 2,
-      });
-    }
-  }, []);
-
   // Função para selecionar uma edge
   const handleEdgeSelect = (edge: Edge) => {
     setSelectedEdgeId(edge.id);
@@ -335,25 +339,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         }}
       >Resetar Interação</button>
       {/* Grid de fundo SVG infinito */}
-      <svg
-        className="absolute top-0 left-0 w-full h-full"
-        style={{ zIndex: 0, pointerEvents: 'none' }}
-        width="100%"
-        height="100%"
-      >
-        <defs>
-          <pattern
-            id="smallGrid"
-            width={32 * scale}
-            height={32 * scale}
-            patternUnits="userSpaceOnUse"
-            patternTransform={`translate(${position.x % (32 * scale)},${position.y % (32 * scale)})`}
-          >
-            <path d={`M ${32 * scale} 0 L 0 0 0 ${32 * scale}`} fill="none" stroke="#23272e" strokeWidth="1" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#smallGrid)" />
-      </svg>
       <div
         className="absolute top-0 left-0"
         style={{
@@ -364,7 +349,32 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           zIndex: 1,
         }}
       >
-        {/* SVG das edges agora com dimensões fixas */}
+        {/* Grid de fundo SVG infinito agora dentro do container escalado */}
+        <svg
+          width="40000"
+          height="40000"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            pointerEvents: 'none',
+            zIndex: 0
+          }}
+        >
+          <defs>
+            <pattern
+              id="smallGrid"
+              width={32 * scale}
+              height={32 * scale}
+              patternUnits="userSpaceOnUse"
+              patternTransform={`translate(${position.x % (32 * scale)},${position.y % (32 * scale)})`}
+            >
+              <path d={`M ${32 * scale} 0 L 0 0 0 ${32 * scale}`} fill="none" stroke="#23272e" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="40000" height="40000" fill="url(#smallGrid)" />
+        </svg>
+        {/* SVG das edges agora DENTRO do container escalado */}
         <svg
           width="40000"
           height="40000"
