@@ -117,8 +117,8 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       e.stopPropagation();
       // Sempre tente finalizar a conexão, mesmo se isConnecting for falso
       onConnectionEnd?.(node.id, connectorId);
-      setIsConnecting(false);
-      setActiveConnector(null);
+        setIsConnecting(false);
+        setActiveConnector(null);
     },
     [node.id, onConnectionEnd]
   );
