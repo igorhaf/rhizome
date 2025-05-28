@@ -172,7 +172,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   }, []);
 
   const handleConnectionEnd = useCallback((nodeId: string, connectorId: string) => {
-    if (connectionStart && connectionStart.nodeId !== nodeId) {
+    if (connectionStart) {
       const newEdge: Edge = {
         id: `edge-${Date.now()}`,
         source: connectionStart.nodeId,
