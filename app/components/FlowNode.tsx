@@ -163,8 +163,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   const nodeIcons: Record<string, React.ReactNode> = {
     start: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#2563eb" />
         <polygon points="16,16 36,24 16,32" fill="#fff" />
@@ -172,8 +183,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     end: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#ef4444" />
         <rect x="17" y="17" width="14" height="14" rx="3" fill="#fff" />
@@ -181,8 +203,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     funcion: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#10b981" />
         <rect x="18" y="18" width="12" height="12" rx="2" fill="#fff" />
@@ -190,8 +223,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     email: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#2563eb" />
         <rect x="14" y="20" width="20" height="12" rx="3" fill="#fff" />
@@ -201,8 +245,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     webhook: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#f59e42" />
         <path d="M16 28a8 8 0 0 1 16 0" stroke="#fff" strokeWidth="2.5" fill="none" />
@@ -210,8 +265,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     decision: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#eab308" />
         <text x="24" y="32" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
@@ -219,8 +285,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     loop: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#6366f1" />
         <path d="M17 33a7 7 0 1 0 3-11" stroke="#fff" strokeWidth="2" fill="none" />
@@ -229,8 +306,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     subprocess: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#f59e42" />
         <rect x="18" y="25" width="12" height="2" rx="1" fill="#fff" />
@@ -238,14 +326,36 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     data: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         <rect x="10" y="10" width="28" height="28" rx="6" fill="#a78bfa" />
         <ellipse cx="24" cy="24" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
       </svg>
     ),
     Database: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#a78bfa" />
         <ellipse cx="24" cy="28" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
@@ -254,8 +364,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     api: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#38bdf8" />
         <circle cx="24" cy="24" r="10" fill="#fff" fillOpacity=".2" />
@@ -264,8 +385,19 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     spreadsheet: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {selected && (
-          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
         <circle cx="24" cy="24" r="20" fill="#a3e635" />
         <rect x="16" y="17" width="16" height="14" rx="3" fill="#fff" />
