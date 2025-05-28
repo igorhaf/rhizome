@@ -109,7 +109,7 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
           <label className="text-xs text-gray-400">ID</label>
           <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
           {/* Botão para abrir o modal de configuração da consulta */}
-          {((localNode.type === 'action' && localNode.data?.actionType === 'database') || localNode.type === 'data') && (
+          {(localNode.type === 'Database') && (
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               onClick={() => setShowQueryModal(true)}

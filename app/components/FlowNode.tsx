@@ -213,6 +213,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <ellipse cx="20" cy="20" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
       </svg>
     ),
+    Database: (
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="6" y="6" width="28" height="28" rx="6" fill="#a78bfa" />
+        <ellipse cx="20" cy="20" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
+      </svg>
+    ),
     api: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
         <circle cx="20" cy="20" r="20" fill="#38bdf8" />
