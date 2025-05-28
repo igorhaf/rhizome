@@ -124,6 +124,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
   const [tempEdge, setTempEdge] = useState<{ x: number; y: number } | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  const [editingLabel, setEditingLabel] = useState<string>('');
   // Ref para throttle do preview da seta
   const lastPreviewUpdateRef = useRef(0);
   const lastPreviewPosRef = useRef<{x: number, y: number} | null>(null);
@@ -274,6 +276,28 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     }
   }, []);
 
+  // Função para selecionar uma edge
+  const handleEdgeSelect = (edge: Edge) => {
+    setSelectedEdgeId(edge.id);
+    setEditingLabel(edge.label || '');
+  };
+
+  // Função para atualizar o label da edge
+  const handleEdgeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingLabel(e.target.value);
+    if (selectedEdgeId) {
+      const updatedEdges = edges.map(edge =>
+        edge.id === selectedEdgeId ? { ...edge, label: e.target.value } : edge
+      );
+      onEdgesChange(updatedEdges);
+    }
+  };
+
+  // Função para desfocar input
+  const handleEdgeLabelBlur = () => {
+    setSelectedEdgeId(null);
+  };
+
   return (
     <div
       ref={canvasRef}
@@ -376,10 +400,26 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
                 sourcePosition={sourceNode?.position}
                 targetPosition={targetNode?.position}
                 nodes={nodes}
+                onSelect={handleEdgeSelect}
+                selected={selectedEdgeId === edge.id}
               />
             );
           })}
         </svg>
+        {/* Input para editar o nome da edge selecionada */}
+        {selectedEdgeId && (
+          <div style={{ position: 'absolute', top: 24, left: 300, zIndex: 10000 }}>
+            <input
+              className="px-2 py-1 rounded border border-blue-400 bg-white text-black text-xs shadow"
+              value={editingLabel}
+              onChange={handleEdgeLabelChange}
+              onBlur={handleEdgeLabelBlur}
+              autoFocus
+              placeholder="Nome da seta"
+              style={{ minWidth: 120 }}
+            />
+          </div>
+        )}
         {tempEdge && connectionStart && (
           <svg
             className="absolute top-0 left-0 w-full h-full pointer-events-none"

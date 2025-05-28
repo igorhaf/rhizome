@@ -9,12 +9,14 @@ interface FlowEdgeProps {
   sourcePosition?: { x: number; y: number };
   targetPosition?: { x: number; y: number };
   nodes?: Node[];
+  onSelect?: (edge: Edge) => void;
+  selected?: boolean;
 }
 
 // Tamanho visual do nó (deve bater com o SVG e o CSS)
 const NODE_SIZE = 56; // ajuste conforme necessário
 
-const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes }) => {
+const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes, onSelect, selected }) => {
   const pathRef = useRef<SVGPathElement>(null);
   const [points, setPoints] = React.useState<string>('');
 
@@ -108,8 +110,13 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
       </defs>
       <polyline
         points={points}
-        className={`${getEdgeStyle(edge.type)} stroke-2 fill-none`}
+        className={`${getEdgeStyle(edge.type)} stroke-2 fill-none ${selected ? 'stroke-blue-500 drop-shadow-[0_0_4px_rgba(59,130,246,0.7)]' : ''}`}
         markerEnd="url(#arrowhead)"
+        style={{ cursor: 'pointer', pointerEvents: 'all' }}
+        onClick={e => {
+          e.stopPropagation();
+          onSelect?.(edge);
+        }}
       />
       {edge.label && (
         <text
