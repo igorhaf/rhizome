@@ -355,6 +355,20 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     }
   };
 
+  useEffect(() => {
+    function handleUpdateEdgeLabel(e: any) {
+      const { edgeId, label } = e.detail;
+      const updatedEdges = edges.map(edge =>
+        edge.id === edgeId ? { ...edge, label } : edge
+      );
+      onEdgesChange(updatedEdges);
+    }
+    window.addEventListener('updateEdgeLabel', handleUpdateEdgeLabel);
+    return () => {
+      window.removeEventListener('updateEdgeLabel', handleUpdateEdgeLabel);
+    };
+  }, [edges, onEdgesChange]);
+
   return (
     <div
       ref={canvasRef}
@@ -483,20 +497,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             );
           })}
         </svg>
-        {/* Input para editar o nome da edge selecionada */}
-        {selectedEdgeId && (
-          <div style={{ position: 'absolute', top: 24, left: 300, zIndex: 10000 }}>
-            <input
-              className="px-2 py-1 rounded border border-blue-400 bg-white text-black text-xs shadow"
-              value={editingLabel}
-              onChange={handleEdgeLabelChange}
-              onBlur={handleEdgeLabelBlur}
-              autoFocus
-              placeholder="Nome da seta"
-              style={{ minWidth: 120 }}
-            />
-          </div>
-        )}
         {tempEdge && connectionStart && (
           <svg
             className="absolute top-0 left-0 w-full h-full pointer-events-none"
