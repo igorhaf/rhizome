@@ -173,20 +173,22 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     funcion: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="8" y="8" width="24" height="24" rx="6" fill="#10b981" />
+        <circle cx="20" cy="20" r="20" fill="#10b981" />
         <rect x="14" y="14" width="12" height="12" rx="2" fill="#fff" />
       </svg>
     ),
     email: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="7" y="13" width="26" height="14" rx="3" fill="#2563eb" />
-        <polyline points="7,13 20,27 33,13" fill="none" stroke="#fff" strokeWidth="2" />
+        <circle cx="20" cy="20" r="20" fill="#2563eb" />
+        <rect x="10" y="14" width="20" height="12" rx="3" fill="#fff" />
+        <polyline points="10,14 20,24 30,14" fill="none" stroke="#2563eb" strokeWidth="2.2" />
+        <rect x="10" y="14" width="20" height="12" rx="3" fill="none" stroke="#2563eb" strokeWidth="1.5" />
       </svg>
     ),
     webhook: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="17" fill="#f59e42" />
-        <path d="M12 20a8 8 0 0 1 16 0" stroke="#fff" strokeWidth="2" fill="none" />
+        <circle cx="20" cy="20" r="20" fill="#f59e42" />
+        <path d="M12 24a8 8 0 0 1 16 0" stroke="#fff" strokeWidth="2.5" fill="none" />
       </svg>
     ),
     decision: (
@@ -204,8 +206,8 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     subprocess: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="6" y="6" width="28" height="28" rx="6" fill="#f59e42" />
-        <rect x="14" y="18" width="12" height="3" rx="1.5" fill="#fff" />
+        <circle cx="20" cy="20" r="20" fill="#f59e42" />
+        <rect x="14" y="19" width="12" height="2" rx="1" fill="#fff" />
       </svg>
     ),
     data: (
@@ -216,8 +218,9 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     Database: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="6" y="6" width="28" height="28" rx="6" fill="#a78bfa" />
-        <ellipse cx="20" cy="20" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
+        <circle cx="20" cy="20" r="20" fill="#a78bfa" />
+        <ellipse cx="20" cy="24" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
+        <ellipse cx="20" cy="16" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
       </svg>
     ),
     api: (
@@ -229,10 +232,11 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     spreadsheet: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="7" y="7" width="26" height="26" rx="4" fill="#a3e635" />
-        <rect x="13" y="14" width="14" height="3" rx="1.5" fill="#fff" />
-        <rect x="13" y="20" width="14" height="3" rx="1.5" fill="#fff" />
-        <rect x="13" y="26" width="14" height="3" rx="1.5" fill="#fff" />
+        <circle cx="20" cy="20" r="20" fill="#a3e635" />
+        <rect x="12" y="13" width="16" height="14" rx="3" fill="#fff" />
+        <rect x="15" y="16" width="10" height="2" rx="1" fill="#a3e635" />
+        <rect x="15" y="20" width="10" height="2" rx="1" fill="#a3e635" />
+        <rect x="15" y="24" width="10" height="2" rx="1" fill="#a3e635" />
       </svg>
     ),
   };
@@ -264,9 +268,9 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         >
           {nodeIcons[node.type]}
         </div>
-        <div className="mt-1 text-xs font-semibold text-white text-center pointer-events-none">
-          {node.data.label}
-        </div>
+      </div>
+      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 mt-1 text-xs font-semibold text-white text-center pointer-events-none whitespace-nowrap">
+        {node.data.label}
       </div>
     </div>
   );
