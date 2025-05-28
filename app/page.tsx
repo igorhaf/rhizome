@@ -31,17 +31,7 @@ export default function Home() {
           returnType: 'json',
           shouldLog: true,
         }),
-        ...(type === 'action' && {
-          actionType: 'function',
-          inputParams: '',
-          timeout: 30,
-          retryCount: 0,
-          retryInterval: 5,
-          isAsync: false,
-          shouldLog: true,
-        }),
-        ...(type === 'function' && {
-          functionName: '',
+        ...(type === 'funcion' && {
           inputParams: '',
           timeout: 30000,
           retryCount: 0,
@@ -82,18 +72,6 @@ export default function Home() {
         shouldLog: updatedNode.data.shouldLog ?? true
       };
     }
-    if (node.type === 'action') {
-      updatedNode.data = {
-        ...updatedNode.data,
-        actionType: updatedNode.data.actionType ?? 'function',
-        inputParams: updatedNode.data.inputParams ?? '',
-        timeout: updatedNode.data.timeout ?? 30,
-        retryCount: updatedNode.data.retryCount ?? 0,
-        retryInterval: updatedNode.data.retryInterval ?? 5,
-        isAsync: updatedNode.data.isAsync ?? false,
-        shouldLog: updatedNode.data.shouldLog ?? true
-      };
-    }
     if (node.type === 'decision') {
       updatedNode.data = {
         ...updatedNode.data,
@@ -101,6 +79,18 @@ export default function Home() {
         inputVars: updatedNode.data.inputVars ?? '',
         outputVars: updatedNode.data.outputVars ?? '',
         shouldLog: updatedNode.data.shouldLog ?? true
+      };
+    }
+    if (node.type === 'funcion') {
+      updatedNode.data = {
+        ...updatedNode.data,
+        inputParams: updatedNode.data.inputParams ?? '',
+        timeout: updatedNode.data.timeout ?? 30000,
+        retryCount: updatedNode.data.retryCount ?? 0,
+        retryInterval: updatedNode.data.retryInterval ?? 1000,
+        isAsync: updatedNode.data.isAsync ?? false,
+        shouldLog: updatedNode.data.shouldLog ?? true,
+        notes: updatedNode.data.notes ?? '',
       };
     }
     setSelectedNode(updatedNode);
@@ -137,6 +127,7 @@ export default function Home() {
           onNodesChange={handleNodesChange}
           onEdgesChange={handleEdgesChange}
           onNodeClick={handleNodeSelect}
+          selectedNode={selectedNode}
         />
       </div>
       {selectedNode && (
@@ -146,7 +137,7 @@ export default function Home() {
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}
           />
-        ) : selectedNode.type === 'function' ? (
+        ) : selectedNode.type === 'funcion' ? (
           <FunctionNodeSidebar
             node={selectedNode}
             onUpdate={handleNodeUpdate}

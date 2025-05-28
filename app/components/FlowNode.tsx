@@ -9,6 +9,7 @@ interface FlowNodeProps {
   onConnectionStart?: (nodeId: string, connectorId: string) => void;
   onConnectionEnd?: (nodeId: string, connectorId: string) => void;
   onClick?: () => void;
+  selected?: boolean;
 }
 
 const FlowNode: React.FC<FlowNodeProps> = ({
@@ -17,6 +18,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   onConnectionStart,
   onConnectionEnd,
   onClick,
+  selected = false,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const dragOffsetRef = useRef({ x: 0, y: 0 });
@@ -160,83 +162,116 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   // SVGs para cada tipo de nó
   const nodeIcons: Record<string, React.ReactNode> = {
     start: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#2563eb" />
-        <polygon points="14,13 30,20 14,27" fill="#fff" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#2563eb" />
+        <polygon points="16,16 36,24 16,32" fill="#fff" />
       </svg>
     ),
     end: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#ef4444" />
-        <rect x="13" y="13" width="14" height="14" rx="3" fill="#fff" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#ef4444" />
+        <rect x="17" y="17" width="14" height="14" rx="3" fill="#fff" />
       </svg>
     ),
     funcion: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#10b981" />
-        <rect x="14" y="14" width="12" height="12" rx="2" fill="#fff" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#10b981" />
+        <rect x="18" y="18" width="12" height="12" rx="2" fill="#fff" />
       </svg>
     ),
     email: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#2563eb" />
-        <rect x="10" y="14" width="20" height="12" rx="3" fill="#fff" />
-        <polyline points="10,14 20,24 30,14" fill="none" stroke="#2563eb" strokeWidth="2.2" />
-        <rect x="10" y="14" width="20" height="12" rx="3" fill="none" stroke="#2563eb" strokeWidth="1.5" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#2563eb" />
+        <rect x="14" y="20" width="20" height="12" rx="3" fill="#fff" />
+        <polyline points="14,20 24,30 34,20" fill="none" stroke="#2563eb" strokeWidth="2.2" />
+        <rect x="14" y="20" width="20" height="12" rx="3" fill="none" stroke="#2563eb" strokeWidth="1.5" />
       </svg>
     ),
     webhook: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#f59e42" />
-        <path d="M12 24a8 8 0 0 1 16 0" stroke="#fff" strokeWidth="2.5" fill="none" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#f59e42" />
+        <path d="M16 28a8 8 0 0 1 16 0" stroke="#fff" strokeWidth="2.5" fill="none" />
       </svg>
     ),
     decision: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#eab308" />
-        <text x="20" y="28" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#eab308" />
+        <text x="24" y="32" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
       </svg>
     ),
     loop: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#6366f1" />
-        <path d="M13 27a7 7 0 1 0 3-11" stroke="#fff" strokeWidth="2" fill="none" />
-        <polygon points="13,13 19,13 16,19" fill="#fff" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#6366f1" />
+        <path d="M17 33a7 7 0 1 0 3-11" stroke="#fff" strokeWidth="2" fill="none" />
+        <polygon points="17,17 23,17 20,23" fill="#fff" />
       </svg>
     ),
     subprocess: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#f59e42" />
-        <rect x="14" y="19" width="12" height="2" rx="1" fill="#fff" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#f59e42" />
+        <rect x="18" y="25" width="12" height="2" rx="1" fill="#fff" />
       </svg>
     ),
     data: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="6" y="6" width="28" height="28" rx="6" fill="#a78bfa" />
-        <ellipse cx="20" cy="20" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <rect x="10" y="10" width="28" height="28" rx="6" fill="#a78bfa" />
+        <ellipse cx="24" cy="24" rx="11" ry="5" fill="#fff" fillOpacity=".7" />
       </svg>
     ),
     Database: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#a78bfa" />
-        <ellipse cx="20" cy="24" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
-        <ellipse cx="20" cy="16" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#a78bfa" />
+        <ellipse cx="24" cy="28" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
+        <ellipse cx="24" cy="20" rx="10" ry="5" fill="#fff" fillOpacity=".7" />
       </svg>
     ),
     api: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#38bdf8" />
-        <circle cx="20" cy="20" r="10" fill="#fff" fillOpacity=".2" />
-        <circle cx="20" cy="20" r="4" fill="#fff" fillOpacity=".5" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#38bdf8" />
+        <circle cx="24" cy="24" r="10" fill="#fff" fillOpacity=".2" />
+        <circle cx="24" cy="24" r="4" fill="#fff" fillOpacity=".5" />
       </svg>
     ),
     spreadsheet: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="20" fill="#a3e635" />
-        <rect x="12" y="13" width="16" height="14" rx="3" fill="#fff" />
-        <rect x="15" y="16" width="10" height="2" rx="1" fill="#a3e635" />
-        <rect x="15" y="20" width="10" height="2" rx="1" fill="#a3e635" />
-        <rect x="15" y="24" width="10" height="2" rx="1" fill="#a3e635" />
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="drop-shadow(0 0 8px #22c55e88)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#a3e635" />
+        <rect x="16" y="17" width="16" height="14" rx="3" fill="#fff" />
+        <rect x="19" y="20" width="10" height="2" rx="1" fill="#a3e635" />
+        <rect x="19" y="24" width="10" height="2" rx="1" fill="#a3e635" />
+        <rect x="19" y="28" width="10" height="2" rx="1" fill="#a3e635" />
       </svg>
     ),
   };
