@@ -35,6 +35,7 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     baseX: number;
     baseY: number;
   } | null>(null);
+  const [inlineEdit, setInlineEdit] = useState<null | { x: number; y: number; value: string }>(null);
 
   const getEdgeStyle = (type: Edge['type']) => {
     switch (type) {
@@ -166,6 +167,26 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     };
   }, [dragging, dragStart, points, canvasRef]);
 
+  useEffect(() => {
+    function handleUpdateEdgeLabel(e: any) {
+      const { edgeId, label } = e.detail;
+      if (edgeId === edge.id) {
+        onLabelEdit?.(); // ativa edição no parent se necessário
+        if (typeof onLabelEditSave === 'function') {
+          onLabelEditSave();
+        }
+        // Atualiza o label diretamente
+        if (typeof onLabelEditSave === 'function') {
+          onLabelEditSave();
+        }
+      }
+    }
+    window.addEventListener('updateEdgeLabel', handleUpdateEdgeLabel);
+    return () => {
+      window.removeEventListener('updateEdgeLabel', handleUpdateEdgeLabel);
+    };
+  }, [edge.id, onLabelEdit, onLabelEditSave]);
+
   return (
     <svg
       className="absolute top-0 left-0 w-full h-full pointer-events-none"
@@ -188,17 +209,35 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
           />
         </marker>
       </defs>
-      <polyline
-        points={points}
-        className={`${getEdgeStyle(edge.type)} stroke-2 fill-none ${selected ? 'stroke-blue-500 drop-shadow-[0_0_4px_rgba(59,130,246,0.7)]' : ''}`}
-        markerEnd="url(#arrowhead)"
-        style={{ cursor: 'pointer', pointerEvents: 'all' }}
-        onClick={e => {
-          e.stopPropagation();
-          console.log('edge click', { edgeId: edge.id });
-          onSelect?.(edge);
-        }}
-      />
+      <g>
+        <polyline
+          points={points}
+          stroke="transparent"
+          strokeWidth={10}
+          fill="none"
+          style={{ pointerEvents: 'stroke' }}
+          onClick={e => {
+            e.stopPropagation();
+            onSelect?.(edge);
+          }}
+          onDoubleClick={e => {
+            e.stopPropagation();
+            onSelect?.(edge);
+            if (!canvasRef.current) return;
+            const rect = canvasRef.current.getBoundingClientRect();
+            const scale = parseFloat(getComputedStyle(canvasRef.current).transform.split(',')[0].split('(')[1]) || 1;
+            const x = (e.clientX - rect.left) / scale;
+            const y = (e.clientY - rect.top) / scale;
+            setInlineEdit({ x, y, value: edge.label || '' });
+          }}
+        />
+        <polyline
+          points={points}
+          className={`${getEdgeStyle(edge.type)} stroke-2 fill-none ${selected ? 'stroke-blue-500 drop-shadow-[0_0_4px_rgba(59,130,246,0.7)]' : ''}`}
+          markerEnd="url(#arrowhead)"
+          style={{ cursor: 'pointer', pointerEvents: 'none' }}
+        />
+      </g>
       {edge.label && (
         (() => {
           // Posição base do label (meio da linha)
@@ -284,6 +323,36 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
             </g>
           );
         })()
+      )}
+      {inlineEdit && (
+        <foreignObject x={inlineEdit.x - 60} y={inlineEdit.y - 16} width={120} height={32} style={{ overflow: 'visible', position: 'absolute', zIndex: 10000 }}>
+          <input
+            id={`label-input-${edge.id}`}
+            name={`label-input-${edge.id}`}
+            type="text"
+            value={inlineEdit.value}
+            onChange={e => setInlineEdit({ ...inlineEdit, value: e.target.value })}
+            onBlur={() => {
+              // Salva o label
+              if (inlineEdit.value.trim() !== '') {
+                const event = new CustomEvent('updateEdgeLabel', { detail: { edgeId: edge.id, label: inlineEdit.value } });
+                window.dispatchEvent(event);
+              }
+              setInlineEdit(null);
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                if (inlineEdit.value.trim() !== '') {
+                  const event = new CustomEvent('updateEdgeLabel', { detail: { edgeId: edge.id, label: inlineEdit.value } });
+                  window.dispatchEvent(event);
+                }
+                setInlineEdit(null);
+              }
+            }}
+            style={{ width: '100%', fontSize: 16, fontWeight: 'bold', color: '#fff', background: '#23272e', border: '1px solid #4b5563', borderRadius: 4, padding: '2px 8px', outline: 'none' }}
+            autoFocus
+          />
+        </foreignObject>
       )}
     </svg>
   );
