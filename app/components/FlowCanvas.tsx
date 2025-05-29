@@ -377,6 +377,13 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     };
   }, [edges, onEdgesChange]);
 
+  const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setSelectedNode?.(null);
+      onEdgeSelect?.(null);
+    }
+  };
+
   return (
     <div
       ref={canvasRef}
@@ -425,6 +432,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           transformOrigin: '0 0',
           zIndex: 1,
         }}
+        onClick={handleCanvasClick}
       >
         {/* Grid de fundo SVG infinito agora dentro do container escalado */}
         <svg
