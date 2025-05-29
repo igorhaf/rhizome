@@ -9,6 +9,7 @@ interface FlowNodeProps {
   onConnectionStart?: (nodeId: string, connectorId: string) => void;
   onConnectionEnd?: (nodeId: string, connectorId: string) => void;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   selected?: boolean;
 }
 
@@ -18,6 +19,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   onConnectionStart,
   onConnectionEnd,
   onClick,
+  onDoubleClick,
   selected = false,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -430,6 +432,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         minWidth: 0,
       }}
       onMouseDown={handleMouseDown}
+      onDoubleClick={onDoubleClick}
     >
       {renderConnectors()}
       <div className="flex flex-col items-center">

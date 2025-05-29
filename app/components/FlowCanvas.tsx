@@ -15,6 +15,7 @@ interface FlowCanvasProps {
   selectedEdgeId?: string | null;
   onEdgeSelect?: (edgeId: string | null) => void;
   setSelectedNode?: (node: Node | null) => void;
+  onNodeDoubleClick?: (node: Node) => void;
 }
 
 // Função utilitária: grid, obstáculos e BFS ortogonal (copiada do FlowEdge)
@@ -122,6 +123,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   selectedEdgeId,
   onEdgeSelect,
   setSelectedNode,
+  onNodeDoubleClick,
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -571,6 +573,11 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
               setSelectedNode?.(node);
               onEdgeSelect?.(null);
               onNodeClick?.(node);
+            }}
+            onDoubleClick={() => {
+              if (typeof onNodeDoubleClick === 'function') {
+                onNodeDoubleClick(node);
+              }
             }}
             selected={selectedNode?.id === node.id}
           />
