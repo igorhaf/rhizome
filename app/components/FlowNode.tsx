@@ -151,11 +151,15 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     });
   };
 
-  // Cleanup defensivo (caso listeners fiquem presos)
+  // Adiciona um efeito para garantir que mouseup global sempre limpa conexão
   useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      setIsConnecting(false);
+      setActiveConnector(null);
+    };
+    window.addEventListener('mouseup', handleGlobalMouseUp);
     return () => {
-      window.removeEventListener('mousemove', () => {});
-      window.removeEventListener('mouseup', () => {});
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
   }, []);
 

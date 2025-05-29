@@ -12,6 +12,9 @@ interface FlowCanvasProps {
   onEdgesChange: (edges: Edge[]) => void;
   onNodeClick?: (node: Node) => void;
   selectedNode?: Node | null;
+  selectedEdgeId?: string | null;
+  onEdgeSelect?: (edgeId: string | null) => void;
+  setSelectedNode?: (node: Node | null) => void;
 }
 
 // Função utilitária: grid, obstáculos e BFS ortogonal (copiada do FlowEdge)
@@ -116,6 +119,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   onEdgesChange,
   onNodeClick,
   selectedNode,
+  selectedEdgeId,
+  onEdgeSelect,
+  setSelectedNode,
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -126,8 +132,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
   const [tempEdge, setTempEdge] = useState<{ x: number; y: number } | null>(null);
-  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
-  const [editingLabel, setEditingLabel] = useState<string>('');
   const [selectedLabelEdgeId, setSelectedLabelEdgeId] = useState<string | null>(null);
   const [editingLabelEdgeId, setEditingLabelEdgeId] = useState<string | null>(null);
   const [editingLabelValue, setEditingLabelValue] = useState<string>('');
@@ -287,13 +291,12 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
   // Função para selecionar uma edge
   const handleEdgeSelect = (edge: Edge) => {
-    setSelectedEdgeId(edge.id);
-    setEditingLabel(edge.label || '');
+    onEdgeSelect?.(edge.id);
+    setSelectedNode?.(null);
   };
 
   // Função para atualizar o label da edge
   const handleEdgeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditingLabel(e.target.value);
     if (selectedEdgeId) {
       const updatedEdges = edges.map(edge =>
         edge.id === selectedEdgeId ? { ...edge, label: e.target.value } : edge
@@ -304,7 +307,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
   // Função para desfocar input
   const handleEdgeLabelBlur = () => {
-    setSelectedEdgeId(null);
+    onEdgeSelect?.(null);
   };
 
   // Atualiza o labelOffset da edge ao arrastar o label
@@ -327,13 +330,14 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   // Handler para selecionar label para arrasto
   const handleLabelSelect = (edge: Edge) => {
     console.log('handleLabelSelect', edge.id);
-    setSelectedEdgeId(null); // Desmarca a seta
+    onEdgeSelect?.(null);
     setSelectedLabelEdgeId(edge.id);
   };
 
   // Handler para deselecionar label
   const handleLabelDeselect = () => {
     console.log('handleLabelDeselect');
+    onEdgeSelect?.(null);
     setSelectedLabelEdgeId(null);
   };
 
@@ -482,9 +486,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
                 sourcePosition={sourceNode?.position}
                 targetPosition={targetNode?.position}
                 nodes={nodes}
-                onSelect={e => {
+                onSelect={() => {
                   handleLabelDeselect();
-                  handleEdgeSelect(e);
+                  handleEdgeSelect(edge);
                 }}
                 selected={selectedEdgeId === edge.id}
                 labelSelected={selectedLabelEdgeId === edge.id}
@@ -564,6 +568,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             onConnectionEnd={handleConnectionEnd}
             onClick={() => {
               handleLabelDeselect();
+              setSelectedNode?.(node);
+              onEdgeSelect?.(null);
               onNodeClick?.(node);
             }}
             selected={selectedNode?.id === node.id}

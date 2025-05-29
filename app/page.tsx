@@ -16,6 +16,7 @@ export default function Home() {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
 
   const handleNodeAdd = (type: NodeType) => {
     const newNode: Node = {
@@ -106,6 +107,12 @@ export default function Home() {
 
   const handleNodeClick = (node: Node) => {
     setSelectedNode(node);
+    setSelectedEdgeId(null);
+  };
+
+  const handleEdgeSelect = (edgeId: string | null) => {
+    setSelectedEdgeId(edgeId);
+    setSelectedNode(null);
   };
 
   const handleNodeUpdate = (updatedNode: Node) => {
@@ -128,6 +135,9 @@ export default function Home() {
           onEdgesChange={handleEdgesChange}
           onNodeClick={handleNodeSelect}
           selectedNode={selectedNode}
+          selectedEdgeId={selectedEdgeId}
+          onEdgeSelect={handleEdgeSelect}
+          setSelectedNode={setSelectedNode}
         />
       </div>
       {selectedNode && (
