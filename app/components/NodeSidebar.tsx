@@ -7,9 +7,10 @@ interface NodeSidebarProps {
   node: Node | null;
   onUpdate: (updated: Node) => void;
   onClose: () => void;
+  canClose?: boolean;
 }
 
-const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) => {
+const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose, canClose }) => {
   const [localNode, setLocalNode] = useState<Node | null>(node);
   const [visible, setVisible] = useState(false);
   const [showQueryModal, setShowQueryModal] = useState(false);
@@ -78,7 +79,9 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
       >
         <div className="flex justify-between items-center mb-1 sticky top-0 bg-[#1e1e1e] z-10">
           <h3 className="text-base font-semibold text-gray-200">Propriedades do Nó</h3>
-          <button onClick={handleClose} className="text-gray-500 hover:text-red-400 text-lg px-1">×</button>
+          {canClose !== false && (
+            <button onClick={handleClose} className="text-gray-500 hover:text-red-400 text-lg px-1">×</button>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-xs text-gray-400">Nome</label>
@@ -108,15 +111,6 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
           />
           <label className="text-xs text-gray-400">ID</label>
           <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
-          {/* Botão para abrir o modal de configuração da consulta */}
-          {(localNode.type === 'Database') && (
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => setShowQueryModal(true)}
-            >
-              Configurar Consulta
-            </button>
-          )}
         </div>
         <style jsx>{`
           aside::-webkit-scrollbar {

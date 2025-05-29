@@ -42,6 +42,8 @@ export interface Node {
     conditionExpression?: string;
     inputVars?: string;
     outputVars?: string;
+    databaseConfig?: any;
+    queryInterface?: any;
   };
 }
 

@@ -14,126 +14,152 @@ interface DatabaseConfig {
 interface DatabaseQueryModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (config: DatabaseConfig) => void;
+  onSave?: (config: DatabaseConfig) => void;
+  inline?: boolean;
 }
 
-const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, onSave }) => {
-  const [step, setStep] = useState(1);
-  const [config, setConfig] = useState<DatabaseConfig>({
-    type: 'postgresql',
-    host: '',
-    port: '',
-    database: '',
-    username: '',
-    password: '',
-  });
-
+const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, onSave, inline }) => {
   if (!open) return null;
 
-  const handleNext = () => {
-    if (step < 2) {
-      setStep(step + 1);
-    } else {
-      onSave(config);
-      onClose();
-    }
-  };
+  // Tela única: edição de consulta SQL, entradas e saídas
+  const [inputs, setInputs] = useState([
+    { name: 'user_id', type: 'Número' },
+    { name: 'status', type: 'Texto' },
+  ]);
+  const [outputs, setOutputs] = useState([
+    { name: 'lista_pedidos', returnType: 'Lista de registros' },
+  ]);
+  const [query, setQuery] = useState<string>(
+    'SELECT td, descricao, valor_total\nFROM pedidos\nWHERE usuario_id = :user_id\nAND status = :status'
+  );
 
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
+  const handleAddInput = () => setInputs([...inputs, { name: '', type: 'Texto' }]);
+  const handleRemoveInput = (idx: number) => setInputs(inputs.filter((_, i) => i !== idx));
+  const handleInputChange = (idx: number, field: 'name' | 'type', value: string) => setInputs(inputs.map((input, i) => i === idx ? { ...input, [field]: value } : input));
+  const handleAddOutput = () => setOutputs([...outputs, { name: '', returnType: 'Texto' }]);
+  const handleRemoveOutput = (idx: number) => setOutputs(outputs.filter((_, i) => i !== idx));
+  const handleOutputChange = (idx: number, field: 'name' | 'returnType', value: string) => setOutputs(outputs.map((output, i) => i === idx ? { ...output, [field]: value } : output));
+  const handleSave = () => { if (onSave) onSave({ inputs, outputs, query }); onClose(); };
 
-  const handleConfigChange = (field: keyof DatabaseConfig, value: any) => {
-    setConfig(prev => ({ ...prev, [field]: value }));
-  };
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Selecione o Banco de Dados</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {(['postgresql', 'mysql', 'mongodb', 'sqlite'] as DatabaseType[]).map((type) => (
-                <button
-                  key={type}
-                  className={`p-4 rounded-lg border ${
-                    config.type === type
-                      ? 'border-blue-500 bg-blue-500/10'
-                      : 'border-[#333] hover:border-blue-500/50'
-                  }`}
-                  onClick={() => handleConfigChange('type', type)}
-                >
-                  <div className="text-white font-medium capitalize">{type}</div>
-                </button>
-              ))}
-            </div>
+  const content = (
+    <div className="w-full flex flex-col gap-8 p-0">
+      {/* Entradas da Consulta */}
+      <div className="mb-5 w-full">
+        <div className="font-semibold mb-1 text-gray-200 text-sm">Entradas da Consulta</div>
+        <div className="text-gray-400 text-xs mb-2">Variáveis que serão usadas como parâmetros na consulta.</div>
+        <table className="w-full text-xs border border-[#222] mb-2 rounded overflow-hidden">
+          <thead>
+            <tr className="bg-[#23272e] border-b border-[#222]">
+              <th className="py-1 px-2 text-left font-medium text-gray-400">Nome</th>
+              <th className="py-1 px-2 text-left font-medium text-gray-400">Tipo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {inputs.map((input, idx) => (
+              <tr key={idx} className="border-b border-[#23272e]">
+                <td className="py-1 px-2">
+                  <input
+                    className="border border-[#222] rounded px-2 py-1.5 w-full bg-[#23272e] text-gray-100 placeholder-gray-500 text-sm focus:outline-none"
+                    value={input.name}
+                    onChange={e => handleInputChange(idx, 'name', e.target.value)}
+                    placeholder="Nome"
+                  />
+                </td>
+                <td className="py-1 px-2">
+                  <select
+                    className="border border-[#222] rounded px-2 py-1.5 w-full bg-[#23272e] text-gray-100 text-sm focus:outline-none"
+                    value={input.type}
+                    onChange={e => handleInputChange(idx, 'type', e.target.value)}
+                  >
+                    <option value="Texto">Texto</option>
+                    <option value="Número">Número</option>
+                  </select>
+                </td>
+                <td className="py-1 px-2">
+                  {inputs.length > 1 && (
+                    <button className="text-red-500 text-lg" onClick={() => handleRemoveInput(idx)}>×</button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button className="flex items-center text-blue-500 hover:underline text-xs mt-1" onClick={handleAddInput}>
+          <span className="text-lg mr-1">+</span> Adicionar Entrada
+        </button>
+      </div>
+      {/* Consulta SQL */}
+      <div className="mb-5 w-full">
+        <div className="font-semibold mb-1 text-gray-200 text-sm">Consulta SQL</div>
+        <div className="text-gray-400 text-xs mb-2">Escreva a consulta, utilizando os nomes das variáveis de entrada precedidos por dois pontos (:)</div>
+        <div className="flex gap-2 w-full">
+          <textarea
+            className="border border-[#222] rounded px-2 py-1.5 w-full min-w-0 font-mono text-blue-200 bg-[#181c23] text-sm focus:outline-none"
+            rows={5}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
+          <div className="flex flex-col gap-2 min-w-[140px] w-48">
+            <button className="border border-[#222] rounded px-3 py-1.5 w-full bg-[#23272e] text-gray-200 hover:bg-[#181c23] text-xs">Validar Sintaxe</button>
+            <button className="border border-[#222] rounded px-3 py-1.5 w-full bg-[#23272e] text-gray-200 hover:bg-[#181c23] text-xs">Testar com dados simulados</button>
           </div>
-        );
+        </div>
+      </div>
+      {/* Variáveis de Saída */}
+      <div className="mb-5 w-full">
+        <div className="font-semibold mb-1 text-gray-200 text-sm">Variáveis de Saida</div>
+        <div className="text-gray-400 text-xs mb-2">Defina como os dados retornados pela consulta serão armazenados.</div>
+        <table className="w-full text-xs border border-[#222] mb-2 rounded overflow-hidden">
+          <thead>
+            <tr className="bg-[#23272e] border-b border-[#222]">
+              <th className="py-1 px-2 text-left font-medium text-gray-400">Nome da variável</th>
+              <th className="py-1 px-2 text-left font-medium text-gray-400">Tipo de retorno</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {outputs.map((output, idx) => (
+              <tr key={idx} className="border-b border-[#23272e]">
+                <td className="py-1 px-2">
+                  <input
+                    className="border border-[#222] rounded px-2 py-1.5 w-full bg-[#23272e] text-gray-100 placeholder-gray-500 text-sm focus:outline-none"
+                    value={output.name}
+                    onChange={e => handleOutputChange(idx, 'name', e.target.value)}
+                    placeholder="Nome da variável"
+                  />
+                </td>
+                <td className="py-1 px-2">
+                  <input
+                    className="border border-[#222] rounded px-2 py-1.5 w-full bg-[#23272e] text-gray-100 placeholder-gray-500 text-sm focus:outline-none"
+                    value={output.returnType}
+                    onChange={e => handleOutputChange(idx, 'returnType', e.target.value)}
+                    placeholder="Tipo de retorno"
+                  />
+                </td>
+                <td className="py-1 px-2">
+                  {outputs.length > 1 && (
+                    <button className="text-red-500 text-lg" onClick={() => handleRemoveOutput(idx)}>×</button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button className="flex items-center text-blue-500 hover:underline text-xs mt-1" onClick={handleAddOutput}>
+          <span className="text-lg mr-1">+</span> Adicionar Saida
+        </button>
+      </div>
+      <div className="flex justify-end gap-2 mt-6 w-full">
+        <button className="px-4 py-2 rounded bg-[#23272e] text-gray-300 border border-[#222] hover:bg-[#181c23] text-sm" onClick={onClose}>Cancelar</button>
+        <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 text-sm" onClick={handleSave}>Salvar</button>
+      </div>
+    </div>
+  );
 
-      case 2:
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Configuração da Conexão</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-sm text-gray-400">Host</label>
-                <input
-                  type="text"
-                  className="w-full mt-1 border border-[#333] rounded px-3 py-2 bg-[#1e1e1e] text-white"
-                  value={config.host}
-                  onChange={(e) => handleConfigChange('host', e.target.value)}
-                  placeholder="localhost"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-400">Porta</label>
-                <input
-                  type="text"
-                  className="w-full mt-1 border border-[#333] rounded px-3 py-2 bg-[#1e1e1e] text-white"
-                  value={config.port}
-                  onChange={(e) => handleConfigChange('port', e.target.value)}
-                  placeholder={config.type === 'postgresql' ? '5432' : '3306'}
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-400">Nome do Banco</label>
-                <input
-                  type="text"
-                  className="w-full mt-1 border border-[#333] rounded px-3 py-2 bg-[#1e1e1e] text-white"
-                  value={config.database}
-                  onChange={(e) => handleConfigChange('database', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-400">Usuário</label>
-                <input
-                  type="text"
-                  className="w-full mt-1 border border-[#333] rounded px-3 py-2 bg-[#1e1e1e] text-white"
-                  value={config.username}
-                  onChange={(e) => handleConfigChange('username', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-400">Senha</label>
-                <input
-                  type="password"
-                  className="w-full mt-1 border border-[#333] rounded px-3 py-2 bg-[#1e1e1e] text-white"
-                  value={config.password}
-                  onChange={(e) => handleConfigChange('password', e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
+  if (inline) {
+    return content;
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
       <div className="bg-[#23272e] rounded-lg p-8 w-[600px] max-w-full shadow-xl">
@@ -141,47 +167,7 @@ const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, 
           <h2 className="text-xl font-bold text-white">Configuração da Consulta de Dados</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-red-400 text-lg px-1">×</button>
         </div>
-
-        <div className="mb-6">
-          <div className="flex justify-between items-center">
-            {[1, 2].map((stepNumber) => (
-              <React.Fragment key={stepNumber}>
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    step >= stepNumber ? 'bg-blue-500' : 'bg-[#333]'
-                  }`}
-                >
-                  <span className="text-white">{stepNumber}</span>
-                </div>
-                {stepNumber < 2 && (
-                  <div
-                    className={`flex-1 h-1 mx-2 ${
-                      step > stepNumber ? 'bg-blue-500' : 'bg-[#333]'
-                    }`}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-
-        {renderStep()}
-
-        <div className="flex justify-between mt-8">
-          <button
-            className="px-4 py-2 text-gray-300 hover:text-white"
-            onClick={handleBack}
-            disabled={step === 1}
-          >
-            Voltar
-          </button>
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            onClick={handleNext}
-          >
-            {step === 2 ? 'Salvar' : 'Próximo'}
-          </button>
-        </div>
+        {content}
       </div>
     </div>
   );

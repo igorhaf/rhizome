@@ -10,6 +10,8 @@ import DecisionNodeSidebar from './components/DecisionNodeSidebar';
 import FunctionNodeSidebar from './components/advanced/FunctionNodeSidebar';
 import EmailNodeSidebar from './components/advanced/EmailNodeSidebar';
 import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
+import DatabaseQueryModal from './components/DatabaseQueryModal';
+import QueryInterfaceModal from './components/QueryInterfaceModal';
 import { Node, Edge, NodeType } from './types/flow';
 
 // Definição do tipo de aba
@@ -18,6 +20,7 @@ interface Tab {
   label: string;
   type: string;
   content: Node | null;
+  mode: 'canvas' | 'screen';
 }
 
 // SVGs dos ícones (agora com azul VSCode)
@@ -35,6 +38,58 @@ const SubprocessIcon = (
   </svg>
 );
 
+// Componente para configuração do banco de dados na aba
+const DatabaseConfigTab: React.FC<{ node: Node; setNodes: React.Dispatch<React.SetStateAction<Node[]>> }> = ({ node, setNodes }) => {
+  const [showQuery, setShowQuery] = React.useState(true);
+  const [localNode, setLocalNode] = React.useState<Node>(() => ({ ...node, id: node.id || '' }));
+
+  const handleSaveQueryConfig = (config: any) => {
+    const updated: Node = {
+      ...localNode,
+      id: localNode.id || '',
+      data: {
+        ...localNode.data,
+        databaseConfig: config,
+      },
+    };
+    setLocalNode(updated);
+    setNodes(nodes => nodes.map(n => n.id === updated.id ? updated : n));
+    setShowQuery(false);
+  };
+  const handleSaveInterfaceConfig = (interfaceConfig: any) => {
+    const updated: Node = {
+      ...localNode,
+      id: localNode.id || '',
+      data: {
+        ...localNode.data,
+        queryInterface: interfaceConfig,
+      },
+    };
+    setLocalNode(updated);
+    setNodes(nodes => nodes.map(n => n.id === updated.id ? updated : n));
+  };
+
+  return (
+    <div className="flex flex-col h-full w-full bg-[#1e2228] px-0 pt-8 pb-8 text-white overflow-auto">
+      <h2 className="text-xl font-semibold mb-4">Configuração do Banco de Dados</h2>
+      {showQuery ? (
+        <DatabaseQueryModal
+          open={true}
+          onClose={() => {}}
+          inline={true}
+        />
+      ) : (
+        <QueryInterfaceModal
+          open={true}
+          onClose={() => setShowQuery(true)}
+          onSave={handleSaveInterfaceConfig}
+          inline={true}
+        />
+      )}
+    </div>
+  );
+};
+
 export default function Home() {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -43,19 +98,29 @@ export default function Home() {
 
   // Sistema de abas
   const [tabs, setTabs] = useState<Tab[]>([
-    { id: 'main', label: 'Main', type: 'main', content: null },
+    { id: 'main', label: 'Main', type: 'main', content: null, mode: 'canvas' },
   ]);
   const [activeTab, setActiveTab] = useState('main');
 
   // Handler para abrir subprocesso em nova aba
   const handleNodeDoubleClick = (node: Node) => {
-    if (node.type === 'subprocess') {
-      // Se já existe uma aba para esse subprocesso, ativa
+    if (node.type === 'subprocess' || node.type === 'Database') {
+      // Se já existe uma aba para esse nó, ativa
       const existing = tabs.find(tab => tab.id === node.id);
+      if (node.type === 'Database') setSelectedNode(null); // Garante que não há sidebar na aba de config
       if (existing) {
         setActiveTab(existing.id);
       } else {
-        setTabs([...tabs, { id: node.id, label: node.data.label || 'Subprocesso', type: 'subprocess', content: node }]);
+        setTabs([
+          ...tabs,
+          {
+            id: node.id,
+            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : 'Database'),
+            type: node.type === 'subprocess' ? 'subprocess' : 'database',
+            content: node,
+            mode: node.type === 'subprocess' ? 'screen' : 'screen',
+          },
+        ]);
         setActiveTab(node.id);
       }
     }
@@ -99,6 +164,15 @@ export default function Home() {
       return (
         <div className="flex items-center justify-center h-full text-2xl text-white">
           eu sou um subprocesso
+        </div>
+      );
+    }
+    if (tab.type === 'database') {
+      return (
+        <div
+          className="flex-1 h-full flex flex-col px-8 pt-8 pb-8 overflow-auto"
+        >
+          <DatabaseConfigTab node={tab.content as Node} setNodes={setNodes} />
         </div>
       );
     }
@@ -209,6 +283,10 @@ export default function Home() {
     setNodes(newNodes);
   };
 
+  // Determina se a aba ativa é canvas
+  const activeTabObj = tabs.find(t => t.id === activeTab);
+  const isCanvasTab = activeTabObj?.mode === 'canvas';
+
   return (
     <div className="flex h-screen bg-[#e5e7eb]">
       <div className="relative z-50">
@@ -275,7 +353,8 @@ export default function Home() {
           {renderTabContent()}
         </div>
       </div>
-      {selectedNode && (
+      {/* Sidebar direito só aparece se a aba ativa for CANVAS */}
+      {isCanvasTab && selectedNode && (
         selectedNode.type === 'end' ? (
           <EndNodeSidebar
             node={selectedNode}
@@ -311,6 +390,7 @@ export default function Home() {
             node={selectedNode}
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}
+            canClose={true}
           />
         )
       )}
