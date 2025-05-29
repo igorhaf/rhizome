@@ -23,6 +23,7 @@ interface FlowEdgeProps {
 
 // Tamanho visual do nó (deve bater com o SVG e o CSS)
 const NODE_SIZE = 56; // ajuste conforme necessário
+const CONNECTOR_RADIUS = 8; // Raio visual do conector
 
 const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes, onSelect, selected, labelSelected, onLabelSelect, onLabelDeselect, onLabelEdit, editingLabel, editingLabelValue, setEditingLabelValue, onLabelEditSave }) => {
   const pathRef = useRef<SVGPathElement>(null);
@@ -80,10 +81,10 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     // node.position já é o centro do nó
     const { x, y } = node.position;
     switch (connectorId) {
-      case 'top': return { x, y: y - NODE_SIZE / 2 };
-      case 'right': return { x: x + NODE_SIZE / 2, y };
-      case 'bottom': return { x, y: y + NODE_SIZE / 2 };
-      case 'left': return { x: x - NODE_SIZE / 2, y };
+      case 'top': return { x, y: y - NODE_SIZE / 2 + 4 };
+      case 'right': return { x: x + NODE_SIZE / 2 - 4, y };
+      case 'bottom': return { x, y: y + NODE_SIZE / 2 - 4 };
+      case 'left': return { x: x - NODE_SIZE / 2 + 4, y };
       default: return { x, y };
     }
   }

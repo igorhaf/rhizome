@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Node } from '../types/flow';
+import QueryInterfaceModal from './QueryInterfaceModal';
+import BusinessRulesModal from './BusinessRulesModal';
 
 interface DecisionNodeSidebarProps {
   node: Node | null;
@@ -10,6 +12,7 @@ interface DecisionNodeSidebarProps {
 const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
   const [localNode, setLocalNode] = useState<Node | null>(node);
   const [visible, setVisible] = useState(false);
+  const [showBusinessRules, setShowBusinessRules] = useState(false);
 
   React.useEffect(() => {
     setLocalNode(node);
@@ -38,68 +41,80 @@ const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdat
   };
 
   return (
-    <aside
-      className={`fixed top-0 right-0 h-full w-96 bg-[#1e1e1e] border-l border-[#222] p-6 z-50 flex flex-col
-        transform transition-transform duration-200 ease-in-out
-        ${visible ? 'translate-x-0' : 'translate-x-full'}`}
-      style={{ maxHeight: '100vh', overflowY: 'auto' }}
-    >
-      <div className="flex justify-between items-center mb-1 sticky top-0 bg-[#1e1e1e] z-10">
-        <h3 className="text-base font-semibold text-gray-200">Configurações da Decisão</h3>
-        <button onClick={handleClose} className="text-gray-500 hover:text-red-400 text-lg px-1">×</button>
-      </div>
-      <div className="flex flex-col gap-2">
-        <label className="text-xs text-gray-400">Nome</label>
-        <input
-          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-          value={data['label']}
-          onChange={e => handleChange('label', e.target.value)}
-        />
-        <label className="text-xs text-gray-400">Descrição</label>
-        <textarea
-          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-          value={data['description'] || ''}
-          onChange={e => handleChange('description', e.target.value)}
-        />
-        <label className="text-xs text-gray-400">Expressão de Condição</label>
-        <input
-          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-          value={data['conditionExpression'] || ''}
-          onChange={e => handleChange('conditionExpression', e.target.value)}
-          placeholder="Ex: x > 10 && y < 5"
-        />
-        <label className="text-xs text-gray-400">Variáveis de Entrada</label>
-        <input
-          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-          value={data['inputVars'] || ''}
-          onChange={e => handleChange('inputVars', e.target.value)}
-          placeholder="Ex: x, y"
-        />
-        <label className="text-xs text-gray-400">Variáveis de Saída</label>
-        <input
-          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-          value={data['outputVars'] || ''}
-          onChange={e => handleChange('outputVars', e.target.value)}
-          placeholder="Ex: resultado"
-        />
-        <label className="flex items-center gap-2 mt-1 text-gray-400 text-xs">
+    <>
+      <aside
+        className={`fixed top-0 right-0 h-full w-96 bg-[#1e1e1e] border-l border-[#222] p-6 z-50 flex flex-col
+          transform transition-transform duration-200 ease-in-out
+          ${visible ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{ maxHeight: '100vh', overflowY: 'auto' }}
+      >
+        <div className="flex justify-between items-center mb-1 sticky top-0 bg-[#1e1e1e] z-10">
+          <h3 className="text-base font-semibold text-gray-200">Configurações da Decisão</h3>
+          <button onClick={handleClose} className="text-gray-500 hover:text-red-400 text-lg px-1">×</button>
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-xs text-gray-400">Nome</label>
           <input
-            type="checkbox"
-            className="w-4 h-4 rounded border-[#222] bg-[#23272e] text-blue-500 focus:ring-blue-500"
-            checked={!!data['shouldLog']}
-            onChange={e => handleChange('shouldLog', e.target.checked)}
+            className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+            value={data['label']}
+            onChange={e => handleChange('label', e.target.value)}
           />
-          Registrar no Log
-        </label>
-        <label className="text-xs font-medium mt-1 text-gray-400">Notas</label>
-        <textarea
-          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-          value={data['notes'] || ''}
-          onChange={e => handleChange('notes', e.target.value)}
+          <label className="text-xs text-gray-400">Descrição</label>
+          <textarea
+            className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+            value={data['description'] || ''}
+            onChange={e => handleChange('description', e.target.value)}
+          />
+          <label className="flex items-center gap-2 mt-1 text-gray-400 text-xs">
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded border-[#222] bg-[#23272e] text-blue-500 focus:ring-blue-500"
+              checked={!!data['shouldLog']}
+              onChange={e => handleChange('shouldLog', e.target.checked)}
+            />
+            Registrar no Log
+          </label>
+          <label className="text-xs font-medium mt-1 text-gray-400">Notas</label>
+          <textarea
+            className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+            value={data['notes'] || ''}
+            onChange={e => handleChange('notes', e.target.value)}
+          />
+          <label className="text-xs text-gray-400">ID</label>
+          <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
+          <button
+            className="px-3 py-1.5 rounded bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 w-fit self-end mb-2"
+            onClick={() => setShowBusinessRules(true)}
+            type="button"
+          >
+            Parâmetros/Regras
+          </button>
+        </div>
+      </aside>
+      {showBusinessRules && (
+        <BusinessRulesModal
+          open={showBusinessRules}
+          onClose={() => setShowBusinessRules(false)}
+          onSave={data => {
+            handleChange('conditions', data.conditions);
+            handleChange('inputVars', data.inputVars);
+            handleChange('outputVars', data.outputVars);
+            handleChange('testWithSimData', data.testWithSimData);
+            handleChange('notes', data.notes);
+            setShowBusinessRules(false);
+          }}
+          initialData={{
+            conditions: (data as any).conditions || [],
+            inputVars: data.inputVars || '',
+            outputVars: data.outputVars || '',
+            testWithSimData: (data as any).testWithSimData ?? true,
+            notes: data.notes || '',
+          }}
+          blockName={data.label || ''}
+          blockId={localNode.id}
+          blockDescription={data.description || ''}
         />
-        <label className="text-xs text-gray-400">ID</label>
-        <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm" value={localNode.id} readOnly />
-      </div>
+      )}
       <style jsx>{`
         aside::-webkit-scrollbar {
           width: 7px;
@@ -115,7 +130,7 @@ const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdat
           background: transparent;
         }
       `}</style>
-    </aside>
+    </>
   );
 };
 
