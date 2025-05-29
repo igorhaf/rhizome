@@ -453,6 +453,26 @@ export default function Home() {
   const activeTabObj = tabs.find(t => t.id === activeTab);
   const isCanvasTab = activeTabObj?.mode === 'canvas';
 
+  // Handler global para deletar nó ou aresta selecionada
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedNode) {
+          // Remove o nó e todas as edges ligadas a ele
+          setNodes(prevNodes => prevNodes.filter(n => n.id !== selectedNode.id));
+          setEdges(prevEdges => prevEdges.filter(e => e.source !== selectedNode.id && e.target !== selectedNode.id));
+          setSelectedNode(null);
+        } else if (selectedEdgeId) {
+          // Remove apenas a edge selecionada
+          setEdges(prevEdges => prevEdges.filter(e => e.id !== selectedEdgeId));
+          setSelectedEdgeId(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedNode, selectedEdgeId]);
+
   return (
     <div className="flex h-screen bg-[#e5e7eb]">
       <div className="relative z-50">
