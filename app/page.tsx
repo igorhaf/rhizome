@@ -70,7 +70,7 @@ const DatabaseConfigTab: React.FC<{ node: Node; setNodes: React.Dispatch<React.S
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#1e2228] px-0 pt-8 pb-8 text-white overflow-auto">
+    <div className="flex flex-col h-full px-8 pt-8 pb-8 text-white overflow-auto">
       <h2 className="text-xl font-semibold mb-4">Configuração do Banco de Dados</h2>
       {showQuery ? (
         <DatabaseQueryModal
@@ -90,6 +90,167 @@ const DatabaseConfigTab: React.FC<{ node: Node; setNodes: React.Dispatch<React.S
   );
 };
 
+// Componente de configuração inline para nó Decision
+const DecisionConfigTab: React.FC<{ node: Node; setNodes: React.Dispatch<React.SetStateAction<Node[]>> }> = ({ node, setNodes }) => {
+  type DecisionNodeData = typeof node.data & { 
+    inputVars?: { name: string; type: string }[]; 
+    conditions?: { field: string; operator: string; value: string }[];
+    outputVars?: { name: string; type: string }[];
+  };
+  const data = node.data as DecisionNodeData;
+  const [localNode, setLocalNode] = React.useState<Node>(() => ({ ...node, id: node.id || '' }));
+  const [inputVars, setInputVars] = React.useState<{ name: string; type: string }[]>(data.inputVars || []);
+  const [conditions, setConditions] = React.useState<{ field: string; operator: string; value: string }[]>(data.conditions || []);
+  const [outputVars, setOutputVars] = React.useState<{ name: string; type: string }[]>(data.outputVars || []);
+
+  const handleSave = () => {
+    const updated: Node = {
+      ...localNode,
+      data: {
+        ...(localNode.data as any),
+        inputVars,
+        conditions,
+        outputVars,
+      },
+    };
+    setLocalNode(updated);
+    setNodes(nodes => nodes.map(n => n.id === updated.id ? updated : n));
+  };
+
+  return (
+    <div className="flex flex-col h-full px-8 pt-8 pb-8 text-white overflow-auto bg-[#1e2228]">
+      <h2 className="text-xl font-semibold mb-4">Configuração de Decisão</h2>
+      
+      {/* Variáveis de Entrada */}
+      <div className="mb-6">
+        <div className="font-semibold mb-1 text-gray-200 text-sm">Variáveis de Entrada</div>
+        <div className="flex flex-col gap-2">
+          {inputVars.map((v, i) => (
+            <div key={i} className="flex flex-wrap gap-2 items-center w-full">
+              <input
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-1 min-w-0"
+                value={v.name}
+                onChange={e => {
+                  const newVars = [...inputVars];
+                  newVars[i].name = e.target.value;
+                  setInputVars(newVars);
+                }}
+                placeholder="Nome"
+              />
+              <input
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-1 min-w-0"
+                value={v.type}
+                onChange={e => {
+                  const newVars = [...inputVars];
+                  newVars[i].type = e.target.value;
+                  setInputVars(newVars);
+                }}
+                placeholder="Tipo"
+              />
+              <button className="text-red-500 text-lg flex-none" onClick={() => setInputVars(inputVars.filter((_, idx: number) => idx !== i))}>×</button>
+            </div>
+          ))}
+          <button className="flex items-center text-blue-500 hover:underline text-xs mt-1" onClick={() => setInputVars([...inputVars, { name: '', type: '' }])}>
+            <span className="text-lg mr-1">+</span> Adicionar Variável de Entrada
+          </button>
+        </div>
+      </div>
+
+      {/* Condições */}
+      <div className="mb-6">
+        <div className="font-semibold mb-1 text-gray-200 text-sm">Condições</div>
+        <div className="flex flex-col gap-2">
+          {conditions.map((c, i) => (
+            <div key={i} className="flex flex-wrap gap-2 items-center w-full">
+              <input
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-1 min-w-0"
+                value={c.field}
+                onChange={e => {
+                  const newConditions = [...conditions];
+                  newConditions[i].field = e.target.value;
+                  setConditions(newConditions);
+                }}
+                placeholder="Campo"
+              />
+              <select
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-none"
+                value={c.operator}
+                onChange={e => {
+                  const newConditions = [...conditions];
+                  newConditions[i].operator = e.target.value;
+                  setConditions(newConditions);
+                }}
+                style={{ minWidth: 70 }}
+              >
+                <option value="==">==</option>
+                <option value="!=">!=</option>
+                <option value=">">&gt;</option>
+                <option value="<">&lt;</option>
+                <option value=">=">&gt;=</option>
+                <option value="<=">&lt;=</option>
+                <option value="contains">contém</option>
+              </select>
+              <input
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-1 min-w-0"
+                value={c.value}
+                onChange={e => {
+                  const newConditions = [...conditions];
+                  newConditions[i].value = e.target.value;
+                  setConditions(newConditions);
+                }}
+                placeholder="Valor"
+              />
+              <button className="text-red-500 text-lg flex-none" onClick={() => setConditions(conditions.filter((_, idx: number) => idx !== i))}>×</button>
+            </div>
+          ))}
+          <button className="flex items-center text-blue-500 hover:underline text-xs mt-1" onClick={() => setConditions([...conditions, { field: '', operator: '==', value: '' }])}>
+            <span className="text-lg mr-1">+</span> Adicionar Condição
+          </button>
+        </div>
+      </div>
+
+      {/* Variáveis de Saída */}
+      <div className="mb-6">
+        <div className="font-semibold mb-1 text-gray-200 text-sm">Variáveis de Saída</div>
+        <div className="flex flex-col gap-2">
+          {outputVars.map((v, i) => (
+            <div key={i} className="flex flex-wrap gap-2 items-center w-full">
+              <input
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-1 min-w-0"
+                value={v.name}
+                onChange={e => {
+                  const newVars = [...outputVars];
+                  newVars[i].name = e.target.value;
+                  setOutputVars(newVars);
+                }}
+                placeholder="Nome"
+              />
+              <input
+                className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-100 text-sm focus:outline-none flex-1 min-w-0"
+                value={v.type}
+                onChange={e => {
+                  const newVars = [...outputVars];
+                  newVars[i].type = e.target.value;
+                  setOutputVars(newVars);
+                }}
+                placeholder="Tipo"
+              />
+              <button className="text-red-500 text-lg flex-none" onClick={() => setOutputVars(outputVars.filter((_, idx: number) => idx !== i))}>×</button>
+            </div>
+          ))}
+          <button className="flex items-center text-blue-500 hover:underline text-xs mt-1" onClick={() => setOutputVars([...outputVars, { name: '', type: '' }])}>
+            <span className="text-lg mr-1">+</span> Adicionar Variável de Saída
+          </button>
+        </div>
+      </div>
+
+      <button className="border border-[#222] rounded px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 text-sm self-start" onClick={handleSave}>
+        Salvar
+      </button>
+    </div>
+  );
+};
+
 export default function Home() {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -102,12 +263,12 @@ export default function Home() {
   ]);
   const [activeTab, setActiveTab] = useState('main');
 
-  // Handler para abrir subprocesso em nova aba
+  // Handler para abrir subprocesso ou config de nó em nova aba
   const handleNodeDoubleClick = (node: Node) => {
-    if (node.type === 'subprocess' || node.type === 'Database') {
+    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision') {
       // Se já existe uma aba para esse nó, ativa
-      const existing = tabs.find(tab => tab.id === node.id);
-      if (node.type === 'Database') setSelectedNode(null); // Garante que não há sidebar na aba de config
+      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : 'database'));
+      if (node.type === 'Database' || node.type === 'decision') setSelectedNode(null); // Garante que não há sidebar na aba de config
       if (existing) {
         setActiveTab(existing.id);
       } else {
@@ -115,10 +276,10 @@ export default function Home() {
           ...tabs,
           {
             id: node.id,
-            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : 'Database'),
-            type: node.type === 'subprocess' ? 'subprocess' : 'database',
+            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : 'Decision'),
+            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : 'database',
             content: node,
-            mode: node.type === 'subprocess' ? 'screen' : 'screen',
+            mode: 'screen',
           },
         ]);
         setActiveTab(node.id);
@@ -169,10 +330,15 @@ export default function Home() {
     }
     if (tab.type === 'database') {
       return (
-        <div
-          className="flex-1 h-full flex flex-col px-8 pt-8 pb-8 overflow-auto"
-        >
+        <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
           <DatabaseConfigTab node={tab.content as Node} setNodes={setNodes} />
+        </div>
+      );
+    }
+    if (tab.type === 'decision-config') {
+      return (
+        <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
+          <DecisionConfigTab node={tab.content as Node} setNodes={setNodes} />
         </div>
       );
     }
