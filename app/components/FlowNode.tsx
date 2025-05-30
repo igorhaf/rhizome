@@ -11,6 +11,15 @@ interface FlowNodeProps {
   onClick?: () => void;
   onDoubleClick?: () => void;
   selected?: boolean;
+  handleConnectorEnter?: (nodeId: string, connectorId: string) => void;
+  handleConnectorLeave?: () => void;
+  handleConnectorMouseDown?: (nodeId: string, connectorId: string, e: React.MouseEvent) => void;
+  activeConnector?: { nodeId: string; connectorId: string } | null;
+  draggingFrom?: { nodeId: string; connectorId: string } | null;
+  draggingTo?: { x: number; y: number } | null;
+  draggingEdgeId?: string | null;
+  draggingEnd?: 'source' | 'target' | null;
+  handleConnectorDrop?: (nodeId: string, connectorId: string) => void;
 }
 
 const FlowNode: React.FC<FlowNodeProps> = ({
@@ -21,11 +30,20 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   onClick,
   onDoubleClick,
   selected = false,
+  handleConnectorEnter,
+  handleConnectorLeave,
+  handleConnectorMouseDown,
+  activeConnector,
+  draggingFrom,
+  draggingTo,
+  draggingEdgeId,
+  draggingEnd,
+  handleConnectorDrop,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const dragOffsetRef = useRef({ x: 0, y: 0 });
   const [isConnecting, setIsConnecting] = useState(false);
-  const [activeConnector, setActiveConnector] = useState<string | null>(null);
+  const [localActiveConnector, setLocalActiveConnector] = useState<string | null>(null);
   const mouseDownPos = useRef<{x: number, y: number} | null>(null);
 
   const handleMouseDown = useCallback(
@@ -96,68 +114,132 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     }
   };
 
-  const handleConnectorMouseDown = useCallback(
-    (e: React.MouseEvent, connectorId: string) => {
-      e.stopPropagation();
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      const nodeElement = document.getElementById(`node-${node.id}`);
-      const connectorElement = document.getElementById(`node-${node.id}-connector-${connectorId}`);
-      const canvasElement = nodeElement?.closest('.w-full.h-full.bg-gray-100.overflow-hidden');
-      const canvasRect = canvasElement?.getBoundingClientRect();
-      const nodeRect = nodeElement?.getBoundingClientRect();
-      const connectorRect = connectorElement?.getBoundingClientRect();
-      setIsConnecting(true);
-      setActiveConnector(connectorId);
-      onConnectionStart?.(node.id, connectorId);
-    },
-    [node.id, onConnectionStart]
-  );
-
   const handleConnectorMouseUp = useCallback(
     (e: React.MouseEvent, connectorId: string) => {
       e.stopPropagation();
-      // Sempre tente finalizar a conexão, mesmo se isConnecting for falso
       onConnectionEnd?.(node.id, connectorId);
-        setIsConnecting(false);
-        setActiveConnector(null);
+      setIsConnecting(false);
+      setLocalActiveConnector(null);
     },
     [node.id, onConnectionEnd]
   );
 
   const renderConnectors = () => {
-    const connectors = [
-      { id: 'top', position: 'top-0 left-1/2', style: { transform: 'translateX(-50%)' } },
-      { id: 'right', position: 'right-0 top-1/2', style: { transform: 'translateY(-50%)' } },
-      { id: 'bottom', position: 'bottom-0 left-1/2', style: { transform: 'translateX(-50%)' } },
-      { id: 'left', position: 'left-0 top-1/2', style: { transform: 'translateY(-50%)' } },
-    ];
-    return connectors.map((connector) => {
-      return (
-      <div
-        key={connector.id}
-          id={`${node.id}-connector-${connector.id}`}
-          className={`absolute w-2 h-2 rounded-full bg-white border border-gray-400 cursor-crosshair hover:bg-blue-400 hover:border-blue-600 transition-colors ${connector.position} ${
-            activeConnector === connector.id ? 'bg-blue-400 border-blue-600 scale-110' : ''
-        }`}
-          style={{ zIndex: 2, ...connector.style }}
-        onMouseDown={(e) => handleConnectorMouseDown(e, connector.id)}
-        onMouseUp={(e) => handleConnectorMouseUp(e, connector.id)}
-          title={`Connect from ${connector.id}`}
+    return (
+      <>
+        <div
+          id={`${node.id}-connector-top`}
+          className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'top' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          onMouseEnter={() => handleConnectorEnter?.(node.id, 'top')}
+          onMouseLeave={handleConnectorLeave}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            setIsConnecting(true);
+            setLocalActiveConnector('top');
+            if (handleConnectorMouseDown) {
+              handleConnectorMouseDown(node.id, 'top', e);
+            }
+            onConnectionStart?.(node.id, 'top');
+          }}
+          onMouseUp={(e) => {
+            e.stopPropagation();
+            setIsConnecting(false);
+            setLocalActiveConnector(null);
+            handleConnectorMouseUp(e, 'top');
+            if (draggingEdgeId && handleConnectorDrop) {
+              handleConnectorDrop(node.id, 'top');
+            }
+          }}
         >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-0.5 h-0.5 bg-gray-400 rounded-full" />
-          </div>
+          <div className="w-0.5 h-0.5 rounded-full bg-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>
-      );
-    });
+        <div
+          id={`${node.id}-connector-right`}
+          className={`absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'right' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          onMouseEnter={() => handleConnectorEnter?.(node.id, 'right')}
+          onMouseLeave={handleConnectorLeave}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            setIsConnecting(true);
+            setLocalActiveConnector('right');
+            if (handleConnectorMouseDown) {
+              handleConnectorMouseDown(node.id, 'right', e);
+            }
+            onConnectionStart?.(node.id, 'right');
+          }}
+          onMouseUp={(e) => {
+            e.stopPropagation();
+            setIsConnecting(false);
+            setLocalActiveConnector(null);
+            handleConnectorMouseUp(e, 'right');
+            if (draggingEdgeId && handleConnectorDrop) {
+              handleConnectorDrop(node.id, 'right');
+            }
+          }}
+        >
+          <div className="w-0.5 h-0.5 rounded-full bg-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        </div>
+        <div
+          id={`${node.id}-connector-bottom`}
+          className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'bottom' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          onMouseEnter={() => handleConnectorEnter?.(node.id, 'bottom')}
+          onMouseLeave={handleConnectorLeave}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            setIsConnecting(true);
+            setLocalActiveConnector('bottom');
+            if (handleConnectorMouseDown) {
+              handleConnectorMouseDown(node.id, 'bottom', e);
+            }
+            onConnectionStart?.(node.id, 'bottom');
+          }}
+          onMouseUp={(e) => {
+            e.stopPropagation();
+            setIsConnecting(false);
+            setLocalActiveConnector(null);
+            handleConnectorMouseUp(e, 'bottom');
+            if (draggingEdgeId && handleConnectorDrop) {
+              handleConnectorDrop(node.id, 'bottom');
+            }
+          }}
+        >
+          <div className="w-0.5 h-0.5 rounded-full bg-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        </div>
+        <div
+          id={`${node.id}-connector-left`}
+          className={`absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'left' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          onMouseEnter={() => handleConnectorEnter?.(node.id, 'left')}
+          onMouseLeave={handleConnectorLeave}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            setIsConnecting(true);
+            setLocalActiveConnector('left');
+            if (handleConnectorMouseDown) {
+              handleConnectorMouseDown(node.id, 'left', e);
+            }
+            onConnectionStart?.(node.id, 'left');
+          }}
+          onMouseUp={(e) => {
+            e.stopPropagation();
+            setIsConnecting(false);
+            setLocalActiveConnector(null);
+            handleConnectorMouseUp(e, 'left');
+            if (draggingEdgeId && handleConnectorDrop) {
+              handleConnectorDrop(node.id, 'left');
+            }
+          }}
+        >
+          <div className="w-0.5 h-0.5 rounded-full bg-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        </div>
+      </>
+    );
   };
 
   // Adiciona um efeito para garantir que mouseup global sempre limpa conexão
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsConnecting(false);
-      setActiveConnector(null);
+      setLocalActiveConnector(null);
     };
     window.addEventListener('mouseup', handleGlobalMouseUp);
     return () => {

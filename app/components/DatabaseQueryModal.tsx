@@ -100,10 +100,6 @@ const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, 
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <div className="flex flex-col gap-2 min-w-[140px] w-48">
-            <button className="border border-[#222] rounded px-3 py-1.5 w-full bg-[#23272e] text-gray-200 hover:bg-[#181c23] text-xs">Validar Sintaxe</button>
-            <button className="border border-[#222] rounded px-3 py-1.5 w-full bg-[#23272e] text-gray-200 hover:bg-[#181c23] text-xs">Testar com dados simulados</button>
-          </div>
         </div>
       </div>
       {/* Variáveis de Saída */}

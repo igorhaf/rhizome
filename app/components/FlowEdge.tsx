@@ -19,13 +19,21 @@ interface FlowEdgeProps {
   editingLabelValue?: string;
   setEditingLabelValue?: (v: string) => void;
   onLabelEditSave?: () => void;
+  onConnectorDragStart?: (edgeId: string, connectorType: 'source' | 'target', connectorData: { nodeId: string; connectorId: string }, connectorPosition: { x: number; y: number }) => void;
+  handleConnectorEnter?: (nodeId: string, connectorId: string) => void;
+  handleConnectorLeave?: () => void;
+  handleConnectorMouseDown?: (nodeId: string, connectorId: string, e: React.MouseEvent) => void;
+  activeConnector?: { nodeId: string; connectorId: string } | null;
+  draggingFrom?: { nodeId: string; connectorId: string } | null;
+  draggingTo?: { x: number; y: number } | null;
+  handleEdgeConnectorDragStart?: (edgeId: string, end: 'source' | 'target', from: { nodeId: string; connectorId: string }, e: React.MouseEvent) => void;
 }
 
 // Tamanho visual do nó (deve bater com o SVG e o CSS)
 const NODE_SIZE = 56; // ajuste conforme necessário
 const CONNECTOR_RADIUS = 8; // Raio visual do conector
 
-const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes, onSelect, selected, labelSelected, onLabelSelect, onLabelDeselect, onLabelEdit, editingLabel, editingLabelValue, setEditingLabelValue, onLabelEditSave }) => {
+const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, targetPosition, nodes, onSelect, selected, labelSelected, onLabelSelect, onLabelDeselect, onLabelEdit, editingLabel, editingLabelValue, setEditingLabelValue, onLabelEditSave, onConnectorDragStart, handleConnectorEnter, handleConnectorLeave, handleConnectorMouseDown, activeConnector, draggingFrom, draggingTo, handleEdgeConnectorDragStart }) => {
   const pathRef = useRef<SVGPathElement>(null);
   const [points, setPoints] = React.useState<string>('');
   const [dragging, setDragging] = useState(false);
@@ -78,13 +86,14 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
 
   // Função para calcular a posição do conector baseado no estado do nó
   function getConnectorPosition(node: Node, connectorId: string) {
-    // node.position já é o centro do nó
     const { x, y } = node.position;
+    const halfSize = NODE_SIZE / 2;
+    
     switch (connectorId) {
-      case 'top': return { x, y: y - NODE_SIZE / 2 + 4 };
-      case 'right': return { x: x + NODE_SIZE / 2 - 4, y };
-      case 'bottom': return { x, y: y + NODE_SIZE / 2 - 4 };
-      case 'left': return { x: x - NODE_SIZE / 2 + 4, y };
+      case 'top': return { x, y: y - halfSize };
+      case 'right': return { x: x + halfSize, y };
+      case 'bottom': return { x, y: y + halfSize };
+      case 'left': return { x: x - halfSize, y };
       default: return { x, y };
     }
   }
@@ -92,14 +101,16 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   useEffect(() => {
     const sourceConnector = edge.data?.sourceConnector || 'right';
     const targetConnector = edge.data?.targetConnector || 'left';
-    // Busca os nós pelo estado
     const sourceNode = nodes?.find(n => n.id === edge.source);
     const targetNode = nodes?.find(n => n.id === edge.target);
+    
     if (!sourceNode || !targetNode) return;
-    // Calcula a posição dos conectores sem depender do DOM
+
+    // Calcula a posição dos conectores
     const start = getConnectorPosition(sourceNode, sourceConnector);
     const end = getConnectorPosition(targetNode, targetConnector);
-    // NÃO aplica panning/scale aqui, pois o container já está transformado
+
+    // Usa o caminho ortogonal com fallback
     const fallbackPoints = fallbackOrthogonal([start.x, start.y], [end.x, end.y]);
     setPoints(fallbackPoints.map(([x, y]) => `${x},${y}`).join(' '));
   }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, nodes]);
@@ -188,6 +199,35 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     };
   }, [edge.id, onLabelEdit, onLabelEditSave]);
 
+  // Calcula posições dos conectores
+  const sourceConnector = edge.data?.sourceConnector || 'right';
+  const targetConnector = edge.data?.targetConnector || 'left';
+  const sourceNode = nodes?.find(n => n.id === edge.source);
+  const targetNode = nodes?.find(n => n.id === edge.target);
+  let sourcePos = { x: 0, y: 0 };
+  let targetPos = { x: 0, y: 0 };
+  const size = 56;
+  if (sourceNode) {
+    const { x, y } = sourceNode.position;
+    switch (sourceConnector) {
+      case 'top': sourcePos = { x, y: y - size / 2 }; break;
+      case 'right': sourcePos = { x: x + size / 2, y }; break;
+      case 'bottom': sourcePos = { x, y: y + size / 2 }; break;
+      case 'left': sourcePos = { x: x - size / 2, y }; break;
+      default: sourcePos = { x, y }; break;
+    }
+  }
+  if (targetNode) {
+    const { x, y } = targetNode.position;
+    switch (targetConnector) {
+      case 'top': targetPos = { x, y: y - size / 2 }; break;
+      case 'right': targetPos = { x: x + size / 2, y }; break;
+      case 'bottom': targetPos = { x, y: y + size / 2 }; break;
+      case 'left': targetPos = { x: x - size / 2, y }; break;
+      default: targetPos = { x, y }; break;
+    }
+  }
+
   return (
     <svg
       className="absolute top-0 left-0 w-full h-full pointer-events-none"
@@ -195,7 +235,7 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
     >
       <defs>
         <marker
-          id="arrowhead"
+          id={`arrowhead-${edge.id}`}
           markerWidth="6"
           markerHeight="4"
           refX="5.5"
@@ -210,151 +250,81 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
           />
         </marker>
       </defs>
-      <g>
-        <polyline
-          points={points}
-          stroke="transparent"
-          strokeWidth={10}
-          fill="none"
-          style={{ pointerEvents: 'stroke' }}
-          onClick={e => {
-            e.stopPropagation();
-            onSelect?.(edge);
+      <g style={{ pointerEvents: 'auto' }}>
+        <path
+          ref={pathRef}
+          d={`M ${points.split(' ').join(' L ')}`}
+          className={`${getEdgeStyle(edge.type)} stroke-2 fill-none`}
+          markerEnd={`url(#arrowhead-${edge.id})`}
+          style={{
+            cursor: 'pointer',
+            transition: 'stroke 0.2s ease',
           }}
-          onDoubleClick={e => {
-            e.stopPropagation();
-            onSelect?.(edge);
-            if (!canvasRef.current) return;
-            const rect = canvasRef.current.getBoundingClientRect();
-            const scale = parseFloat(getComputedStyle(canvasRef.current).transform.split(',')[0].split('(')[1]) || 1;
-            const x = (e.clientX - rect.left) / scale;
-            const y = (e.clientY - rect.top) / scale;
-            setInlineEdit({ x, y, value: edge.label || '' });
-          }}
+          onClick={() => onSelect?.(edge)}
         />
-        <polyline
-          points={points}
-          className={`${getEdgeStyle(edge.type)} stroke-2 fill-none ${selected ? 'stroke-blue-500 drop-shadow-[0_0_4px_rgba(59,130,246,0.7)]' : ''}`}
-          markerEnd="url(#arrowhead)"
-          style={{ cursor: 'pointer', pointerEvents: 'none' }}
-        />
-      </g>
-      {edge.label && (
-        (() => {
-          // Posição base do label (meio da linha)
-          const pts = points.split(' ').map(p => p.split(',').map(Number));
-          let lx = 0, ly = 0;
-          if (pts.length >= 2) {
-            const [x1, y1] = pts[0];
-            const [x2, y2] = pts[pts.length-1];
-            lx = (x1 + x2) / 2;
-            ly = (y1 + y2) / 2;
-          }
-          const offsetRaw = edge.data?.labelOffset;
-          const offset = (typeof offsetRaw === 'object' && offsetRaw !== null && 'x' in offsetRaw && 'y' in offsetRaw)
-            ? offsetRaw
-            : { x: 0, y: 0 };
-          lx += offset.x;
-          ly += offset.y;
-          if (editingLabel && typeof editingLabelValue === 'string' && setEditingLabelValue) {
-            // Renderiza input para edição
-            return (
-              <foreignObject x={lx - 60} y={ly - 16} width={120} height={32} style={{ overflow: 'visible' }}>
-                <input
-                  id={`label-input-${edge.id}`}
-                  name={`label-input-${edge.id}`}
-                  type="text"
-                  value={editingLabelValue}
-                  onChange={e => setEditingLabelValue(e.target.value)}
-                  onBlur={onLabelEditSave}
-                  onKeyDown={e => { if (e.key === 'Enter') onLabelEditSave?.(); }}
-                  style={{ width: '100%', fontSize: 16, fontWeight: 'bold', color: '#fff', background: '#23272e', border: '1px solid #4b5563', borderRadius: 4, padding: '2px 8px', outline: 'none' }}
-                  autoFocus
-                />
-              </foreignObject>
-            );
-          }
-          console.log('render label', { edgeId: edge.id, labelSelected, editingLabel });
-          return (
-            <g>
-              {labelSelected && (
-                <rect
-                  x={lx - 40}
-                  y={ly - 16}
-                  width={80}
-                  height={32}
-                  rx={8}
-                  fill="#23272e"
-                  stroke="#38bdf8"
-                  strokeWidth={2}
-                  opacity={0.7}
-                />
-              )}
-              <text
-                x={lx}
-                y={ly}
-                fontSize="16"
-                fill="#fff"
-                fontWeight="bold"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                style={{ 
-                  textShadow: '0 1px 4px #23272e, 0 0 2px #23272e', 
-                  cursor: labelSelected ? 'grab' : 'pointer', 
-                  userSelect: 'none',
-                  pointerEvents: 'all'
-                }}
-                onClick={e => {
-                  e.stopPropagation();
-                  onLabelSelect?.();
-                }}
-                onDoubleClick={e => {
-                  e.stopPropagation();
-                  onLabelEdit?.();
-                }}
-                onMouseDown={e => {
-                  if (labelSelected) {
-                    e.stopPropagation();
-                    handleLabelMouseDown(e);
+        {/* Pontos de arrasto nas extremidades */}
+        {points.split(' ').length > 0 && (
+          <>
+            <circle
+              cx={points.split(' ')[0].split(',')[0]}
+              cy={points.split(' ')[0].split(',')[1]}
+              r="4"
+              className="fill-blue-400 stroke-blue-600 stroke-2 cursor-move opacity-0 hover:opacity-100 transition-opacity"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                if (handleEdgeConnectorDragStart) {
+                  const sourceNode = nodes?.find(n => n.id === edge.source);
+                  if (sourceNode) {
+                    handleEdgeConnectorDragStart(
+                      edge.id,
+                      'source',
+                      { nodeId: edge.source, connectorId: edge.data?.sourceConnector || 'right' },
+                      e
+                    );
                   }
-                }}
-              >
-                {edge.label}
-              </text>
-            </g>
-          );
-        })()
-      )}
-      {inlineEdit && (
-        <foreignObject x={inlineEdit.x - 60} y={inlineEdit.y - 16} width={120} height={32} style={{ overflow: 'visible', position: 'absolute', zIndex: 10000 }}>
-          <input
-            id={`label-input-${edge.id}`}
-            name={`label-input-${edge.id}`}
-            type="text"
-            value={inlineEdit.value}
-            onChange={e => setInlineEdit({ ...inlineEdit, value: e.target.value })}
-            onBlur={() => {
-              // Salva o label
-              if (inlineEdit.value.trim() !== '') {
-                const event = new CustomEvent('updateEdgeLabel', { detail: { edgeId: edge.id, label: inlineEdit.value } });
-                window.dispatchEvent(event);
-              }
-              setInlineEdit(null);
-            }}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                if (inlineEdit.value.trim() !== '') {
-                  const event = new CustomEvent('updateEdgeLabel', { detail: { edgeId: edge.id, label: inlineEdit.value } });
-                  window.dispatchEvent(event);
                 }
-                setInlineEdit(null);
-              }
+              }}
+              style={{ pointerEvents: 'auto' }}
+            />
+            <circle
+              cx={points.split(' ')[points.split(' ').length - 1].split(',')[0]}
+              cy={points.split(' ')[points.split(' ').length - 1].split(',')[1]}
+              r="4"
+              className="fill-blue-400 stroke-blue-600 stroke-2 cursor-move opacity-0 hover:opacity-100 transition-opacity"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                if (handleEdgeConnectorDragStart) {
+                  const targetNode = nodes?.find(n => n.id === edge.target);
+                  if (targetNode) {
+                    handleEdgeConnectorDragStart(
+                      edge.id,
+                      'target',
+                      { nodeId: edge.target, connectorId: edge.data?.targetConnector || 'left' },
+                      e
+                    );
+                  }
+                }
+              }}
+              style={{ pointerEvents: 'auto' }}
+            />
+          </>
+        )}
+        {edge.data?.properties?.label && (
+          <text
+            x={points.split(' ').map(p => p.split(',')[0]).reduce((a, b) => a + Number(b), 0) / points.split(' ').length}
+            y={points.split(' ').map(p => p.split(',')[1]).reduce((a, b) => a + Number(b), 0) / points.split(' ').length}
+            className={`text-xs fill-current ${selected ? 'font-bold' : ''}`}
+            style={{
+              pointerEvents: 'auto',
+              cursor: 'move',
+              userSelect: 'none',
             }}
-            style={{ width: '100%', fontSize: 16, fontWeight: 'bold', color: '#fff', background: '#23272e', border: '1px solid #4b5563', borderRadius: 4, padding: '2px 8px', outline: 'none' }}
-            autoFocus
-          />
-        </foreignObject>
-      )}
+            onMouseDown={handleLabelMouseDown}
+          >
+            {edge.data.properties.label}
+          </text>
+        )}
+      </g>
     </svg>
   );
 };
