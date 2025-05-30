@@ -39,7 +39,12 @@ const ChevronDown = (
 const icons: Record<string, React.ReactNode> = {
   start: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#2d7ff9"/><polygon points="8,7 14,10 8,13" fill="#fff"/></svg>,
   end: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#4b5563"/></svg>,
-  decision: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="10" width="12" height="6" rx="2" fill="#e11d48"/><rect x="4" y="4" width="12" height="6" rx="2" fill="#fff" fillOpacity=".2"/></svg>,
+  decision: (
+    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#eab308" />
+      <text x="24" y="32" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
+    </svg>
+  ),
   loop: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="6" fill="#38bdf8"/><path d="M8 10h4" stroke="#fff" strokeWidth="1.5"/></svg>,
   subprocess: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#bfa06a"/></svg>,
   data: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#a78bfa"/></svg>,

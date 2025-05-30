@@ -329,4 +329,12 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   );
 };
 
-export default FlowEdge; 
+export default FlowEdge;
+
+// Adicionar export do SVG correto para decision
+export const DecisionNodeIcon = (
+  <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+    <circle cx="24" cy="24" r="20" fill="#eab308" />
+    <text x="24" y="32" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
+  </svg>
+); 

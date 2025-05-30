@@ -13,6 +13,7 @@ import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
 import DatabaseQueryModal from './components/DatabaseQueryModal';
 import QueryInterfaceModal from './components/QueryInterfaceModal';
 import { Node, Edge, NodeType } from './types/flow';
+import { DecisionNodeIcon } from './components/FlowEdge';
 
 // Definição do tipo de aba
 interface Tab {
@@ -473,6 +474,8 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedNode, selectedEdgeId]);
 
+  const DecisionIcon = DecisionNodeIcon;
+
   return (
     <div className="flex h-screen bg-[#e5e7eb]">
       <div className="relative z-50">
@@ -483,6 +486,11 @@ export default function Home() {
         <div className="flex items-center h-9 bg-[#181a1b] border-b border-[#23272e] px-1 gap-0 select-none" style={{ minHeight: 36 }}>
           {tabs.map((tab, idx) => {
             const isActive = activeTab === tab.id;
+            let icon = null;
+            if (tab.id === 'main') icon = StartIcon;
+            else if (tab.type === 'subprocess') icon = SubprocessIcon;
+            else if (tab.type === 'decision-config') icon = DecisionIcon;
+            else icon = SubprocessIcon;
             return (
               <React.Fragment key={tab.id}>
                 {/* Divisória à esquerda de todas as abas, exceto a primeira */}
@@ -514,7 +522,7 @@ export default function Home() {
                 >
                   {/* Ícone */}
                   <span className="mr-2 flex items-center">
-                    {tab.id === 'main' ? StartIcon : SubprocessIcon}
+                    {icon}
                   </span>
                   <span className="truncate max-w-[120px]">{tab.label}</span>
                   {/* X só aparece em abas não-main, sempre visível na ativa, só on hover na inativa */}

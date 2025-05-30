@@ -482,6 +482,17 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     setActiveConnector(null);
   }, [draggingEdgeId, draggingEnd, draggingFrom, onEdgesChange, edges]);
 
+  // Exemplo de objeto de ícones
+  const nodeIcons = {
+    decision: (
+      <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="20" fill="#eab308" />
+        <text x="24" y="32" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
+      </svg>
+    ),
+    // ... outros tipos
+  };
+
   return (
     <div
       ref={canvasRef}
