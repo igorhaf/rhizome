@@ -307,19 +307,20 @@ export default function Home() {
     if (!tab) return null;
     if (tab.type === 'main') {
       return (
-        <FlowCanvas
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={setNodes}
-          onEdgesChange={setEdges}
-          onNodeClick={handleNodeSelect}
-          selectedNode={selectedNode}
-          selectedEdgeId={selectedEdgeId}
-          onEdgeSelect={handleEdgeSelect}
-          setSelectedNode={setSelectedNode}
-          // Adiciona handler de duplo clique
-          onNodeDoubleClick={handleNodeDoubleClick}
-        />
+        <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
+          <FlowCanvas
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={setNodes}
+            onEdgesChange={setEdges}
+            onNodeClick={handleNodeSelect}
+            selectedNode={selectedNode}
+            selectedEdgeId={selectedEdgeId}
+            onEdgeSelect={handleEdgeSelect}
+            setSelectedNode={setSelectedNode}
+            onNodeDoubleClick={handleNodeDoubleClick}
+          />
+        </div>
       );
     }
     if (tab.type === 'subprocess') {

@@ -151,6 +151,17 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   // Estado para seleção e ligação de conectores
   const [activeConnector, setActiveConnector] = useState<{ nodeId: string; connectorId: string } | null>(null);
 
+  // Centralizar o canvas na inicialização com posição arredondada
+  useEffect(() => {
+    if (canvasRef.current) {
+      const { width, height } = canvasRef.current.getBoundingClientRect();
+      setPosition({
+        x: Math.round(width / 2 - 20000),
+        y: Math.round(height / 2 - 20000)
+      });
+    }
+  }, []);
+
   const getMousePosition = useCallback((event: MouseEvent) => {
     const container = canvasRef.current;
     if (!container) return { x: 0, y: 0 };
@@ -166,25 +177,30 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     const delta = e.deltaY;
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
+    
     // Posição do mouse relativa ao canvas
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
+    
     setScale((prevScale) => {
-      let newScale = prevScale - delta * 0.001;
-      newScale = Math.min(Math.max(0.1, newScale), 2);
-      setPosition((prevPos) => {
-        // Corrigir cálculo: posição do mouse no mundo antes do zoom
-        const worldX = (mouseX - prevPos.x) / prevScale;
-        const worldY = (mouseY - prevPos.y) / prevScale;
-        // Nova posição para manter o ponto do mouse fixo
-        return {
-          x: mouseX - worldX * newScale,
-          y: mouseY - worldY * newScale,
-        };
+      // Ajuste mais suave do zoom com fator menor para maior precisão
+      const zoomFactor = 0.0005;
+      const newScale = Math.max(0.1, Math.min(2, prevScale - delta * zoomFactor));
+      
+      // Calcula a posição do mouse no mundo antes do zoom
+      const worldX = (mouseX - position.x) / prevScale;
+      const worldY = (mouseY - position.y) / prevScale;
+      
+      // Ajusta a posição para manter o ponto do mouse fixo
+      // Usa Math.round para evitar problemas de precisão com números decimais
+      setPosition({
+        x: Math.round(mouseX - worldX * newScale),
+        y: Math.round(mouseY - worldY * newScale)
       });
+      
       return newScale;
     });
-  }, []);
+  }, [position]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -250,84 +266,35 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     setDraggingTo(null);
   }, [connectionStart, edges, onEdgesChange]);
 
-  const handleCanvasMouseMove = useCallback((e: React.MouseEvent) => {
-    if (draggingEdgeId && draggingEnd && draggingFrom) {
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const x = (e.clientX - rect.left - position.x) / scale;
-      const y = (e.clientY - rect.top - position.y) / scale;
-      setDraggingTo({ x, y });
-    }
-    // mantém pan/preview
-    if (isDragging && draggingTo) {
-      const canvasRect = canvasRef.current?.getBoundingClientRect();
-      if (!canvasRect) return;
-      const x = (e.clientX - canvasRect.left - position.x) / scale;
-      const y = (e.clientY - canvasRect.top - position.y) / scale;
-      setDraggingTo({ x, y });
-      setTempEdge({ x, y });
-    }
-  }, [draggingEdgeId, draggingEnd, draggingFrom, position, scale, isDragging, draggingTo]);
+  const handleCanvasMouseMove = useCallback((e: MouseEvent) => {
+    if (!isPanning || !startPoint || !startOffset) return;
+    
+    const dx = e.clientX - startPoint.x;
+    const dy = e.clientY - startPoint.y;
+    
+    // Usa Math.round para evitar problemas de precisão com números decimais
+    setPosition({
+      x: Math.round(startOffset.x + dx),
+      y: Math.round(startOffset.y + dy)
+    });
+  }, [isPanning, startPoint, startOffset]);
 
-  const handleCanvasMouseUp = useCallback((e: React.MouseEvent) => {
-    if (draggingEdgeId && edgeBackup) {
-      // Restaura a seta original se não existir
-      const exists = edges.some((ed: Edge) => ed.id === edgeBackup.id);
-      if (!exists) {
-        onEdgesChange([...edges, edgeBackup]);
-      }
-    }
-    setDraggingEdgeId(null);
-    setDraggingEnd(null);
-    setDraggingFrom(null);
-    setDraggingTo(null);
-    setEdgeBackup(null);
-    setIsDragging(false);
-    setActiveConnector(null);
-    setTempEdge(null);
-  }, [draggingEdgeId, edgeBackup, onEdgesChange, edges]);
+  const handleCanvasMouseUp = useCallback(() => {
+    setIsPanning(false);
+    setStartPoint(null);
+    setStartOffset(null);
+  }, []);
 
-  React.useEffect(() => {
-    // Só ativa panning global se NÃO estiver em drag de conexão
-    if (!isPanning || !startPoint || !startOffset || connectionStart) return;
-    const handleMove = (e: MouseEvent) => {
-      // Proteção extra: nunca panning durante drag de conexão
-      if (connectionStart) return;
-      const dx = e.clientX - startPoint.x;
-      const dy = e.clientY - startPoint.y;
-      const sidebarWidth = 240;
-      const canvasWidth = canvasRef.current?.clientWidth || 0;
-      let newX = startOffset.x + dx;
-      setPosition({
-        x: newX,
-        y: startOffset.y + dy,
-      });
-    };
-    const handleUp = () => {
-      setIsPanning(false);
-      setStartPoint(null);
-      setStartOffset(null);
-    };
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('mouseup', handleUp);
+  useEffect(() => {
+    if (isPanning) {
+      window.addEventListener('mousemove', handleCanvasMouseMove);
+      window.addEventListener('mouseup', handleCanvasMouseUp);
+    }
     return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('mousemove', handleCanvasMouseMove);
+      window.removeEventListener('mouseup', handleCanvasMouseUp);
     };
-  }, [isPanning, startPoint, startOffset, connectionStart]);
-
-  // Remover o useEffect que estava causando conflito
-  React.useEffect(() => {
-    if (!connectionStart) return;
-    const handleUp = () => {
-      setTempEdge(null);
-      setConnectionStart(null);
-    };
-    window.addEventListener('mouseup', handleUp);
-    return () => {
-      window.removeEventListener('mouseup', handleUp);
-    };
-  }, [connectionStart]);
+  }, [isPanning, handleCanvasMouseMove, handleCanvasMouseUp]);
 
   // Função para selecionar uma edge
   const handleEdgeSelect = (edge: Edge) => {
@@ -493,44 +460,35 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     // ... outros tipos
   };
 
+  const handleCanvasMouseDown = useCallback((e: React.MouseEvent) => {
+    if (connectionStart) return;
+    const target = e.target as HTMLElement;
+    const isNode = target.closest('[id^="node-"]');
+    const isConnector = target.id && target.id.includes('-connector-');
+    
+    if (e.currentTarget === e.target) {
+      handleLabelDeselect();
+    }
+    
+    if (isNode || isConnector) return;
+    
+    if (e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) {
+      setIsPanning(true);
+      setStartPoint({ x: e.clientX, y: e.clientY });
+      setStartOffset({ x: position.x, y: position.y });
+    }
+  }, [connectionStart, position, handleLabelDeselect]);
+
   return (
     <div
       ref={canvasRef}
-      className={`w-full h-full bg-[#1e2228] overflow-hidden select-none relative ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
-      style={{}}
+      className={`relative w-full h-full bg-[#1e2228] ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
       onWheel={handleWheel}
-      onMouseDown={e => {
-        if (connectionStart) return;
-        const target = e.target as HTMLElement;
-        const isNode = target.closest('[id^="node-"]');
-        const isConnector = target.id && target.id.includes('-connector-');
-        if (e.currentTarget === e.target) {
-          handleLabelDeselect();
-        }
-        if (isNode || isConnector) return;
-        if (e.button === 0 || e.button === 1 || (e.button === 0 && e.altKey)) {
-          setIsPanning(true);
-          setStartPoint({ x: e.clientX, y: e.clientY });
-          setStartOffset({ x: position.x, y: position.y });
-        }
-      }}
+      onMouseDown={handleCanvasMouseDown}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onMouseMove={handleCanvasMouseMove}
-      onMouseUp={handleCanvasMouseUp}
+      onClick={handleCanvasClick}
     >
-      {/* Botão de debug para resetar interação */}
-      <button
-        style={{ position: 'absolute', top: 8, right: 8, zIndex: 1000, background: '#23272e', color: '#fff', border: '1px solid #444', borderRadius: 4, padding: '2px 8px', fontSize: 12 }}
-        onClick={() => {
-          setTempEdge(null);
-          setConnectionStart(null);
-          setIsPanning(false);
-          setStartPoint(null);
-          setStartOffset(null);
-        }}
-      >Resetar Interação</button>
-      {/* Grid de fundo SVG infinito */}
       <div
         className="absolute top-0 left-0"
         style={{
@@ -539,10 +497,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
           transformOrigin: '0 0',
           zIndex: 1,
+          willChange: 'transform' // Otimização de performance
         }}
-        onClick={handleCanvasClick}
       >
-        {/* Grid de fundo SVG infinito agora dentro do container escalado */}
+        {/* SVG do grid */}
         <svg
           width="40000"
           height="40000"
@@ -550,8 +508,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             position: 'absolute',
             top: 0,
             left: 0,
-            pointerEvents: 'none',
-            zIndex: 0
+            pointerEvents: 'none'
           }}
         >
           <defs>
@@ -567,7 +524,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
           </defs>
           <rect width="40000" height="40000" fill="url(#smallGrid)" />
         </svg>
-        {/* SVG das edges agora DENTRO do container escalado */}
+        {/* SVG das edges */}
         <svg
           width="40000"
           height="40000"
