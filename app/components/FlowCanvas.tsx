@@ -616,29 +616,45 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             );
           })}
           {/* Linha fantasma durante drag de edge */}
-          {isDragging && draggingTo && activeConnector && (
-            (() => {
-              const sourceNode = nodes.find(n => n.id === activeConnector.nodeId);
-              if (!sourceNode) return null;
-              const { x, y } = sourceNode.position;
-              const size = 56;
-              let fromPos;
-              switch (activeConnector.connectorId) {
-                case 'top': fromPos = { x, y: y - size / 2 }; break;
-                case 'right': fromPos = { x: x + size / 2, y }; break;
-                case 'bottom': fromPos = { x, y: y + size / 2 }; break;
-                case 'left': fromPos = { x: x - size / 2, y }; break;
-                default: fromPos = { x, y }; break;
-              }
-              return (
-                <polyline
-                  points={`${fromPos.x},${fromPos.y} ${draggingTo.x},${draggingTo.y}`}
-                  className="stroke-blue-400 stroke-2 fill-none pointer-events-none"
-                  style={{ zIndex: 9999 }}
-                  markerEnd="url(#arrowhead)"
-                />
-              );
-            })()
+          {draggingEdgeId && draggingFrom && draggingTo && (
+            <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ zIndex: 1000 }}>
+              <defs>
+                <marker
+                  id="temp-arrowhead"
+                  markerWidth="10"
+                  markerHeight="7"
+                  refX="9"
+                  refY="3.5"
+                  orient="auto"
+                >
+                  <polygon
+                    points="0 0, 10 3.5, 0 7"
+                    className="fill-gray-500"
+                  />
+                </marker>
+              </defs>
+              {(() => {
+                const edge = edges.find(e => e.id === draggingEdgeId);
+                if (!edge) return null;
+                const nodeId = draggingEnd === 'source' ? edge.target : edge.source;
+                const connectorId = draggingEnd === 'source'
+                  ? edge.data?.targetConnector || 'left'
+                  : edge.data?.sourceConnector || 'right';
+                const connectorElement = document.getElementById(`${nodeId}-connector-${connectorId}`);
+                const canvasRect = canvasRef.current?.getBoundingClientRect();
+                if (!connectorElement || !canvasRect) return null;
+                const connectorRect = connectorElement.getBoundingClientRect();
+                const startX = connectorRect.left + connectorRect.width / 2 - canvasRect.left;
+                const startY = connectorRect.top + connectorRect.height / 2 - canvasRect.top;
+                return (
+                  <polyline
+                    points={`${startX},${startY} ${draggingTo.x},${draggingTo.y}`}
+                    className="stroke-blue-400 stroke-2 fill-none pointer-events-none"
+                    markerEnd="url(#arrowhead)"
+                  />
+                );
+              })()}
+            </svg>
           )}
         </svg>
         {tempEdge && connectionStart && (
