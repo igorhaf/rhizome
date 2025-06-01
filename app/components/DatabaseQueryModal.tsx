@@ -97,6 +97,7 @@ const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, 
           <span className="text-lg mr-1">+</span> Adicionar Entrada
         </button>
       </div>
+
       {/* Consulta SQL */}
       <div className="mb-5 w-full">
         <div className="font-semibold mb-1 text-gray-200 text-sm">Consulta SQL</div>
@@ -110,6 +111,7 @@ const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, 
           />
         </div>
       </div>
+
       {/* Variáveis de Saída */}
       <div className="mb-5 w-full">
         <div className="font-semibold mb-1 text-gray-200 text-sm">Variáveis de Saida</div>
@@ -154,6 +156,7 @@ const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, 
           <span className="text-lg mr-1">+</span> Adicionar Saida
         </button>
       </div>
+
       <div className="flex justify-end gap-2 mt-6 w-full">
         <button className="px-4 py-2 rounded bg-[#23272e] text-gray-300 border border-[#222] hover:bg-[#181c23] text-sm" onClick={onClose}>Cancelar</button>
         <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 text-sm" onClick={handleSave}>Salvar</button>
@@ -164,6 +167,7 @@ const DatabaseQueryModal: React.FC<DatabaseQueryModalProps> = ({ open, onClose, 
   if (inline) {
     return content;
   }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
       <div className="bg-[#23272e] rounded-lg p-8 w-[600px] max-w-full shadow-xl">

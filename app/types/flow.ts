@@ -7,7 +7,7 @@ export type NodeType =
   | 'decision'
   | 'loop'
   | 'subprocess'
-  | 'Database'
+  | 'database'
   | 'api'
   | 'spreadsheet';
 
@@ -16,117 +16,36 @@ export interface Position {
   y: number;
 }
 
+export interface NodeData {
+  label: string;
+  description?: string;
+  notes?: string;
+  outputs?: string;
+  active?: boolean;
+  databaseConfig?: {
+    type: 'postgres' | 'mysql' | 'sqlite' | 'mongodb';
+    query: string;
+  };
+  emailConfig?: {
+    to: string;
+    subject: string;
+    body: string;
+    attachments?: string[];
+  };
+  spreadsheetConfig?: {
+    fileType: 'xlsx' | 'xls' | 'csv' | 'ods';
+    operationType: 'read' | 'write' | 'append' | 'update';
+    sheetName: string;
+    range: string;
+    format: 'none' | 'number' | 'currency' | 'date' | 'percentage';
+  };
+}
+
 export interface Node {
   id: string;
   type: NodeType;
   position: Position;
-  data: {
-    label: string;
-    description?: string;
-    properties?: Record<string, any>;
-    color?: string;
-    active?: boolean;
-    outputs?: string;
-    notes?: string;
-    returnStatus?: 'success' | 'error' | 'warning' | 'info';
-    returnCode?: number;
-    finalMessage?: string;
-    returnType?: 'json' | 'text' | 'html' | 'xml' | 'binary';
-    shouldLog?: boolean;
-    actionType?: 'function' | 'api' | 'database' | 'file' | 'email' | 'notification';
-    inputParams?: string;
-    timeout?: number;
-    retryCount?: number;
-    retryInterval?: number;
-    isAsync?: boolean;
-    conditionExpression?: string;
-    inputVars?: string;
-    outputVars?: string;
-    databaseConfig?: any;
-    queryInterface?: any;
-    to?: string;
-    subject?: string;
-    body?: string | any[];
-    functionName?: string;
-    webhookUrl?: string;
-    httpMethod?: string;
-    headers?: string;
-    payload?: string;
-    responseStatus?: string;
-    lastExecution?: string;
-    executionCount?: number;
-    avgResponseTime?: number;
-    // API fields
-    apiUrl?: string;
-    authType?: 'none' | 'basic' | 'bearer' | 'apiKey' | 'oauth2';
-    authUsername?: string;
-    authPassword?: string;
-    authToken?: string;
-    apiKey?: string;
-    apiKeyValue?: string;
-    apiKeyLocation?: 'header' | 'query';
-    bodyType?: 'none' | 'raw' | 'form-data' | 'x-www-form-urlencoded';
-    rawBody?: string;
-    formData?: { key: string; value: string }[];
-    preRequestScript?: string;
-    tests?: string;
-    followRedirects?: boolean;
-    sslVerification?: boolean;
-    // Function fields
-    functionType?: 'javascript' | 'python';
-    functionCode?: string;
-    functionInputs?: { name: string; type: string; description?: string }[];
-    functionOutputs?: { name: string; type: string; description?: string }[];
-    functionTests?: string;
-    functionTimeout?: number;
-    functionRetryCount?: number;
-    functionRetryInterval?: number;
-    functionIsAsync?: boolean;
-    functionShouldLog?: boolean;
-    functionNotes?: string;
-    // Email fields
-    from?: string;
-    cc?: string;
-    bcc?: string;
-    replyTo?: string;
-    contentType?: 'html' | 'text' | 'template';
-    templateId?: string;
-    attachments?: { name: string; path: string }[];
-    priority?: 'high' | 'normal' | 'low';
-    trackOpens?: boolean;
-    trackClicks?: boolean;
-    // Email specific properties
-    emailConfig?: {
-      from?: string;
-      to?: string[];
-      cc?: string[];
-      bcc?: string[];
-      replyTo?: string;
-      subject?: string;
-      contentType?: 'html' | 'text' | 'template';
-      body?: string;
-      templateId?: string;
-      templateVariables?: Record<string, any>;
-      attachments?: Array<{
-        name: string;
-        path: string;
-      }>;
-      priority?: 'high' | 'normal' | 'low';
-      trackOpens?: boolean;
-      trackClicks?: boolean;
-    };
-    // Spreadsheet specific properties
-    spreadsheetConfig?: {
-      fileType?: 'xlsx' | 'xls' | 'csv' | 'ods';
-      operationType?: 'read' | 'write' | 'append' | 'update';
-      sheetName?: string;
-      range?: string;
-      headers?: string[];
-      data?: string;
-      formula?: string;
-      format?: 'none' | 'number' | 'currency' | 'date' | 'percentage';
-    };
-  };
+  data: NodeData;
 }
 
 export interface Edge {
@@ -142,4 +61,9 @@ export interface Edge {
     targetConnector?: string;
     labelOffset?: number;
   };
+}
+
+export interface Flow {
+  nodes: Node[];
+  edges: Edge[];
 } 
