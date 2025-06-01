@@ -11,7 +11,7 @@ export const nodeTypes = [
   },
   {
     type: 'spreadsheet',
-    label: 'Spreadsheet',
+    label: 'Planilha',
     icon: 'spreadsheet',
     group: 'Advanced/Actions/Data',
     description: 'Read, write and manipulate spreadsheet data'

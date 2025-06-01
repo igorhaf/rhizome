@@ -1,35 +1,32 @@
 import React from 'react';
-import { Node } from '../../types/flow';
+import { Node } from '../types/flow';
 
-interface SpreadsheetNodeSidebarProps {
+interface SpreadsheetConfigTabProps {
   node: Node;
-  onUpdate: (node: Node) => void;
-  onClose: () => void;
+  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
 }
 
-const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
-  return (
-    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-4 overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium text-white">Configuração da Planilha</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-white"
-        >
-          ×
-        </button>
-      </div>
+const SpreadsheetConfigTab: React.FC<SpreadsheetConfigTabProps> = ({ node, setNodes }) => {
+  const [localNode, setLocalNode] = React.useState<Node>(() => ({ ...node, id: node.id || '' }));
 
-      <div className="space-y-4">
+  const handleSave = () => {
+    setNodes(nodes => nodes.map(n => n.id === localNode.id ? localNode : n));
+  };
+
+  return (
+    <div className="flex flex-col h-full px-8 pt-8 pb-8 text-white overflow-auto bg-[#1e2228]">
+      <h2 className="text-xl font-semibold mb-4">Configuração da Planilha</h2>
+      
+      <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-200 mb-1">Nome</label>
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.label || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, label: e.target.value }
+            value={localNode.data.label || ''}
+            onChange={(e) => setLocalNode({
+              ...localNode,
+              data: { ...localNode.data, label: e.target.value }
             })}
             placeholder="Minha Planilha"
           />
@@ -39,13 +36,13 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
           <label className="block text-sm font-medium text-gray-200 mb-1">Tipo de Arquivo</label>
           <select
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.spreadsheetConfig?.fileType || 'xlsx'}
-            onChange={(e) => onUpdate({
-              ...node,
+            value={localNode.data.spreadsheetConfig?.fileType || 'xlsx'}
+            onChange={(e) => setLocalNode({
+              ...localNode,
               data: {
-                ...node.data,
+                ...localNode.data,
                 spreadsheetConfig: {
-                  ...node.data.spreadsheetConfig,
+                  ...localNode.data.spreadsheetConfig,
                   fileType: e.target.value as 'xlsx' | 'xls' | 'csv' | 'ods'
                 }
               }
@@ -62,13 +59,13 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
           <label className="block text-sm font-medium text-gray-200 mb-1">Operação</label>
           <select
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.spreadsheetConfig?.operationType || 'read'}
-            onChange={(e) => onUpdate({
-              ...node,
+            value={localNode.data.spreadsheetConfig?.operationType || 'read'}
+            onChange={(e) => setLocalNode({
+              ...localNode,
               data: {
-                ...node.data,
+                ...localNode.data,
                 spreadsheetConfig: {
-                  ...node.data.spreadsheetConfig,
+                  ...localNode.data.spreadsheetConfig,
                   operationType: e.target.value as 'read' | 'write' | 'append' | 'update'
                 }
               }
@@ -86,13 +83,13 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.spreadsheetConfig?.sheetName || ''}
-            onChange={(e) => onUpdate({
-              ...node,
+            value={localNode.data.spreadsheetConfig?.sheetName || ''}
+            onChange={(e) => setLocalNode({
+              ...localNode,
               data: {
-                ...node.data,
+                ...localNode.data,
                 spreadsheetConfig: {
-                  ...node.data.spreadsheetConfig,
+                  ...localNode.data.spreadsheetConfig,
                   sheetName: e.target.value
                 }
               }
@@ -106,13 +103,13 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.spreadsheetConfig?.range || ''}
-            onChange={(e) => onUpdate({
-              ...node,
+            value={localNode.data.spreadsheetConfig?.range || ''}
+            onChange={(e) => setLocalNode({
+              ...localNode,
               data: {
-                ...node.data,
+                ...localNode.data,
                 spreadsheetConfig: {
-                  ...node.data.spreadsheetConfig,
+                  ...localNode.data.spreadsheetConfig,
                   range: e.target.value
                 }
               }
@@ -125,13 +122,13 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
           <label className="block text-sm font-medium text-gray-200 mb-1">Formato</label>
           <select
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.spreadsheetConfig?.format || 'none'}
-            onChange={(e) => onUpdate({
-              ...node,
+            value={localNode.data.spreadsheetConfig?.format || 'none'}
+            onChange={(e) => setLocalNode({
+              ...localNode,
               data: {
-                ...node.data,
+                ...localNode.data,
                 spreadsheetConfig: {
-                  ...node.data.spreadsheetConfig,
+                  ...localNode.data.spreadsheetConfig,
                   format: e.target.value as 'none' | 'number' | 'currency' | 'date' | 'percentage'
                 }
               }
@@ -150,17 +147,24 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
           <textarea
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
             rows={3}
-            value={node.data.notes || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, notes: e.target.value }
+            value={localNode.data.notes || ''}
+            onChange={(e) => setLocalNode({
+              ...localNode,
+              data: { ...localNode.data, notes: e.target.value }
             })}
             placeholder="Adicione notas sobre esta planilha..."
           />
         </div>
+
+        <button
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={handleSave}
+        >
+          Salvar
+        </button>
       </div>
     </div>
   );
 };
 
-export default SpreadsheetNodeSidebar; 
+export default SpreadsheetConfigTab; 

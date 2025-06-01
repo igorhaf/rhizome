@@ -9,6 +9,7 @@ import ActionNodeSidebar from './components/ActionNodeSidebar';
 import DecisionNodeSidebar from './components/DecisionNodeSidebar';
 import FunctionNodeSidebar from './components/advanced/FunctionNodeSidebar';
 import EmailNodeSidebar from './components/advanced/EmailNodeSidebar';
+import SpreadsheetNodeSidebar from './components/advanced/SpreadsheetNodeSidebar';
 import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
 import DatabaseQueryModal from './components/DatabaseQueryModal';
 import QueryInterfaceModal from './components/QueryInterfaceModal';
@@ -17,6 +18,7 @@ import WebhookConfigTab from './components/WebhookConfigTab';
 import ApiConfigTab from './components/ApiConfigTab';
 import FunctionConfigTab from './components/FunctionConfigTab';
 import EmailConfigTab from './components/EmailConfigTab';
+import SpreadsheetConfigTab from './components/SpreadsheetConfigTab';
 import { Node, Edge, NodeType } from './types/flow';
 import { DecisionNodeIcon } from './components/FlowEdge';
 import WebhookNode from './components/nodes/WebhookNode';
@@ -283,10 +285,10 @@ export default function Home() {
 
   // Handler para abrir subprocesso ou config de nó em nova aba
   const handleNodeDoubleClick = (node: Node) => {
-    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook' || node.type === 'api' || node.type === 'funcion' || node.type === 'email') {
+    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook' || node.type === 'api' || node.type === 'funcion' || node.type === 'email' || node.type === 'spreadsheet') {
       // Se já existe uma aba para esse nó, ativa
-      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : node.type === 'webhook' ? 'webhook' : node.type === 'api' ? 'api' : node.type === 'funcion' ? 'function' : node.type === 'email' ? 'email' : 'database'));
-      if (node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook' || node.type === 'api' || node.type === 'funcion' || node.type === 'email') setSelectedNode(null); // Garante que não há sidebar na aba de config
+      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : node.type === 'webhook' ? 'webhook' : node.type === 'api' ? 'api' : node.type === 'funcion' ? 'function' : node.type === 'email' ? 'email' : node.type === 'spreadsheet' ? 'spreadsheet' : 'database'));
+      if (node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook' || node.type === 'api' || node.type === 'funcion' || node.type === 'email' || node.type === 'spreadsheet') setSelectedNode(null); // Garante que não há sidebar na aba de config
       if (existing) {
         setActiveTab(existing.id);
       } else {
@@ -294,8 +296,8 @@ export default function Home() {
           ...tabs,
           {
             id: node.id,
-            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : node.type === 'loop' ? 'Loop' : node.type === 'webhook' ? 'Webhook' : node.type === 'api' ? 'API' : node.type === 'funcion' ? 'Function' : node.type === 'email' ? 'Email' : 'Decision'),
-            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : node.type === 'webhook' ? 'webhook' : node.type === 'api' ? 'api' : node.type === 'funcion' ? 'function' : node.type === 'email' ? 'email' : 'database',
+            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : node.type === 'loop' ? 'Loop' : node.type === 'webhook' ? 'Webhook' : node.type === 'api' ? 'API' : node.type === 'funcion' ? 'Function' : node.type === 'email' ? 'Email' : node.type === 'spreadsheet' ? 'Planilha' : 'Decision'),
+            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : node.type === 'webhook' ? 'webhook' : node.type === 'api' ? 'api' : node.type === 'funcion' ? 'function' : node.type === 'email' ? 'email' : node.type === 'spreadsheet' ? 'spreadsheet' : 'database',
             content: node,
             mode: 'screen',
           },
@@ -402,6 +404,14 @@ export default function Home() {
       return (
         <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
           <EmailConfigTab node={tab.content as Node} setNodes={setNodes} />
+        </div>
+      );
+    }
+
+    if (tab.type === 'spreadsheet') {
+      return (
+        <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
+          <SpreadsheetConfigTab node={tab.content as Node} setNodes={setNodes} />
         </div>
       );
     }
@@ -654,6 +664,12 @@ export default function Home() {
           />
         ) : selectedNode.type === 'email' ? (
           <EmailNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'spreadsheet' ? (
+          <SpreadsheetNodeSidebar
             node={selectedNode}
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}

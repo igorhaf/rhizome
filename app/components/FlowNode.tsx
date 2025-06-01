@@ -487,11 +487,17 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         {selected && (
           <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
         )}
-        <circle cx="24" cy="24" r="20" fill="#a3e635" />
-        <rect x="16" y="17" width="16" height="14" rx="3" fill="#fff" />
-        <rect x="19" y="20" width="10" height="2" rx="1" fill="#a3e635" />
-        <rect x="19" y="24" width="10" height="2" rx="1" fill="#a3e635" />
-        <rect x="19" y="28" width="10" height="2" rx="1" fill="#a3e635" />
+        <circle cx="24" cy="24" r="20" fill="#10b981" />
+        <rect x="14" y="14" width="20" height="20" rx="4" fill="#fff" />
+        <rect x="18" y="18" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="26" y="18" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="34" y="18" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="18" y="26" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="26" y="26" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="34" y="26" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="18" y="34" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="26" y="34" width="4" height="4" rx="1" fill="#10b981" />
+        <rect x="34" y="34" width="4" height="4" rx="1" fill="#10b981" />
       </svg>
     ),
   };

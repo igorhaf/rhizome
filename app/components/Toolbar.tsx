@@ -71,6 +71,9 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     Basic: true,
     'Basic/Logic': true,
     Advanced: true,
+    'Advanced/Actions': true,
+    'Advanced/Actions/Communication': true,
+    'Advanced/Actions/Data': true
   });
 
   const nodeTypes: { type: NodeType; label: string; icon: string; group: string }[] = [
@@ -84,7 +87,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced/Actions/Communication' },
     { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced/Actions' },
     { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
-    { type: 'spreadsheet', label: 'Spreadsheet', icon: 'spreadsheet', group: 'Advanced/Actions/Data' },
+    { type: 'spreadsheet', label: 'Planilha', icon: 'spreadsheet', group: 'Advanced/Actions/Data' },
   ];
 
   // Grupos hierárquicos
@@ -169,9 +172,10 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
       if (!parentPath) {
         return n.group === group.name;
       }
-      // Se for um subgrupo (Logic ou Actions), pega os itens do caminho completo
+      // Se for um subgrupo (Logic, Actions, Communication, Data), pega os itens do caminho completo
       return n.group === path;
     });
+
     return (
       <li key={path} className="relative">
         {/* Linha vertical (guide) para subníveis */}
@@ -253,4 +257,4 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   );
 };
 
-export default Toolbar; 
+export default Toolbar;
