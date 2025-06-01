@@ -44,6 +44,14 @@ export interface Node {
     outputVars?: string;
     databaseConfig?: any;
     queryInterface?: any;
+    to?: string;
+    subject?: string;
+    body?: string;
+    functionName?: string;
+    webhookUrl?: string;
+    httpMethod?: string;
+    headers?: string;
+    payload?: string;
   };
 }
 

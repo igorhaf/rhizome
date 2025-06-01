@@ -11,10 +11,18 @@ interface DatabaseConfig {
   password: string;
 }
 
+// Add new interface for query config
+interface DatabaseQueryConfig {
+  inputs: { name: string; type: string }[];
+  outputs: { name: string; returnType: string }[];
+  query: string;
+}
+
+// Update onSave prop type
 interface DatabaseQueryModalProps {
   open: boolean;
   onClose: () => void;
-  onSave?: (config: DatabaseConfig) => void;
+  onSave?: (config: DatabaseQueryConfig) => void;
   inline?: boolean;
 }
 
