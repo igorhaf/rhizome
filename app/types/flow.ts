@@ -56,6 +56,22 @@ export interface Node {
     lastExecution?: string;
     executionCount?: number;
     avgResponseTime?: number;
+    // API fields
+    apiUrl?: string;
+    authType?: 'none' | 'basic' | 'bearer' | 'apiKey' | 'oauth2';
+    authUsername?: string;
+    authPassword?: string;
+    authToken?: string;
+    apiKey?: string;
+    apiKeyValue?: string;
+    apiKeyLocation?: 'header' | 'query';
+    bodyType?: 'none' | 'raw' | 'form-data' | 'x-www-form-urlencoded';
+    rawBody?: string;
+    formData?: { key: string; value: string }[];
+    preRequestScript?: string;
+    tests?: string;
+    followRedirects?: boolean;
+    sslVerification?: boolean;
   };
 }
 
