@@ -13,8 +13,11 @@ import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
 import DatabaseQueryModal from './components/DatabaseQueryModal';
 import QueryInterfaceModal from './components/QueryInterfaceModal';
 import LoopConfigTab from './components/LoopConfigTab';
+import WebhookConfigTab from './components/WebhookConfigTab';
 import { Node, Edge, NodeType } from './types/flow';
 import { DecisionNodeIcon } from './components/FlowEdge';
+import WebhookNode from './components/nodes/WebhookNode';
+import WebhookConfigPanel from './components/panels/WebhookConfigPanel';
 
 // Definição do tipo de aba
 interface Tab {
@@ -267,10 +270,10 @@ export default function Home() {
 
   // Handler para abrir subprocesso ou config de nó em nova aba
   const handleNodeDoubleClick = (node: Node) => {
-    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision' || node.type === 'loop') {
+    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook') {
       // Se já existe uma aba para esse nó, ativa
-      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : 'database'));
-      if (node.type === 'Database' || node.type === 'decision' || node.type === 'loop') setSelectedNode(null); // Garante que não há sidebar na aba de config
+      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : node.type === 'webhook' ? 'webhook' : 'database'));
+      if (node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook') setSelectedNode(null); // Garante que não há sidebar na aba de config
       if (existing) {
         setActiveTab(existing.id);
       } else {
@@ -278,8 +281,8 @@ export default function Home() {
           ...tabs,
           {
             id: node.id,
-            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : node.type === 'loop' ? 'Loop' : 'Decision'),
-            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : 'database',
+            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : node.type === 'loop' ? 'Loop' : node.type === 'webhook' ? 'Webhook' : 'Decision'),
+            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : node.type === 'webhook' ? 'webhook' : 'database',
             content: node,
             mode: 'screen',
           },
@@ -306,15 +309,16 @@ export default function Home() {
   const renderTabContent = () => {
     const tab = tabs.find(t => t.id === activeTab);
     if (!tab) return null;
+
     if (tab.type === 'main') {
       return (
         <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
           <FlowCanvas
             nodes={nodes}
             edges={edges}
-            onNodesChange={setNodes}
-            onEdgesChange={setEdges}
-            onNodeClick={handleNodeSelect}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={handleEdgesChange}
+            onNodeClick={handleNodeClick}
             selectedNode={selectedNode}
             selectedEdgeId={selectedEdgeId}
             onEdgeSelect={handleEdgeSelect}
@@ -324,6 +328,7 @@ export default function Home() {
         </div>
       );
     }
+
     if (tab.type === 'subprocess') {
       return (
         <div className="flex items-center justify-center h-full text-2xl text-white">
@@ -331,6 +336,7 @@ export default function Home() {
         </div>
       );
     }
+
     if (tab.type === 'database') {
       return (
         <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
@@ -338,6 +344,7 @@ export default function Home() {
         </div>
       );
     }
+
     if (tab.type === 'decision-config') {
       return (
         <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
@@ -345,6 +352,7 @@ export default function Home() {
         </div>
       );
     }
+
     if (tab.type === 'loop') {
       return (
         <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
@@ -352,6 +360,15 @@ export default function Home() {
         </div>
       );
     }
+
+    if (tab.type === 'webhook') {
+      return (
+        <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
+          <WebhookConfigTab node={tab.content as Node} setNodes={setNodes} />
+        </div>
+      );
+    }
+
     return null;
   };
 
@@ -390,6 +407,9 @@ export default function Home() {
           httpMethod: 'POST',
           headers: '',
           payload: '',
+          timeout: 5000,
+          retryCount: 0,
+          retryInterval: 1000,
           inputParams: '',
           notes: '',
         }),
@@ -490,6 +510,24 @@ export default function Home() {
   }, [selectedNode, selectedEdgeId]);
 
   const DecisionIcon = DecisionNodeIcon;
+
+  // Renderiza o painel lateral
+  const renderSidePanel = () => {
+    if (!selectedNode) return null;
+
+    switch (selectedNode.type) {
+      case 'webhook':
+        return (
+          <WebhookConfigPanel
+            node={selectedNode}
+            onClose={() => setSelectedNode(null)}
+          />
+        );
+      // ... outros casos ...
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="flex h-screen bg-[#e5e7eb]">
@@ -604,6 +642,7 @@ export default function Home() {
           />
         )
       )}
+      {renderSidePanel()}
     </div>
   );
 }

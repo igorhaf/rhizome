@@ -46,12 +46,16 @@ export interface Node {
     queryInterface?: any;
     to?: string;
     subject?: string;
-    body?: string;
+    body?: string | any[];
     functionName?: string;
     webhookUrl?: string;
     httpMethod?: string;
     headers?: string;
     payload?: string;
+    responseStatus?: string;
+    lastExecution?: string;
+    executionCount?: number;
+    avgResponseTime?: number;
   };
 }
 

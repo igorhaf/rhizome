@@ -5,6 +5,7 @@ import { Node, Edge, NodeType } from '../types/flow';
 import FlowNode from './FlowNode';
 import FlowEdge from './FlowEdge';
 import LoopNode from './nodes/LoopNode';
+import WebhookNode from './nodes/WebhookNode';
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -117,7 +118,16 @@ function fallbackOrthogonal(safeStart: [number, number], safeEnd: [number, numbe
 const nodeTypes = {
   default: FlowNode,
   loop: LoopNode,
-  // ... existing node types ...
+  webhook: WebhookNode,
+  start: FlowNode,
+  end: FlowNode,
+  funcion: FlowNode,
+  email: FlowNode,
+  decision: FlowNode,
+  subprocess: FlowNode,
+  Database: FlowNode,
+  api: FlowNode,
+  spreadsheet: FlowNode,
 };
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
