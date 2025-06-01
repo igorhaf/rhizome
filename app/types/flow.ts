@@ -72,6 +72,18 @@ export interface Node {
     tests?: string;
     followRedirects?: boolean;
     sslVerification?: boolean;
+    // Function fields
+    functionType?: 'javascript' | 'python';
+    functionCode?: string;
+    functionInputs?: { name: string; type: string; description?: string }[];
+    functionOutputs?: { name: string; type: string; description?: string }[];
+    functionTests?: string;
+    functionTimeout?: number;
+    functionRetryCount?: number;
+    functionRetryInterval?: number;
+    functionIsAsync?: boolean;
+    functionShouldLog?: boolean;
+    functionNotes?: string;
   };
 }
 
