@@ -55,26 +55,14 @@ const icons: Record<string, React.ReactNode> = {
       <path d="M8 8h4v4H8z" fill="#fff"/>
     </svg>
   ),
-  email: (
-    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-      <rect x="3" y="5" width="14" height="10" rx="2" fill="#2563eb"/>
-      <path d="M3 5l7 6 7-6" stroke="#fff" strokeWidth="1.5"/>
-    </svg>
-  ),
+  email: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="#3b82f6"/></svg>,
   webhook: (
     <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
       <circle cx="10" cy="10" r="8" fill="#f59e42"/>
       <path d="M6 10a4 4 0 0 1 8 0" stroke="#fff" strokeWidth="1.5"/>
     </svg>
   ),
-  spreadsheet: (
-    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-      <rect x="3" y="3" width="14" height="14" rx="2" fill="#a3e635" />
-      <rect x="6" y="6" width="8" height="2" rx="1" fill="#fff" />
-      <rect x="6" y="10" width="8" height="2" rx="1" fill="#fff" />
-      <rect x="6" y="14" width="8" height="2" rx="1" fill="#fff" />
-    </svg>
-  ),
+  spreadsheet: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17Z" fill="#10b981"/></svg>,
 };
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
@@ -93,10 +81,10 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     { type: 'Database', label: 'Database', icon: 'data', group: 'Advanced/Actions' },
     { type: 'api', label: 'API', icon: 'api', group: 'Advanced/Actions' },
     { type: 'funcion', label: 'Função', icon: 'funcion', group: 'Advanced/Actions' },
-    { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced/Actions' },
+    { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced/Actions/Communication' },
     { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced/Actions' },
     { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
-    { type: 'spreadsheet', label: 'Spreadsheet', icon: 'spreadsheet', group: 'Advanced/Actions/Files' },
+    { type: 'spreadsheet', label: 'Spreadsheet', icon: 'spreadsheet', group: 'Advanced/Actions/Data' },
   ];
 
   // Grupos hierárquicos
@@ -128,7 +116,13 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
           color: '',
           children: [
             {
-              name: 'Files',
+              name: 'Communication',
+              iconClosed: FolderClosedIcon,
+              iconOpen: FolderOpenIcon,
+              color: '',
+            },
+            {
+              name: 'Data',
               iconClosed: FolderClosedIcon,
               iconOpen: FolderOpenIcon,
               color: '',

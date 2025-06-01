@@ -95,6 +95,37 @@ export interface Node {
     priority?: 'high' | 'normal' | 'low';
     trackOpens?: boolean;
     trackClicks?: boolean;
+    // Email specific properties
+    emailConfig?: {
+      from?: string;
+      to?: string[];
+      cc?: string[];
+      bcc?: string[];
+      replyTo?: string;
+      subject?: string;
+      contentType?: 'html' | 'text' | 'template';
+      body?: string;
+      templateId?: string;
+      templateVariables?: Record<string, any>;
+      attachments?: Array<{
+        name: string;
+        path: string;
+      }>;
+      priority?: 'high' | 'normal' | 'low';
+      trackOpens?: boolean;
+      trackClicks?: boolean;
+    };
+    // Spreadsheet specific properties
+    spreadsheetConfig?: {
+      fileType?: 'xlsx' | 'xls' | 'csv' | 'ods';
+      operationType?: 'read' | 'write' | 'append' | 'update';
+      sheetName?: string;
+      range?: string;
+      headers?: string[];
+      data?: string;
+      formula?: string;
+      format?: 'none' | 'number' | 'currency' | 'date' | 'percentage';
+    };
   };
 }
 

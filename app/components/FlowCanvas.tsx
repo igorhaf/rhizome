@@ -16,6 +16,7 @@ import { LoopNodeIcon } from './icons/LoopNodeIcon';
 import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
 import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
 import { ApiNodeIcon } from './icons/ApiNodeIcon';
+import { SpreadsheetNodeIcon } from './icons/SpreadsheetNodeIcon';
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -546,6 +547,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         return <DatabaseNodeIcon />;
       case 'api':
         return <ApiNodeIcon />;
+      case 'spreadsheet':
+        return <SpreadsheetNodeIcon />;
       default:
         return null;
     }
