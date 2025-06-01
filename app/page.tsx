@@ -12,6 +12,7 @@ import EmailNodeSidebar from './components/advanced/EmailNodeSidebar';
 import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
 import DatabaseQueryModal from './components/DatabaseQueryModal';
 import QueryInterfaceModal from './components/QueryInterfaceModal';
+import LoopConfigTab from './components/LoopConfigTab';
 import { Node, Edge, NodeType } from './types/flow';
 import { DecisionNodeIcon } from './components/FlowEdge';
 
@@ -266,10 +267,10 @@ export default function Home() {
 
   // Handler para abrir subprocesso ou config de nó em nova aba
   const handleNodeDoubleClick = (node: Node) => {
-    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision') {
+    if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision' || node.type === 'loop') {
       // Se já existe uma aba para esse nó, ativa
-      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : 'database'));
-      if (node.type === 'Database' || node.type === 'decision') setSelectedNode(null); // Garante que não há sidebar na aba de config
+      const existing = tabs.find(tab => tab.id === node.id && tab.type === (node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : 'database'));
+      if (node.type === 'Database' || node.type === 'decision' || node.type === 'loop') setSelectedNode(null); // Garante que não há sidebar na aba de config
       if (existing) {
         setActiveTab(existing.id);
       } else {
@@ -277,8 +278,8 @@ export default function Home() {
           ...tabs,
           {
             id: node.id,
-            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : 'Decision'),
-            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : 'database',
+            label: node.data.label || (node.type === 'subprocess' ? 'Subprocesso' : node.type === 'Database' ? 'Database' : node.type === 'loop' ? 'Loop' : 'Decision'),
+            type: node.type === 'decision' ? 'decision-config' : node.type === 'subprocess' ? 'subprocess' : node.type === 'loop' ? 'loop' : 'database',
             content: node,
             mode: 'screen',
           },
@@ -344,6 +345,13 @@ export default function Home() {
         </div>
       );
     }
+    if (tab.type === 'loop') {
+      return (
+        <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
+          <LoopConfigTab node={tab.content as Node} setNodes={setNodes} />
+        </div>
+      );
+    }
     return null;
   };
 
@@ -384,6 +392,12 @@ export default function Home() {
           payload: '',
           inputParams: '',
           notes: '',
+        }),
+        ...(type === 'loop' && {
+          type: 'while',
+          condition: '',
+          iterations: 0,
+          body: [],
         }),
       },
     };
@@ -491,6 +505,7 @@ export default function Home() {
             if (tab.id === 'main') icon = StartIcon;
             else if (tab.type === 'subprocess') icon = SubprocessIcon;
             else if (tab.type === 'decision-config') icon = DecisionIcon;
+            else if (tab.type === 'loop') icon = SubprocessIcon;
             else icon = SubprocessIcon;
             return (
               <React.Fragment key={tab.id}>

@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Node, Edge, NodeType } from '../types/flow';
 import FlowNode from './FlowNode';
 import FlowEdge from './FlowEdge';
+import LoopNode from './nodes/LoopNode';
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -112,6 +113,12 @@ function fallbackOrthogonal(safeStart: [number, number], safeEnd: [number, numbe
     ];
   }
 }
+
+const nodeTypes = {
+  default: FlowNode,
+  loop: LoopNode,
+  // ... existing node types ...
+};
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
   nodes,
