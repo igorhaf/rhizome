@@ -6,6 +6,16 @@ import FlowNode from './FlowNode';
 import FlowEdge from './FlowEdge';
 import LoopNode from './nodes/LoopNode';
 import WebhookNode from './nodes/WebhookNode';
+import { EmailNodeIcon } from './icons/EmailNodeIcon';
+import { StartNodeIcon } from './icons/StartNodeIcon';
+import { EndNodeIcon } from './icons/EndNodeIcon';
+import { FunctionNodeIcon } from './icons/FunctionNodeIcon';
+import { WebhookNodeIcon } from './icons/WebhookNodeIcon';
+import { DecisionNodeIcon } from './icons/DecisionNodeIcon';
+import { LoopNodeIcon } from './icons/LoopNodeIcon';
+import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
+import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
+import { ApiNodeIcon } from './icons/ApiNodeIcon';
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -512,6 +522,33 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       </svg>
     ),
     // ... outros tipos
+  };
+
+  const getNodeIcon = (type: NodeType) => {
+    switch (type) {
+      case 'start':
+        return <StartNodeIcon />;
+      case 'end':
+        return <EndNodeIcon />;
+      case 'funcion':
+        return <FunctionNodeIcon />;
+      case 'email':
+        return <EmailNodeIcon />;
+      case 'webhook':
+        return <WebhookNodeIcon />;
+      case 'decision':
+        return <DecisionNodeIcon />;
+      case 'loop':
+        return <LoopNodeIcon />;
+      case 'subprocess':
+        return <SubprocessNodeIcon />;
+      case 'Database':
+        return <DatabaseNodeIcon />;
+      case 'api':
+        return <ApiNodeIcon />;
+      default:
+        return null;
+    }
   };
 
   const handleCanvasMouseDown = useCallback((e: React.MouseEvent) => {

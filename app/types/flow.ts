@@ -84,6 +84,17 @@ export interface Node {
     functionIsAsync?: boolean;
     functionShouldLog?: boolean;
     functionNotes?: string;
+    // Email fields
+    from?: string;
+    cc?: string;
+    bcc?: string;
+    replyTo?: string;
+    contentType?: 'html' | 'text' | 'template';
+    templateId?: string;
+    attachments?: { name: string; path: string }[];
+    priority?: 'high' | 'normal' | 'low';
+    trackOpens?: boolean;
+    trackClicks?: boolean;
   };
 }
 

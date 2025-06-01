@@ -1,0 +1,18 @@
+import React from 'react';
+
+export const FunctionNodeIcon: React.FC = () => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM4 5V19H20V5H4ZM6 7H8V9H6V7ZM10 7H12V9H10V7ZM14 7H16V9H14V7ZM18 7H18.01V9H18V7ZM6 11H8V13H6V11ZM10 11H12V13H10V11ZM14 11H16V13H14V11ZM18 11H18.01V13H18V11ZM6 15H8V17H6V15ZM10 15H12V17H10V15ZM14 15H16V17H14V15ZM18 15H18.01V17H18V15Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}; 
