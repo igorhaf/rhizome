@@ -17,6 +17,7 @@ import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
 import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
 import { ApiNodeIcon } from './icons/ApiNodeIcon';
 import { SpreadsheetNodeIcon } from './icons/SpreadsheetNodeIcon';
+import { Node as FlowNodeType } from '../types/flow';
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -126,6 +127,32 @@ function fallbackOrthogonal(safeStart: [number, number], safeEnd: [number, numbe
   }
 }
 
+type ConnectorInfo = { nodeId: string; connectorId: string; x: number; y: number; dist: number };
+function findClosestConnector(mouse: { x: number; y: number }, nodes: FlowNodeType[]): ConnectorInfo | null {
+  let minDist = Infinity;
+  let closest: ConnectorInfo | null = null;
+  nodes.forEach((node) => {
+    const nodeWidth = (node.data && typeof (node.data as any).width === 'number') ? (node.data as any).width : 80;
+    const nodeHeight = (node.data && typeof (node.data as any).height === 'number') ? (node.data as any).height : 80;
+    const connectors = [
+      { id: 'top', x: node.position.x + nodeWidth / 2, y: node.position.y },
+      { id: 'right', x: node.position.x + nodeWidth, y: node.position.y + nodeHeight / 2 },
+      { id: 'bottom', x: node.position.x + nodeWidth / 2, y: node.position.y + nodeHeight },
+      { id: 'left', x: node.position.x, y: node.position.y + nodeHeight / 2 },
+    ];
+    connectors.forEach((conn) => {
+      const dx = mouse.x - conn.x;
+      const dy = mouse.y - conn.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = { nodeId: node.id, connectorId: conn.id, x: conn.x, y: conn.y, dist };
+      }
+    });
+  });
+  return (closest && (closest as ConnectorInfo).dist < 20) ? closest : null;
+}
+
 const nodeTypes = {
   default: FlowNode,
   loop: LoopNode,
@@ -160,24 +187,20 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [startOffset, setStartOffset] = useState<{ x: number; y: number } | null>(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
-  const [tempEdge, setTempEdge] = useState<{ x: number; y: number } | null>(null);
   const [selectedLabelEdgeId, setSelectedLabelEdgeId] = useState<string | null>(null);
   const [editingLabelEdgeId, setEditingLabelEdgeId] = useState<string | null>(null);
   const [editingLabelValue, setEditingLabelValue] = useState<string>('');
-  // Ref para throttle do preview da seta
-  const lastPreviewUpdateRef = useRef(0);
-  const lastPreviewPosRef = useRef<{x: number, y: number} | null>(null);
   // Estado para drag de edge
   const [draggingEdgeId, setDraggingEdgeId] = useState<string | null>(null);
   const [draggingEnd, setDraggingEnd] = useState<'source' | 'target' | null>(null);
   const [draggingFrom, setDraggingFrom] = useState<{ nodeId: string; connectorId: string } | null>(null);
   const [draggingTo, setDraggingTo] = useState<{ x: number; y: number } | null>(null);
-  const [dragOverConnector, setDragOverConnector] = useState<{ nodeId: string; connectorId: string } | null>(null);
+  const [hoveredConnector, setHoveredConnector] = useState<{ nodeId: string; connectorId: string; x: number; y: number } | null>(null);
   const [edgeBackup, setEdgeBackup] = useState<Edge | null>(null);
   const [viewport, setViewport] = React.useState({ x: 0, y: 0, zoom: 1 });
   // Estado para seleção e ligação de conectores
   const [activeConnector, setActiveConnector] = useState<{ nodeId: string; connectorId: string } | null>(null);
+  const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
 
   // Centralizar o canvas na inicialização com posição arredondada
   useEffect(() => {
@@ -259,41 +282,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     onNodesChange([...nodes, newNode]);
   }, [nodes, onNodesChange, position, scale]);
 
-  const handleConnectionStart = useCallback((nodeId: string, connectorId: string) => {
-    setIsPanning(false);
-    setConnectionStart({ nodeId, connectorId });
-    setDraggingFrom({ nodeId, connectorId });
-  }, []);
-
-  const handleConnectionEnd = useCallback((nodeId: string, connectorId: string) => {
-    if (connectionStart && connectionStart.nodeId !== nodeId) {
-      // Verifica se já existe uma conexão entre estes nós
-      const existingEdge = edges.find(
-        edge => 
-          (edge.source === connectionStart.nodeId && edge.target === nodeId) ||
-          (edge.source === nodeId && edge.target === connectionStart.nodeId)
-      );
-
-      if (!existingEdge) {
-        const newEdge: Edge = {
-          id: `edge-${Date.now()}`,
-          source: connectionStart.nodeId,
-          target: nodeId,
-          type: 'default',
-          data: {
-            sourceConnector: connectionStart.connectorId,
-            targetConnector: connectorId,
-          },
-        };
-        onEdgesChange([...edges, newEdge]);
-      }
-    }
-    setConnectionStart(null);
-    setTempEdge(null);
-    setDraggingFrom(null);
-    setDraggingTo(null);
-  }, [connectionStart, edges, onEdgesChange]);
-
   const handleCanvasMouseMove = useCallback((e: MouseEvent) => {
     if (!isPanning || !startPoint || !startOffset) return;
     
@@ -305,29 +293,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       y: Math.round(startOffset.y + dy)
     });
   }, [isPanning, startPoint, startOffset]);
-
-  // Handler para atualizar posição da seta durante drag
-  const handleEdgeDragMove = useCallback((e: MouseEvent) => {
-    if (draggingEdgeId && draggingEnd && draggingFrom) {
-      const canvasRect = canvasRef.current?.getBoundingClientRect();
-      if (!canvasRect) return;
-      
-      const x = (e.clientX - canvasRect.left - position.x) / scale;
-      const y = (e.clientY - canvasRect.top - position.y) / scale;
-      
-      setDraggingTo({ x, y });
-    }
-    
-    if (connectionStart) {
-      const canvasRect = canvasRef.current?.getBoundingClientRect();
-      if (!canvasRect) return;
-      
-      const x = (e.clientX - canvasRect.left - position.x) / scale;
-      const y = (e.clientY - canvasRect.top - position.y) / scale;
-      
-      setTempEdge({ x, y });
-    }
-  }, [draggingEdgeId, draggingEnd, draggingFrom, connectionStart, position, scale]);
 
   const handleCanvasMouseUp = useCallback(() => {
     setIsPanning(false);
@@ -345,18 +310,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       window.removeEventListener('mouseup', handleCanvasMouseUp);
     };
   }, [isPanning, handleCanvasMouseMove, handleCanvasMouseUp]);
-
-  // Adiciona e remove event listeners para o drag
-  useEffect(() => {
-    if (draggingEdgeId || connectionStart) {
-      window.addEventListener('mousemove', handleEdgeDragMove);
-      window.addEventListener('mouseup', handleCanvasMouseUp);
-    }
-    return () => {
-      window.removeEventListener('mousemove', handleEdgeDragMove);
-      window.removeEventListener('mouseup', handleCanvasMouseUp);
-    };
-  }, [draggingEdgeId, connectionStart, handleEdgeDragMove, handleCanvasMouseUp]);
 
   // Função para selecionar uma edge
   const handleEdgeSelect = (edge: Edge) => {
@@ -469,8 +422,11 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     const x = (e.clientX - canvasRect.left - position.x) / scale;
     const y = (e.clientY - canvasRect.top - position.y) / scale;
     
-    setConnectionStart({ nodeId, connectorId });
-    setTempEdge({ x, y });
+    setDraggingEdgeId(null);
+    setDraggingEnd(null);
+    setDraggingFrom({ nodeId, connectorId });
+    
+    setDraggingTo({ x, y });
   }, [position, scale]);
 
   // Handler para iniciar drag de conector da seta
@@ -555,7 +511,6 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   };
 
   const handleCanvasMouseDown = useCallback((e: React.MouseEvent) => {
-    if (connectionStart) return;
     const target = e.target as HTMLElement;
     const isNode = target.closest('[id^="node-"]');
     const isConnector = target.id && target.id.includes('-connector-');
@@ -571,7 +526,52 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       setStartPoint({ x: e.clientX, y: e.clientY });
       setStartOffset({ x: position.x, y: position.y });
     }
-  }, [connectionStart, position, handleLabelDeselect]);
+  }, [position, handleLabelDeselect]);
+
+  const handleConnectionStart = useCallback((nodeId: string, connectorId: string) => {
+    setConnectionStart({ nodeId, connectorId });
+  }, []);
+
+  const handleConnectionEnd = useCallback((nodeId: string, connectorId: string) => {
+    if (connectionStart && connectionStart.nodeId !== nodeId) {
+      const newEdge: Edge = {
+        id: `edge-${Date.now()}`,
+        source: connectionStart.nodeId,
+        target: nodeId,
+        data: {
+          sourceConnector: connectionStart.connectorId,
+          targetConnector: connectorId,
+        },
+      };
+      onEdgesChange([...edges, newEdge]);
+    }
+    setConnectionStart(null);
+  }, [connectionStart, edges, onEdgesChange]);
+
+  // Atualiza draggingTo em tempo real durante arraste de ligação e limpa ao soltar
+  useEffect(() => {
+    if (!draggingFrom) return;
+
+    function handleMouseMove(e: MouseEvent) {
+      const canvasRect = canvasRef.current?.getBoundingClientRect();
+      if (!canvasRect) return;
+      const x = (e.clientX - canvasRect.left - position.x) / scale;
+      const y = (e.clientY - canvasRect.top - position.y) / scale;
+      setDraggingTo({ x, y });
+    }
+
+    function handleMouseUp() {
+      setDraggingFrom(null);
+      setDraggingTo(null);
+    }
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [draggingFrom, position, scale]);
 
   return (
     <div
@@ -630,22 +630,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             zIndex: 10
           }}
         >
-          <defs>
-            <marker
-              id="arrowhead"
-              markerWidth="6"
-              markerHeight="4"
-              refX="5.5"
-              refY="2"
-              orient="auto"
-              className="stroke-gray-500"
-            >
-              <polygon points="0 0, 6 2, 0 4" className="fill-gray-500" />
-            </marker>
-          </defs>
           {edges.map((edge) => {
             const sourceNode = nodes.find(n => n.id === edge.source);
             const targetNode = nodes.find(n => n.id === edge.target);
+            const isDragging = draggingEdgeId === edge.id;
             return (
               <FlowEdge
                 key={edge.id}
@@ -670,113 +658,97 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
                 handleConnectorEnter={handleConnectorEnter}
                 handleConnectorLeave={handleConnectorLeave}
                 handleConnectorMouseDown={handleConnectorMouseDown}
-                activeConnector={activeConnector}
-                draggingFrom={draggingFrom}
-                draggingTo={draggingTo}
+                activeConnector={hoveredConnector && hoveredConnector.nodeId === edge.source ? hoveredConnector : activeConnector}
+                draggingFrom={isDragging ? draggingFrom : null}
+                draggingTo={isDragging ? draggingTo : null}
                 handleEdgeConnectorDragStart={handleEdgeConnectorDragStart}
               />
             );
           })}
-          {/* Linha fantasma durante drag de edge */}
-          {draggingEdgeId && draggingFrom && draggingTo && (
-            <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ zIndex: 1000 }}>
-              <defs>
-                <marker
-                  id="temp-arrowhead"
-                  markerWidth="10"
-                  markerHeight="7"
-                  refX="9"
-                  refY="3.5"
-                  orient="auto"
-                >
-                  <polygon
-                    points="0 0, 10 3.5, 0 7"
-                    className="fill-gray-500"
-                  />
-                </marker>
-              </defs>
-              {(() => {
-                const edge = edges.find(e => e.id === draggingEdgeId);
-                if (!edge) return null;
-                const nodeId = draggingEnd === 'source' ? edge.target : edge.source;
-                const connectorId = draggingEnd === 'source'
-                  ? edge.data?.targetConnector || 'left'
-                  : edge.data?.sourceConnector || 'right';
-                const node = nodes.find(n => n.id === nodeId);
-                if (!node) return null;
-                // Cálculo preciso do centro do conector (coordenadas do mundo)
-                const nodeWidth = (node.data && 'width' in node.data && typeof (node.data as any).width === 'number') ? (node.data as any).width : 80;
-                const nodeHeight = (node.data && 'height' in node.data && typeof (node.data as any).height === 'number') ? (node.data as any).height : 80;
-                const cx = node.position.x + nodeWidth / 2;
-                const cy = node.position.y + nodeHeight / 2;
-                const r = nodeWidth / 2;
-                let angle = 0;
-                if (connectorId === 'left') angle = Math.PI;
-                if (connectorId === 'right') angle = 0;
-                if (connectorId === 'top') angle = -Math.PI / 2;
-                if (connectorId === 'bottom') angle = Math.PI / 2;
-                const startX = cx + r * Math.cos(angle);
-                const startY = cy + r * Math.sin(angle);
-                return (
-                  <polyline
-                    points={`${startX},${startY} ${draggingTo.x},${draggingTo.y}`}
-                    className="stroke-blue-400 stroke-2 fill-none pointer-events-none"
-                    markerEnd="url(#arrowhead)"
-                  />
-                );
-              })()}
-            </svg>
-          )}
-        </svg>
-        {tempEdge && connectionStart && (
-          <svg
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            style={{ zIndex: 1000 }}
-          >
-            <defs>
-              <marker
-                id="temp-arrowhead"
-                markerWidth="10"
-                markerHeight="7"
-                refX="9"
-                refY="3.5"
-                orient="auto"
-              >
-                <polygon
-                  points="0 0, 10 3.5, 0 7"
-                  className="fill-gray-500"
-                />
-              </marker>
-            </defs>
-            {(() => {
-              const sourceNode = nodes.find(n => n.id === connectionStart.nodeId);
+          {/* Seta temporária durante arraste de conexão */}
+          {draggingFrom && draggingTo && (
+            (() => {
+              // Encontrar o nó de origem
+              const sourceNode = nodes.find(n => n.id === draggingFrom.nodeId);
               if (!sourceNode) return null;
-              const connectorId = connectionStart.connectorId;
-              // Cálculo preciso do centro do conector (coordenadas do mundo)
-              const nodeWidth = (sourceNode.data && 'width' in sourceNode.data && typeof (sourceNode.data as any).width === 'number') ? (sourceNode.data as any).width : 80;
-              const nodeHeight = (sourceNode.data && 'height' in sourceNode.data && typeof (sourceNode.data as any).height === 'number') ? (sourceNode.data as any).height : 80;
-              const cx = sourceNode.position.x + nodeWidth / 2;
-              const cy = sourceNode.position.y + nodeHeight / 2;
-              const r = nodeWidth / 2;
-              let angle = 0;
-              if (connectorId === 'left') angle = Math.PI;
-              if (connectorId === 'right') angle = 0;
-              if (connectorId === 'top') angle = -Math.PI / 2;
-              if (connectorId === 'bottom') angle = Math.PI / 2;
-              const startX = cx + r * Math.cos(angle);
-              const startY = cy + r * Math.sin(angle);
-              const fallbackPoints = fallbackOrthogonal([startX, startY], [tempEdge.x, tempEdge.y]);
-              const pointsStr = fallbackPoints.map(([x, y]) => `${x},${y}`).join(' ');
+              // Função igual à do FlowEdge
+              const NODE_SIZE = 56;
+              const getConnectorPosition = (node: typeof nodes[0], connectorId: string): { x: number; y: number } => {
+                const { x, y } = node.position;
+                const halfSize = NODE_SIZE / 2;
+                switch (connectorId) {
+                  case 'top': return { x, y: y - halfSize };
+                  case 'right': return { x: x + halfSize, y };
+                  case 'bottom': return { x, y: y + halfSize };
+                  case 'left': return { x: x - halfSize, y };
+                  default: return { x, y };
+                }
+              };
+              const start = getConnectorPosition(sourceNode, draggingFrom.connectorId);
+              // Se o mouse estiver sobre um conector válido, "gruda" nele
+              let end = draggingTo;
+              const closest = nodes
+                .filter(n => n.id !== draggingFrom.nodeId)
+                .flatMap(node => [
+                  { id: 'top', x: node.position.x, y: node.position.y - NODE_SIZE / 2 },
+                  { id: 'right', x: node.position.x + NODE_SIZE / 2, y: node.position.y },
+                  { id: 'bottom', x: node.position.x, y: node.position.y + NODE_SIZE / 2 },
+                  { id: 'left', x: node.position.x - NODE_SIZE / 2, y: node.position.y },
+                ])
+                .map(conn => ({ ...conn, dist: Math.sqrt((draggingTo.x - conn.x) ** 2 + (draggingTo.y - conn.y) ** 2) }))
+                .sort((a, b) => a.dist - b.dist)[0];
+              if (closest && closest.dist < 20) {
+                end = { x: closest.x, y: closest.y };
+              }
+              // Caminho ortogonal igual ao FlowEdge
+              const fallbackOrthogonal = (start: { x: number; y: number }, end: { x: number; y: number }): [number, number][] => {
+                const [sx, sy] = [start.x, start.y];
+                const [ex, ey] = [end.x, end.y];
+                if (Math.abs(ex - sx) > Math.abs(ey - sy)) {
+                  const midX = sx + (ex - sx) / 2;
+                  return [
+                    [sx, sy],
+                    [midX, sy],
+                    [midX, ey],
+                    [ex, ey],
+                  ];
+                } else {
+                  const midY = sy + (ey - sy) / 2;
+                  return [
+                    [sx, sy],
+                    [sx, midY],
+                    [ex, midY],
+                    [ex, ey],
+                  ];
+                }
+              };
+              const points = fallbackOrthogonal(start, end);
               return (
                 <polyline
-                  points={pointsStr}
-                  className="stroke-gray-500 stroke-2 fill-none stroke-dasharray-4"
-                  markerEnd="url(#temp-arrowhead)"
+                  points={points.map(([x, y]) => `${x},${y}`).join(' ')}
+                  fill="none"
+                  stroke="#60a5fa"
+                  strokeWidth={2}
+                  markerEnd="url(#arrowhead-temp)"
+                  style={{ pointerEvents: 'none' }}
                 />
               );
-            })()}
-          </svg>
-        )}
+            })()
+          )}
+          {/* Definição do marcador de seta temporária */}
+          <defs>
+            <marker
+              id="arrowhead-temp"
+              markerWidth="6"
+              markerHeight="4"
+              refX="5.5"
+              refY="2"
+              orient="auto"
+            >
+              <polygon points="0 0, 6 2, 0 4" fill="#60a5fa" />
+            </marker>
+          </defs>
+        </svg>
         {nodes.map((node) => (
           <FlowNode
             key={node.id}
@@ -808,7 +780,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             handleConnectorEnter={handleConnectorEnter}
             handleConnectorLeave={handleConnectorLeave}
             handleConnectorMouseDown={handleConnectorMouseDown}
-            activeConnector={activeConnector}
+            activeConnector={hoveredConnector && hoveredConnector.nodeId === node.id ? hoveredConnector : activeConnector}
             draggingFrom={draggingFrom}
             draggingTo={draggingTo}
             draggingEdgeId={draggingEdgeId}

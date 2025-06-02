@@ -130,6 +130,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <div
           id={`${node.id}-connector-top`}
           className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'top' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          style={{ pointerEvents: 'auto' }}
           onMouseEnter={() => handleConnectorEnter?.(node.id, 'top')}
           onMouseLeave={handleConnectorLeave}
           onMouseDown={(e) => {
@@ -156,6 +157,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <div
           id={`${node.id}-connector-right`}
           className={`absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'right' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          style={{ pointerEvents: 'auto' }}
           onMouseEnter={() => handleConnectorEnter?.(node.id, 'right')}
           onMouseLeave={handleConnectorLeave}
           onMouseDown={(e) => {
@@ -182,6 +184,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <div
           id={`${node.id}-connector-bottom`}
           className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'bottom' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          style={{ pointerEvents: 'auto' }}
           onMouseEnter={() => handleConnectorEnter?.(node.id, 'bottom')}
           onMouseLeave={handleConnectorLeave}
           onMouseDown={(e) => {
@@ -208,6 +211,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <div
           id={`${node.id}-connector-left`}
           className={`absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full border border-gray-400 bg-gray-800 cursor-crosshair transition-all duration-200 hover:scale-125 hover:border-blue-400 hover:bg-blue-500 ${localActiveConnector === 'left' ? 'scale-125 border-blue-400 bg-blue-500' : ''}`}
+          style={{ pointerEvents: 'auto' }}
           onMouseEnter={() => handleConnectorEnter?.(node.id, 'left')}
           onMouseLeave={handleConnectorLeave}
           onMouseDown={(e) => {

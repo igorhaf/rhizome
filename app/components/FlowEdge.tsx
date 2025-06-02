@@ -85,7 +85,7 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   }
 
   // Função para calcular a posição do conector baseado no estado do nó
-  function getConnectorPosition(node: Node, connectorId: string) {
+  function getConnectorPosition(node: Node, connectorId: string): { x: number; y: number } {
     const { x, y } = node.position;
     const halfSize = NODE_SIZE / 2;
     
@@ -99,21 +99,51 @@ const FlowEdge: React.FC<FlowEdgeProps> = ({ edge, canvasRef, sourcePosition, ta
   }
 
   useEffect(() => {
+    // Se estiver em drag de conexão, alinhe ao conector mais próximo
+    if (draggingTo && draggingFrom && nodes) {
+      // Encontrar o nó de origem
+      const sourceNode = nodes.find(n => n.id === draggingFrom.nodeId);
+      if (!sourceNode) return;
+      // Posição do conector de origem
+      const start = getConnectorPosition(sourceNode, draggingFrom.connectorId);
+      // Encontrar conector mais próximo do mouse
+      let minDist = Infinity;
+      let closest: { x: number; y: number } | null = null;
+      nodes.filter(n => n.id !== draggingFrom.nodeId).forEach(node => {
+        const connectors = [
+          { id: 'top', x: node.position.x, y: node.position.y - NODE_SIZE / 2 },
+          { id: 'right', x: node.position.x + NODE_SIZE / 2, y: node.position.y },
+          { id: 'bottom', x: node.position.x, y: node.position.y + NODE_SIZE / 2 },
+          { id: 'left', x: node.position.x - NODE_SIZE / 2, y: node.position.y },
+        ];
+        connectors.forEach(conn => {
+          const dx = draggingTo.x - conn.x;
+          const dy = draggingTo.y - conn.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = { x: conn.x, y: conn.y };
+          }
+        });
+      });
+      // Se estiver perto de um conector (< 20px), use ele, senão use o mouse
+      const end = (closest && minDist < 20) ? closest : draggingTo;
+      // Caminho ortogonal
+      const fallbackPoints = fallbackOrthogonal([start.x, start.y], [end.x, end.y]);
+      setPoints(fallbackPoints.map(([x, y]) => `${x},${y}`).join(' '));
+      return;
+    }
+    // --- comportamento padrão ---
     const sourceConnector = edge.data?.sourceConnector || 'right';
     const targetConnector = edge.data?.targetConnector || 'left';
     const sourceNode = nodes?.find(n => n.id === edge.source);
     const targetNode = nodes?.find(n => n.id === edge.target);
-    
     if (!sourceNode || !targetNode) return;
-
-    // Calcula a posição dos conectores
     const start = getConnectorPosition(sourceNode, sourceConnector);
     const end = getConnectorPosition(targetNode, targetConnector);
-
-    // Usa o caminho ortogonal com fallback
     const fallbackPoints = fallbackOrthogonal([start.x, start.y], [end.x, end.y]);
     setPoints(fallbackPoints.map(([x, y]) => `${x},${y}`).join(' '));
-  }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, nodes]);
+  }, [edge.source, edge.target, edge.data?.sourceConnector, edge.data?.targetConnector, nodes, draggingTo, draggingFrom]);
 
   // Função para atualizar o offset do label
   const updateLabelOffset = (newOffset: { x: number; y: number }) => {

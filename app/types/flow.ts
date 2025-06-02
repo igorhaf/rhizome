@@ -8,6 +8,7 @@ export type NodeType =
   | 'loop'
   | 'subprocess'
   | 'database'
+  | 'Database'
   | 'api'
   | 'spreadsheet';
 
