@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import { Node, Position } from '../types/flow';
+import { Node, Position, NodeType } from '../types/flow';
 
 interface FlowNodeProps {
   node: Node;
@@ -86,7 +86,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
 
   const getNodeStyle = (type: Node['type']) => {
     const baseStyle = 'rounded-lg shadow-md p-2 min-w-[105px] cursor-move relative';
-    switch (type) {
+    switch (type as string) {
       case 'start':
         return `${baseStyle} bg-green-500 text-white`;
       case 'end':
@@ -109,6 +109,8 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         return `${baseStyle} bg-indigo-500 text-white`;
       case 'spreadsheet':
         return `${baseStyle} bg-green-500 text-white`;
+      case 'warning':
+        return `${baseStyle} bg-yellow-400 text-black border-2 border-yellow-600`;
       default:
         return `${baseStyle} bg-gray-500 text-white`;
     }
@@ -502,6 +504,12 @@ const FlowNode: React.FC<FlowNodeProps> = ({
         <rect x="18" y="34" width="4" height="4" rx="1" fill="#10b981" />
         <rect x="26" y="34" width="4" height="4" rx="1" fill="#10b981" />
         <rect x="34" y="34" width="4" height="4" rx="1" fill="#10b981" />
+      </svg>
+    ),
+    warning: (
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <polygon points="24,6 44,42 4,42" fill="#facc15" stroke="#b45309" strokeWidth="3"/>
+        <text x="24" y="34" textAnchor="middle" fontSize="28" fill="#b45309" fontWeight="bold">!</text>
       </svg>
     ),
   };
