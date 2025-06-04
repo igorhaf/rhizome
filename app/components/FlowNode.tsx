@@ -110,7 +110,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       case 'spreadsheet':
         return `${baseStyle} bg-green-500 text-white`;
       case 'warning':
-        return `${baseStyle} bg-yellow-400 text-black border-2 border-yellow-600`;
+        return `${baseStyle} bg-yellow-400 text-black`;
       default:
         return `${baseStyle} bg-gray-500 text-white`;
     }
@@ -508,8 +508,22 @@ const FlowNode: React.FC<FlowNodeProps> = ({
     ),
     warning: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <polygon points="24,6 44,42 4,42" fill="#facc15" stroke="#b45309" strokeWidth="3"/>
-        <text x="24" y="34" textAnchor="middle" fontSize="28" fill="#b45309" fontWeight="bold">!</text>
+        {selected && (
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" filter="url(#node-glow)" />
+        )}
+        <circle cx="24" cy="24" r="20" fill="#facc15" />
+        <text x="24" y="32" textAnchor="middle" fontSize="28" fill="#b45309" fontWeight="bold">!</text>
+        <defs>
+          <filter id="node-glow" x="-4" y="-4" width="56" height="56" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feFlood floodColor="#22c55e" floodOpacity="1" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
       </svg>
     ),
   };
