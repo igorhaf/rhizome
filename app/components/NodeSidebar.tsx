@@ -4,6 +4,7 @@ import DatabaseQueryModal from './DatabaseQueryModal';
 import EmailNodeSidebar from './EmailNodeSidebar';
 import SpreadsheetNodeSidebar from './SpreadsheetNodeSidebar';
 import StartNodeSidebar from './StartNodeSidebar';
+import WarningNodeSidebar from './panels/WarningNodeSidebar';
 
 interface NodeSidebarProps {
   node: Node;
@@ -43,6 +44,10 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
 
   if (node.type === 'start') {
     return <StartNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
+  }
+
+  if (node.type === 'warning') {
+    return <WarningNodeSidebar data={node.data} onChange={newData => onUpdate({ ...node, data: { ...node.data, ...newData } })} />;
   }
 
   return (
