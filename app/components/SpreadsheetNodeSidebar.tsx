@@ -17,8 +17,8 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
   };
 
   return (
-    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-4 overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
+    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-6 overflow-y-auto">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-medium text-white">Configuração da Planilha</h2>
         <button
           onClick={onClose}
@@ -28,9 +28,9 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Nome</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Nome</label>
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
@@ -44,7 +44,7 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Tipo de Arquivo</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Tipo de Arquivo</label>
           <select
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
             value={spreadsheetConfig.fileType}
@@ -67,7 +67,7 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Operação</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Operação</label>
           <select
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
             value={spreadsheetConfig.operationType}
@@ -90,10 +90,10 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Nome da Planilha</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Nome da Planilha</label>
           <input
             type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             value={spreadsheetConfig.sheetName}
             onChange={(e) => onUpdate({
               ...node,
@@ -110,10 +110,10 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Intervalo</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Intervalo</label>
           <input
             type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             value={spreadsheetConfig.range}
             onChange={(e) => onUpdate({
               ...node,
@@ -130,7 +130,7 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Formato</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Formato</label>
           <select
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
             value={spreadsheetConfig.format}
@@ -154,9 +154,9 @@ const SpreadsheetNodeSidebar: React.FC<SpreadsheetNodeSidebarProps> = ({ node, o
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Notas</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Notas</label>
           <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             rows={3}
             value={node.data.notes || ''}
             onChange={(e) => onUpdate({

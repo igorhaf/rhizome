@@ -5,6 +5,7 @@ import EmailNodeSidebar from './EmailNodeSidebar';
 import SpreadsheetNodeSidebar from './SpreadsheetNodeSidebar';
 import StartNodeSidebar from './StartNodeSidebar';
 import WarningNodeSidebar from './panels/WarningNodeSidebar';
+import ApiNodeSidebar from './advanced/ApiNodeSidebar';
 
 interface NodeSidebarProps {
   node: Node;
@@ -33,6 +34,10 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
     });
     setShowDatabaseModal(false);
   };
+
+  if (node.type === 'api') {
+    return <ApiNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
+  }
 
   if (node.type === 'email') {
     return <EmailNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;

@@ -23,6 +23,17 @@ export interface NodeData {
   notes?: string;
   outputs?: string;
   active?: boolean;
+  shouldLog?: boolean;
+  inputVars?: string;
+  outputVars?: string;
+  from?: string;
+  to?: string;
+  subject?: string;
+  contentType?: string;
+  priority?: string;
+  conditionExpression?: string;
+  retryCount?: number;
+  retryInterval?: number;
   databaseConfig?: {
     type: 'postgres' | 'mysql' | 'sqlite' | 'mongodb';
     query: string;
@@ -40,6 +51,18 @@ export interface NodeData {
     range: string;
     format: 'none' | 'number' | 'currency' | 'date' | 'percentage';
   };
+  apiUrl?: string;
+  httpMethod?: string;
+  headers?: string;
+  payload?: string;
+  authType?: 'none' | 'basic' | 'bearer' | 'apiKey';
+  authUsername?: string;
+  authPassword?: string;
+  authToken?: string;
+  apiKey?: string;
+  apiKeyValue?: string;
+  apiKeyLocation?: 'header' | 'query';
+  timeout?: number;
 }
 
 export interface Node {

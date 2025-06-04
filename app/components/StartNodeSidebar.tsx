@@ -9,8 +9,8 @@ interface StartNodeSidebarProps {
 
 const StartNodeSidebar: React.FC<StartNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
   return (
-    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-4 overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
+    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-6 overflow-y-auto">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-medium text-white">Configuração do Início</h2>
         <button
           onClick={onClose}
@@ -20,9 +20,9 @@ const StartNodeSidebar: React.FC<StartNodeSidebarProps> = ({ node, onUpdate, onC
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Nome</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Nome</label>
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
@@ -36,9 +36,9 @@ const StartNodeSidebar: React.FC<StartNodeSidebarProps> = ({ node, onUpdate, onC
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Descrição</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Descrição</label>
           <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             rows={3}
             value={node.data.description || ''}
             onChange={(e) => onUpdate({
@@ -54,7 +54,7 @@ const StartNodeSidebar: React.FC<StartNodeSidebarProps> = ({ node, onUpdate, onC
           <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full">
             <input
               type="checkbox"
-              className="absolute w-6 h-6 transition duration-100 ease-in-out transform bg-white border-4 rounded-full appearance-none cursor-pointer peer border-gray-300 checked:translate-x-full checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="absolute w-6 h-6 transition duration-100 ease-in-out transform bg-[#23272e] border-2 rounded-full appearance-none cursor-pointer peer border-[#333] checked:translate-x-full checked:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               checked={node.data.active || false}
               onChange={(e) => onUpdate({
                 ...node,
@@ -63,16 +63,16 @@ const StartNodeSidebar: React.FC<StartNodeSidebarProps> = ({ node, onUpdate, onC
             />
             <label
               className={`block h-6 overflow-hidden rounded-full cursor-pointer ${
-                node.data.active ? 'bg-blue-600' : 'bg-gray-300'
+                node.data.active ? 'bg-blue-500' : 'bg-[#333]'
               }`}
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Notas</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Notas</label>
           <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             rows={3}
             value={node.data.notes || ''}
             onChange={(e) => onUpdate({

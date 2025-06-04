@@ -16,8 +16,8 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
   };
 
   return (
-    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-4 overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
+    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-6 overflow-y-auto">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-medium text-white">Configuração do Email</h2>
         <button
           onClick={onClose}
@@ -27,9 +27,9 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Nome</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Nome</label>
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
@@ -43,7 +43,7 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Para</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Para</label>
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
@@ -63,7 +63,7 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Assunto</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Assunto</label>
           <input
             type="text"
             className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
@@ -83,9 +83,9 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Corpo</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Corpo</label>
           <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             rows={5}
             value={emailConfig.body}
             onChange={(e) => onUpdate({
@@ -103,10 +103,10 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Anexos</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Anexos</label>
           <input
             type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             value={emailConfig.attachments?.join(', ') || ''}
             onChange={(e) => onUpdate({
               ...node,
@@ -123,9 +123,9 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Notas</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">Notas</label>
           <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
+            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
             rows={3}
             value={node.data.notes || ''}
             onChange={(e) => onUpdate({
