@@ -421,6 +421,7 @@ export default function Home() {
             onEdgesChange={handleEdgesChange}
             onConnect={handleConnect}
             onNodeClick={setSelectedNode}
+            onNodeDoubleClick={handleNodeDoubleClick}
             onEdgeClick={(edge) => setSelectedEdgeId(edge?.id ?? null)}
             onPaneClick={() => {
               setSelectedNode(null);

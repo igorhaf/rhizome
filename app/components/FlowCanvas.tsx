@@ -61,6 +61,7 @@ interface FlowCanvasProps {
   selectedNode?: Node | null;
   selectedEdgeId?: string | null;
   onNodeAdd?: (nodeData: Partial<Node>, position: { x: number; y: number }) => void;
+  onNodeDoubleClick?: (node: Node) => void;
 }
 
 // Função utilitária: grid, obstáculos e BFS ortogonal (copiada do FlowEdge)
@@ -213,6 +214,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   selectedNode,
   selectedEdgeId,
   onNodeAdd,
+  onNodeDoubleClick,
 }) => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   // Se nodes/edges são passados como props, use-os; senão, use estado local
@@ -767,11 +769,16 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
           type: getEdgeType(e),
           animated: !(e as any).animatedDragging,
           style: getEdgeStyle(e),
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: '#555',
+          },
         }))}
         onNodesChange={onNodesChange ?? onNodesChangeInternal}
         onEdgesChange={onEdgesChange ?? onEdgesChangeInternal}
         onConnect={handleConnect}
         onNodeClick={(_, node) => onNodeClick?.(node)}
+        onNodeDoubleClick={(_, node) => onNodeDoubleClick?.(node)}
         onEdgeClick={(_, edge) => onEdgeClick?.(edge)}
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
