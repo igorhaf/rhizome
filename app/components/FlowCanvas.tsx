@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Node, Edge, NodeType } from '../types/flow';
+import { Node, NodeType } from '../types/flow';
 import FlowNode from './FlowNode';
 import FlowEdge from './FlowEdge';
 import {
@@ -45,6 +45,7 @@ import ReactFlow, {
   MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import type { Edge } from 'reactflow';
 
 interface FlowCanvasProps {
   nodes?: Node[];
@@ -219,7 +220,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [localEdges, setLocalEdges, onEdgesChangeInternal] = useEdgesState(initialEdges);
   const renderNodes = nodes ?? localNodes;
   const renderEdges = edges ?? localEdges;
-  const { getIntersectingNodes, getNode } = useReactFlow();
+  const { getIntersectingNodes, getNode, project } = useReactFlow();
   const [isDragging, setIsDragging] = useState(false);
   const [isPanning, setIsPanning] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
@@ -349,12 +350,13 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     }
     const type = nodeData.type || 'start';
     setDebugInfo((info) => ({ ...info, lastType: type }));
-    const dropPosition = {
-      x: (event.clientX - reactFlowBounds.left - position.x) / scale,
-      y: (event.clientY - reactFlowBounds.top - position.y) / scale,
-    };
+    // Corrigir posição usando project do ReactFlow
+    const pos = project({
+      x: event.clientX - reactFlowBounds.left,
+      y: event.clientY - reactFlowBounds.top,
+    });
     if (onNodeAdd) {
-      onNodeAdd({ type, data: nodeData }, dropPosition);
+      onNodeAdd({ type, data: nodeData }, pos);
     } else {
       // Corrige headers se vier como objeto vazio
       if (nodeData.headers && !Array.isArray(nodeData.headers)) {
@@ -365,12 +367,12 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
         {
           id: `node-${Date.now()}`,
           type,
-          position: dropPosition,
+          position: pos,
           data: nodeData,
         },
       ]);
     }
-  }, [onNodeAdd, setLocalNodes, scale, position]);
+  }, [onNodeAdd, setLocalNodes, project]);
 
   const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -725,6 +727,20 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     [renderEdges, getNode, onConnect, setLocalEdges]
   );
 
+  // Ajustar tipo e estilo das edges definitivas
+  const getEdgeType = (edge: Edge) => {
+    if ((edge as any).animatedDragging) {
+      return 'smoothstep';
+    }
+    return 'smoothstep';
+  };
+  const getEdgeStyle = (edge: Edge) => {
+    if ((edge as any).animatedDragging) {
+      return { stroke: '#38bdf8', strokeWidth: 2 };
+    }
+    return { strokeDasharray: '6 3', stroke: '#555', strokeWidth: 2 };
+  };
+
   return (
     <div className="w-full h-full relative" ref={reactFlowWrapper}
       onDragOver={handleDragOver}
@@ -746,7 +762,12 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
       </div>
       <ReactFlow
         nodes={renderNodes}
-        edges={renderEdges}
+        edges={renderEdges.map(e => ({
+          ...e,
+          type: getEdgeType(e),
+          animated: !(e as any).animatedDragging,
+          style: getEdgeStyle(e),
+        }))}
         onNodesChange={onNodesChange ?? onNodesChangeInternal}
         onEdgesChange={onEdgesChange ?? onEdgesChangeInternal}
         onConnect={handleConnect}
