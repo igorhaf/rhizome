@@ -30,12 +30,12 @@ const ApiNodeSidebar: React.FC<ApiNodeSidebarProps> = ({ node, onUpdate, onClose
       <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.apiUrl || ''} onChange={e => handleChange('apiUrl', e.target.value)} placeholder="https://api.exemplo.com/endpoint" />
       <label className="text-xs text-gray-400">Método HTTP</label>
       <select className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.httpMethod || 'GET'} onChange={e => handleChange('httpMethod', e.target.value)}>
-        <option value="GET">GET</option>
-        <option value="POST">POST</option>
-        <option value="PUT">PUT</option>
-        <option value="DELETE">DELETE</option>
-        <option value="PATCH">PATCH</option>
-      </select>
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+            <option value="PATCH">PATCH</option>
+          </select>
       <label className="text-xs text-gray-400">Headers</label>
       <textarea className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none" value={data.headers || ''} onChange={e => handleChange('headers', e.target.value)} placeholder={"Content-Type: application/json\nAuthorization: Bearer ..."} />
       <label className="text-xs text-gray-400">Payload</label>
@@ -43,10 +43,10 @@ const ApiNodeSidebar: React.FC<ApiNodeSidebarProps> = ({ node, onUpdate, onClose
       <label className="text-xs text-gray-400">Tipo de Autenticação</label>
       <select className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.authType || 'none'} onChange={e => handleChange('authType', e.target.value)}>
         <option value="none">Nenhuma</option>
-        <option value="basic">Basic Auth</option>
-        <option value="bearer">Bearer Token</option>
-        <option value="apiKey">API Key</option>
-      </select>
+            <option value="basic">Basic Auth</option>
+            <option value="bearer">Bearer Token</option>
+            <option value="apiKey">API Key</option>
+          </select>
       {data.authType === 'basic' && (<><label className="text-xs text-gray-400">Usuário</label><input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.authUsername || ''} onChange={e => handleChange('authUsername', e.target.value)} placeholder="Usuário" /><label className="text-xs text-gray-400">Senha</label><input type="password" className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.authPassword || ''} onChange={e => handleChange('authPassword', e.target.value)} placeholder="••••••••" /></>)}
       {data.authType === 'bearer' && (<><label className="text-xs text-gray-400">Token</label><input type="password" className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.authToken || ''} onChange={e => handleChange('authToken', e.target.value)} placeholder="••••••••" /></>)}
       {data.authType === 'apiKey' && (<><label className="text-xs text-gray-400">Nome do Header</label><input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.apiKey || ''} onChange={e => handleChange('apiKey', e.target.value)} placeholder="X-API-Key" /><label className="text-xs text-gray-400">Valor do API Key</label><input type="password" className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.apiKeyValue || ''} onChange={e => handleChange('apiKeyValue', e.target.value)} placeholder="••••••••" /><label className="text-xs text-gray-400">Local do API Key</label><select className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.apiKeyLocation || 'header'} onChange={e => handleChange('apiKeyLocation', e.target.value)}><option value="header">Header</option><option value="query">Query Parameter</option></select></>)}

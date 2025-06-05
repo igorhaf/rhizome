@@ -1,7 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { NodeType } from '../types/flow';
+import { StartNodeIcon } from './icons/StartNodeIcon';
+import { EndNodeIcon } from './icons/EndNodeIcon';
+import { FunctionNodeIcon } from './icons/FunctionNodeIcon';
+import { EmailNodeIcon } from './icons/EmailNodeIcon';
+import { WebhookNodeIcon } from './icons/WebhookNodeIcon';
+import { DecisionNodeIcon } from './icons/DecisionNodeIcon';
+import { LoopNodeIcon } from './icons/LoopNodeIcon';
+import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
+import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
+import { ApiNodeIcon } from './icons/ApiNodeIcon';
+import { SpreadsheetNodeIcon } from './icons/SpreadsheetNodeIcon';
 
 interface ToolbarProps {
   onNodeSelect: (type: NodeType) => void;
@@ -67,194 +78,111 @@ const icons: Record<string, React.ReactNode> = {
 };
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
-  const [draggedNode, setDraggedNode] = useState<NodeType | null>(null);
-  const [openFolders, setOpenFolders] = useState<{ [key: string]: boolean }>({
-    Basic: true,
-    'Basic/Logic': true,
-    Advanced: true,
-    'Advanced/Actions': true,
-    'Advanced/Actions/Communication': true,
-    'Advanced/Actions/Data': true
-  });
-
-  const nodeTypes: { type: NodeType; label: string; icon: string; group: string }[] = [
-    { type: 'start', label: 'Start', icon: 'start', group: 'Basic' },
-    { type: 'end', label: 'End', icon: 'end', group: 'Basic' },
-    { type: 'decision', label: 'Decision', icon: 'decision', group: 'Basic/Logic' },
-    { type: 'loop', label: 'Loop', icon: 'loop', group: 'Basic/Logic' },
-    { type: 'Database', label: 'Database', icon: 'data', group: 'Advanced/Actions' },
-    { type: 'api', label: 'API', icon: 'api', group: 'Advanced/Actions' },
-    { type: 'funcion', label: 'Função', icon: 'funcion', group: 'Advanced/Actions' },
-    { type: 'email', label: 'E-mail', icon: 'email', group: 'Advanced/Actions/Communication' },
-    { type: 'webhook', label: 'Webhook', icon: 'webhook', group: 'Advanced/Actions' },
-    { type: 'subprocess', label: 'Subprocess', icon: 'subprocess', group: 'Advanced' },
-    { type: 'spreadsheet', label: 'Planilha', icon: 'spreadsheet', group: 'Advanced/Actions/Data' },
-    { type: 'warning', label: 'Warning', icon: 'warning', group: 'Basic' },
-  ];
-
-  // Grupos hierárquicos
-  const groups: Group[] = [
-    {
-      name: 'Basic',
-      iconClosed: FolderClosedIcon,
-      iconOpen: FolderOpenIcon,
-      color: '',
-      children: [
-        {
-          name: 'Logic',
-          iconClosed: FolderClosedIcon,
-          iconOpen: FolderOpenIcon,
-          color: '',
-        },
-      ],
-    },
-    {
-      name: 'Advanced',
-      iconClosed: FolderClosedIcon,
-      iconOpen: FolderOpenIcon,
-      color: '',
-      children: [
-        {
-          name: 'Actions',
-          iconClosed: FolderClosedIcon,
-          iconOpen: FolderOpenIcon,
-          color: '',
-          children: [
-            {
-              name: 'Communication',
-              iconClosed: FolderClosedIcon,
-              iconOpen: FolderOpenIcon,
-              color: '',
-            },
-            {
-              name: 'Data',
-              iconClosed: FolderClosedIcon,
-              iconOpen: FolderOpenIcon,
-              color: '',
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
-  const toggleFolder = (path: string) => {
-    setOpenFolders((prev) => ({ ...prev, [path]: !prev[path] }));
-  };
-
   const handleDragStart = (e: React.DragEvent, type: NodeType) => {
-    setDraggedNode(type);
-    e.dataTransfer.setData('nodeType', type);
-    e.dataTransfer.effectAllowed = 'copy';
-    // Custom drag image igual ao item
-    const target = e.currentTarget as HTMLElement;
-    const dragImage = target.cloneNode(true) as HTMLElement;
-    dragImage.style.position = 'absolute';
-    dragImage.style.top = '-1000px';
-    dragImage.style.left = '-1000px';
-    dragImage.style.pointerEvents = 'none';
-    dragImage.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
-    document.body.appendChild(dragImage);
-    e.dataTransfer.setDragImage(dragImage, 24, 16);
-    setTimeout(() => {
-      document.body.removeChild(dragImage);
-    }, 0);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedNode(null);
-  };
-
-  // Função recursiva para renderizar grupos e subgrupos
-  const renderGroup = (group: Group, parentPath = '', depth = 0, isLast = false) => {
-    const path = parentPath ? `${parentPath}/${group.name}` : group.name;
-    const isOpen = openFolders[path];
-    const items = nodeTypes.filter((n) => {
-      // Se for um grupo raiz (Basic ou Advanced), pega os itens diretos
-      if (!parentPath) {
-        return n.group === group.name;
-      }
-      // Se for um subgrupo (Logic, Actions, Communication, Data), pega os itens do caminho completo
-      return n.group === path;
-    });
-
-    return (
-      <li key={path} className="relative">
-        {/* Linha vertical (guide) para subníveis */}
-        {depth > 0 && (
-          <span
-            className="absolute left-0 top-0 h-full border-l border-[#333]"
-            style={{ left: `${(depth - 1) * 16 + 10}px`, width: '1px' }}
-            aria-hidden="true"
-          />
-        )}
-        <div
-          className="flex items-center w-full py-1.5 cursor-pointer hover:bg-[#23272e] select-none"
-          style={{ paddingLeft: `${depth * 16 + 12}px` }}
-          draggable={false}
-        >
-          <span onClick={() => toggleFolder(path)} className="flex items-center mr-1">
-            {isOpen ? ChevronDown : ChevronRight}
-          </span>
-          <span onClick={() => toggleFolder(path)} className="flex items-center mr-2">
-            {isOpen ? group.iconOpen : group.iconClosed}
-          </span>
-          <span onClick={() => toggleFolder(path)} className="font-semibold text-gray-300 text-xs">{group.name}</span>
-        </div>
-        {isOpen && (
-          <ul className="">
-            {/* Primeiro renderiza subgrupos (children) */}
-            {group.children?.map((child, idx) => renderGroup(child, path, depth + 1, idx === ((group.children?.length ?? 0) - 1)))}
-            {/* Depois renderiza os itens diretos do grupo */}
-            {items.map((node, idx) => (
-              <li
-                key={node.type}
-                className="flex items-center gap-2 py-1 px-1 rounded cursor-pointer hover:bg-[#264f78] hover:text-blue-200 text-gray-300"
-                style={{ paddingLeft: `${(depth + 1) * 16 + 12}px` }}
-                onClick={() => onNodeSelect(node.type)}
-                draggable
-                onDragStart={(e) => handleDragStart(e, node.type)}
-                onDragEnd={handleDragEnd}
-              >
-                {/* Linha vertical para arquivos, se não for o último */}
-                {depth > 0 && idx !== items.length - 1 && (
-                  <span
-                    className="absolute left-0 top-0 h-full border-l border-[#333]"
-                    style={{ left: `${depth * 16 + 10}px`, width: '1px' }}
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="flex items-center justify-center w-5 h-5" draggable={false}>{icons[node.icon]}</span>
-                <span className="text-sm font-normal text-gray-300" draggable={false}>{node.label}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </li>
-    );
+    e.dataTransfer.setData('application/json', JSON.stringify({ type }));
   };
 
   return (
-    <div className="bg-[#1e1e1e] border-r border-[#222] p-0 w-60 h-full overflow-y-auto text-gray-300 select-none text-[15px] font-mono relative">
-      <div className="px-4 py-3 border-b border-[#222] text-xs uppercase tracking-widest text-gray-400 font-bold sticky top-0 bg-[#1e1e1e] z-10">EXPLORER</div>
-      <ul className="mt-2">
-        {groups.map((group) => renderGroup(group))}
-      </ul>
-      <style jsx>{`
-        div::-webkit-scrollbar {
-          width: 7px;
-        }
-        div::-webkit-scrollbar-thumb {
-          background: #23272e;
-          border-radius: 4px;
-        }
-        div:hover::-webkit-scrollbar-thumb {
-          background: #333842;
-        }
-        div::-webkit-scrollbar-track {
-          background: transparent;
-        }
-      `}</style>
+    <div className="w-16 h-full bg-[#181a1b] border-r border-[#23272e] flex flex-col items-center py-4 gap-2">
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('start')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'start')}
+        title="Start Node"
+      >
+        <StartNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('end')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'end')}
+        title="End Node"
+      >
+        <EndNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('funcion')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'funcion')}
+        title="Function Node"
+      >
+        <FunctionNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('email')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'email')}
+        title="Email Node"
+      >
+        <EmailNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('webhook')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'webhook')}
+        title="Webhook Node"
+      >
+        <WebhookNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('decision')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'decision')}
+        title="Decision Node"
+      >
+        <DecisionNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('loop')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'loop')}
+        title="Loop Node"
+      >
+        <LoopNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('subprocess')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'subprocess')}
+        title="Subprocess Node"
+      >
+        <SubprocessNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('Database')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'Database')}
+        title="Database Node"
+      >
+        <DatabaseNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('api')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'api')}
+        title="API Node"
+      >
+        <ApiNodeIcon />
+      </button>
+      <button
+        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        onClick={() => onNodeSelect('spreadsheet')}
+        draggable
+        onDragStart={(e) => handleDragStart(e, 'spreadsheet')}
+        title="Spreadsheet Node"
+      >
+        <SpreadsheetNodeIcon />
+      </button>
     </div>
   );
 };

@@ -8,7 +8,7 @@ interface LoopConfigTabProps {
 }
 
 const LoopConfigTab: React.FC<LoopConfigTabProps> = ({ node, setNodes }) => {
-  const data = node.data as LoopData;
+  const data = node.data as unknown as LoopData;
   const [localNode, setLocalNode] = React.useState<Node>(() => ({ ...node, id: node.id || '' }));
 
   const handleTypeChange = (type: 'while' | 'for' | 'do-while') => {

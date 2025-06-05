@@ -221,7 +221,7 @@ const EmailConfigTab: React.FC<EmailConfigTabProps> = ({ node, setNodes }) => {
                 <button
                   className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white hover:bg-[#2c313a]"
                   onClick={() => {
-                    const newAttachments = [...(node.data.attachments || []), { name: '', path: '' }];
+                    const newAttachments = [...(node.data.attachments || []), { name: '', url: '', path: '' }];
                     handleUpdate({ attachments: newAttachments });
                   }}
                 >

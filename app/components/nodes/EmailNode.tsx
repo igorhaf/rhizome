@@ -1,14 +1,14 @@
 import React from 'react';
 import { Handle, Position } from 'reactflow';
-import { WarningNodeIcon } from '../icons/WarningNodeIcon';
+import { EmailNodeIcon } from '../icons/EmailNodeIcon';
 
-const WarningNode = ({ data }: { data: any }) => {
+const EmailNode = ({ data }: { data: any }) => {
   return (
     <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
       <Handle type="target" position={Position.Top} className="w-3 h-3" />
       <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
       <div className="flex items-center">
-        <WarningNodeIcon />
+        <EmailNodeIcon />
         <div className="ml-2">
           <div className="text-lg font-bold">{data.label}</div>
           <div className="text-gray-500">{data.description}</div>
@@ -18,4 +18,4 @@ const WarningNode = ({ data }: { data: any }) => {
   );
 };
 
-export default WarningNode; 
+export default EmailNode; 

@@ -531,7 +531,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({
   return (
     <div
       id={node.id}
-      className={`${getNodeStyle(node.type)} transition-shadow duration-200 select-none ${
+      className={`${getNodeStyle(node.type || '')} transition-shadow duration-200 select-none ${
         isDragging ? 'shadow-lg' : ''
       }`}
       style={{
@@ -551,10 +551,10 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       {renderConnectors()}
       <div className="flex flex-col items-center">
         <div
-          className={`flex items-center justify-center ${['data','subprocess'].includes(node.type) ? 'w-16 h-16 rounded-md' : 'w-16 h-16 rounded-full'} shadow-md`}
+          className={`flex items-center justify-center ${['data','subprocess'].includes(node.type || '') ? 'w-16 h-16 rounded-md' : 'w-16 h-16 rounded-full'} shadow-md`}
           style={{ background: 'none' }}
         >
-          {nodeIcons[node.type]}
+          {nodeIcons[node.type || '']}
         </div>
       </div>
       <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 mt-1 text-xs font-semibold text-white text-center pointer-events-none whitespace-nowrap">

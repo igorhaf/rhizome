@@ -107,7 +107,7 @@ const ApiConfigTab: React.FC<ApiConfigTabProps> = ({ node, setNodes }) => {
                 value={localNode.data.httpMethod || 'GET'}
                 onChange={(e) => setLocalNode({
                   ...localNode,
-                  data: { ...localNode.data, httpMethod: e.target.value }
+                  data: { ...localNode.data, httpMethod: e.target.value as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | undefined }
                 })}
               >
                 <option value="GET">GET</option>
@@ -248,7 +248,7 @@ const ApiConfigTab: React.FC<ApiConfigTabProps> = ({ node, setNodes }) => {
         {activeTab === 'headers' && (
           <div className="space-y-6">
             <div className="flex flex-col gap-2">
-              {(localNode.data.headers || []).map((header: any, index: number) => (
+              {(Array.isArray(localNode.data.headers) ? localNode.data.headers.filter(h => typeof h === 'object' && h !== null && 'key' in h && 'value' in h) : []).map((header: any, index: number) => (
                 <div key={index} className="flex gap-2">
                   <input
                     type="text"

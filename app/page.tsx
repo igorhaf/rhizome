@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import FlowCanvas from './components/FlowCanvas';
+import { Node, Edge } from './types/flow';
+import { NodeChange, EdgeChange, Connection } from 'reactflow';
+import { NodeType } from './types/flow';
 import Toolbar from './components/Toolbar';
+import FlowCanvas from './components/FlowCanvas';
 import NodeSidebar from './components/NodeSidebar';
 import EndNodeSidebar from './components/EndNodeSidebar';
 import ActionNodeSidebar from './components/ActionNodeSidebar';
@@ -19,7 +22,6 @@ import ApiConfigTab from './components/ApiConfigTab';
 import FunctionConfigTab from './components/FunctionConfigTab';
 import EmailConfigTab from './components/EmailConfigTab';
 import SpreadsheetConfigTab from './components/SpreadsheetConfigTab';
-import { Node, Edge, NodeType } from './types/flow';
 import { DecisionNodeIcon } from './components/FlowEdge';
 import WebhookNode from './components/nodes/WebhookNode';
 import WebhookConfigPanel from './components/panels/WebhookConfigPanel';
@@ -35,6 +37,7 @@ import { FunctionNodeIcon } from './components/icons/FunctionNodeIcon';
 import { EmailNodeIcon } from './components/icons/EmailNodeIcon';
 import StartNodeSidebar from './components/StartNodeSidebar';
 import SubprocessNodeSidebar from './components/advanced/SubprocessNodeSidebar';
+import { ReactFlowProvider, applyNodeChanges, applyEdgeChanges } from 'reactflow';
 
 // Definição do tipo de aba
 interface Tab {
@@ -295,6 +298,59 @@ export default function Home() {
   ]);
   const [activeTab, setActiveTab] = useState('main');
 
+  const getNextNodeName = (type: NodeType, nodes: Node[]): string => {
+    const baseName = type.charAt(0).toUpperCase() + type.slice(1);
+    const existingNames = nodes
+      .filter(node => node.data.label.startsWith(baseName))
+      .map(node => node.data.label);
+    
+    let counter = 1;
+    let newName = `${baseName} ${counter}`;
+    
+    while (existingNames.includes(newName)) {
+      counter++;
+      newName = `${baseName} ${counter}`;
+    }
+    
+    return newName;
+  };
+
+  const handleNodeAdd = (type: NodeType, position: { x: number; y: number }) => {
+    const newNode: Node = {
+      id: `node-${Date.now()}`,
+      type,
+      position,
+      data: {
+        label: getNextNodeName(type, nodes),
+        description: `This is a ${type} node`,
+      },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+  };
+
+  const handleNodesChange = useCallback((changes: NodeChange[]) => {
+    setNodes((nds) => applyNodeChanges(changes, nds));
+  }, []);
+
+  const handleEdgesChange = useCallback((changes: EdgeChange[]) => {
+    setEdges((eds) => applyEdgeChanges(changes, eds));
+  }, []);
+
+  const handleConnect = useCallback((connection: Connection) => {
+    if (connection.source && connection.target) {
+      setEdges((eds) => [
+        ...eds,
+        {
+          ...connection,
+          source: connection.source as string,
+          target: connection.target as string,
+          id: `edge-${Date.now()}`
+        }
+      ]);
+    }
+  }, []);
+
   // Handler para abrir subprocesso ou config de nó em nova aba
   const handleNodeDoubleClick = (node: Node) => {
     if (node.type === 'subprocess' || node.type === 'Database' || node.type === 'decision' || node.type === 'loop' || node.type === 'webhook' || node.type === 'api' || node.type === 'funcion' || node.type === 'email' || node.type === 'spreadsheet') {
@@ -351,18 +407,24 @@ export default function Home() {
 
     if (tab.type === 'main') {
       return (
-        <FlowCanvas
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={setNodes}
-          onEdgesChange={setEdges}
-          onNodeClick={handleNodeSelect}
-          selectedNode={selectedNode}
-          selectedEdgeId={selectedEdgeId}
-          onEdgeSelect={handleEdgeSelect}
-          setSelectedNode={setSelectedNode}
-          onNodeDoubleClick={handleNodeDoubleClick}
-        />
+        <ReactFlowProvider>
+          <FlowCanvas
+            initialNodes={nodes}
+            initialEdges={edges}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={handleEdgesChange}
+            onConnect={handleConnect}
+            onNodeClick={setSelectedNode}
+            onEdgeClick={(edge) => setSelectedEdgeId(edge?.id ?? null)}
+            onPaneClick={() => {
+              setSelectedNode(null);
+              setSelectedEdgeId(null);
+            }}
+            selectedNode={selectedNode}
+            selectedEdgeId={selectedEdgeId}
+            onNodeAdd={handleNodeAdd}
+          />
+        </ReactFlowProvider>
       );
     }
 
@@ -375,25 +437,31 @@ export default function Home() {
         selectedEdgeId: null 
       };
 
-      const handleSubNodesChange = (newNodes: Node[]) => {
-        setSubprocessStates(prev => ({
-          ...prev,
-          [subprocessId]: { 
-            ...prev[subprocessId], 
-            nodes: newNodes 
-          }
-        }));
-      };
+      const handleSubNodesChange = React.useCallback(
+        (changes: NodeChange[]) => {
+          setSubprocessStates(prev => ({
+            ...prev,
+            [subprocessId]: { 
+              ...prev[subprocessId], 
+              nodes: applyNodeChanges(changes, prev[subprocessId].nodes)
+            }
+          }));
+        },
+        [setSubprocessStates, subprocessId]
+      );
 
-      const handleSubEdgesChange = (newEdges: Edge[]) => {
-        setSubprocessStates(prev => ({
-          ...prev,
-          [subprocessId]: { 
-            ...prev[subprocessId], 
-            edges: newEdges 
-          }
-        }));
-      };
+      const handleSubEdgesChange = React.useCallback(
+        (changes: EdgeChange[]) => {
+          setSubprocessStates(prev => ({
+            ...prev,
+            [subprocessId]: { 
+              ...prev[subprocessId], 
+              edges: applyEdgeChanges(changes, prev[subprocessId].edges)
+            }
+          }));
+        },
+        [setSubprocessStates, subprocessId]
+      );
 
       const handleSubNodeSelect = (node: Node | null) => {
         setSubprocessStates(prev => ({
@@ -419,18 +487,24 @@ export default function Home() {
 
       return (
         <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
-          <FlowCanvas
-            nodes={subprocessState.nodes}
-            edges={subprocessState.edges}
-            onNodesChange={handleSubNodesChange}
-            onEdgesChange={handleSubEdgesChange}
-            onNodeClick={handleSubNodeSelect}
-            selectedNode={subprocessState.selectedNode}
-            selectedEdgeId={subprocessState.selectedEdgeId}
-            onEdgeSelect={handleSubEdgeSelect}
-            setSelectedNode={handleSubNodeSelect}
-            onNodeDoubleClick={handleNodeDoubleClick}
-          />
+          <ReactFlowProvider>
+            <FlowCanvas
+              initialNodes={subprocessState.nodes}
+              initialEdges={subprocessState.edges}
+              onNodesChange={handleSubNodesChange}
+              onEdgesChange={handleSubEdgesChange}
+              onConnect={handleConnect}
+              onNodeClick={handleSubNodeSelect}
+              onEdgeClick={(edge) => setSelectedEdgeId(edge?.id ?? null)}
+              onPaneClick={() => {
+                setSelectedNode(null);
+                setSelectedEdgeId(null);
+              }}
+              selectedNode={subprocessState.selectedNode}
+              selectedEdgeId={subprocessState.selectedEdgeId}
+              onNodeAdd={handleNodeAdd}
+            />
+          </ReactFlowProvider>
         </div>
       );
     }
@@ -502,58 +576,6 @@ export default function Home() {
     return null;
   };
 
-  const handleNodeAdd = (type: NodeType) => {
-    const newNode: Node = {
-      id: `node-${Date.now()}`,
-      type,
-      position: { x: 400, y: 300 },
-      data: {
-        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Node`,
-        description: `This is a ${type} node`,
-        ...(type === 'end' && {
-          returnStatus: 'success',
-          returnCode: 200,
-          returnType: 'json',
-          shouldLog: true,
-        }),
-        ...(type === 'funcion' && {
-          inputParams: '',
-          timeout: 30000,
-          retryCount: 0,
-          retryInterval: 1000,
-          isAsync: false,
-          shouldLog: true,
-          notes: '',
-        }),
-        ...(type === 'email' && {
-          to: '',
-          subject: '',
-          body: '',
-          inputParams: '',
-          notes: '',
-        }),
-        ...(type === 'webhook' && {
-          webhookUrl: '',
-          httpMethod: 'POST',
-          headers: '',
-          payload: '',
-          timeout: 5000,
-          retryCount: 0,
-          retryInterval: 1000,
-          inputParams: '',
-          notes: '',
-        }),
-        ...(type === 'loop' && {
-          type: 'while',
-          condition: '',
-          iterations: 0,
-          body: [],
-        }),
-      },
-    };
-    setNodes([...nodes, newNode]);
-  };
-
   const handleNodeSelect = (node: Node) => {
     // Inicializa campos específicos baseado no tipo do nó
     const updatedNode = { ...node };
@@ -588,24 +610,6 @@ export default function Home() {
       };
     }
     setSelectedNode(updatedNode);
-  };
-
-  const handleNodesChange = (newNodes: Node[]) => {
-    setNodes(newNodes);
-  };
-
-  const handleEdgesChange = (newEdges: Edge[]) => {
-    setEdges(newEdges);
-  };
-
-  const handleNodeClick = (node: Node) => {
-    setSelectedNode(node);
-    setSelectedEdgeId(null);
-  };
-
-  const handleEdgeSelect = (edgeId: string | null) => {
-    setSelectedEdgeId(edgeId);
-    setSelectedNode(null);
   };
 
   const handleNodeUpdate = (updatedNode: Node) => {
@@ -789,7 +793,7 @@ export default function Home() {
   return (
     <div className="flex h-screen bg-[#e5e7eb]">
       <div className="relative z-50">
-        <Toolbar onNodeSelect={handleNodeAdd} />
+        <Toolbar onNodeSelect={(type) => handleNodeAdd(type, { x: 100, y: 100 })} />
       </div>
       <div className="flex-1 flex flex-col relative bg-[#1e2228]">
         {/* Tabs no topo - Agora com z-index maior que o canvas */}

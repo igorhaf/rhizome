@@ -1,3 +1,5 @@
+import { Node as ReactFlowNode, Edge as ReactFlowEdge } from 'reactflow';
+
 export type NodeType = 
   | 'start'
   | 'end'
@@ -7,10 +9,10 @@ export type NodeType =
   | 'decision'
   | 'loop'
   | 'subprocess'
-  | 'database'
   | 'Database'
   | 'api'
-  | 'spreadsheet';
+  | 'spreadsheet'
+  | 'warning';
 
 export interface Position {
   x: number;
@@ -19,72 +21,95 @@ export interface Position {
 
 export interface NodeData {
   label: string;
-  description?: string;
-  notes?: string;
-  outputs?: string;
-  active?: boolean;
+  description: string;
+  returnStatus?: 'success' | 'error';
+  returnCode?: number;
+  returnType?: 'json' | 'text' | 'xml';
   shouldLog?: boolean;
-  inputVars?: string;
-  outputVars?: string;
-  from?: string;
-  to?: string;
-  subject?: string;
-  contentType?: string;
-  priority?: string;
-  conditionExpression?: string;
+  inputVars?: any;
+  timeout?: number;
   retryCount?: number;
   retryInterval?: number;
-  databaseConfig?: {
-    type: 'postgres' | 'mysql' | 'sqlite' | 'mongodb';
-    query: string;
-  };
-  emailConfig?: {
-    to: string;
-    subject: string;
-    body: string;
-    attachments?: string[];
-  };
-  spreadsheetConfig?: {
-    fileType: 'xlsx' | 'xls' | 'csv' | 'ods';
-    operationType: 'read' | 'write' | 'append' | 'update';
-    sheetName: string;
-    range: string;
-    format: 'none' | 'number' | 'currency' | 'date' | 'percentage';
-  };
-  apiUrl?: string;
-  httpMethod?: string;
-  headers?: string;
+  isAsync?: boolean;
+  notes?: string;
+  to?: string;
+  subject?: string;
+  emailBody?: string;
+  webhookUrl?: string;
+  httpMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
+  headers?: { key: string; value: string }[];
   payload?: string;
-  authType?: 'none' | 'basic' | 'bearer' | 'apiKey';
+  loopType?: 'while' | 'for';
+  condition?: string;
+  iterations?: number;
+  loopBody?: any[];
+  queryInterface?: string;
+  inputParams?: string;
+  actionType?: string;
+  apiUrl?: string;
+  authType?: string;
   authUsername?: string;
   authPassword?: string;
   authToken?: string;
   apiKey?: string;
   apiKeyValue?: string;
-  apiKeyLocation?: 'header' | 'query';
-  timeout?: number;
-}
-
-export interface Node {
-  id: string;
-  type: NodeType;
-  position: Position;
-  data: NodeData;
-}
-
-export interface Edge {
-  id: string;
-  source: string;
-  target: string;
-  type?: 'default' | 'success' | 'error' | 'conditional';
-  label?: string;
-  data?: {
-    condition?: string;
-    properties?: Record<string, any>;
-    sourceConnector?: string;
-    targetConnector?: string;
-    labelOffset?: number;
+  apiKeyLocation?: string;
+  bodyType?: string;
+  rawBody?: string;
+  formData?: { key: string; value: string }[];
+  preRequestScript?: string;
+  tests?: string;
+  followRedirects?: boolean;
+  sslVerification?: boolean;
+  outputVars?: any;
+  from?: string;
+  cc?: string;
+  bcc?: string;
+  replyTo?: string;
+  contentType?: string;
+  templateId?: string;
+  body?: string;
+  attachments?: { name: string; url: string; path?: string }[];
+  priority?: string;
+  trackOpens?: boolean;
+  trackClicks?: boolean;
+  emailConfig?: {
+    to?: string;
+    subject?: string;
+    body?: string;
+    attachments?: string[];
   };
+  finalMessage?: string;
+  functionType?: string;
+  functionCode?: string;
+  functionInputs?: any[];
+  functionOutputs?: any[];
+  functionTests?: string;
+  functionTimeout?: number;
+  functionRetryCount?: number;
+  functionRetryInterval?: number;
+  functionIsAsync?: boolean;
+  functionShouldLog?: boolean;
+  functionNotes?: string;
+  databaseConfig?: any;
+  conditionExpression?: string;
+}
+
+export type Node = ReactFlowNode<NodeData>;
+export type Edge = ReactFlowEdge;
+
+export interface Tab {
+  id: string;
+  title: string;
+  type: 'main' | 'subprocess';
+  nodeId?: string;
+}
+
+export interface SubprocessState {
+  nodes: Node[];
+  edges: Edge[];
+  selectedNode: Node | null;
+  selectedEdgeId: string | null;
 }
 
 export interface Flow {
