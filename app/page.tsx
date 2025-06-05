@@ -792,8 +792,11 @@ export default function Home() {
         <Toolbar onNodeSelect={handleNodeAdd} />
       </div>
       <div className="flex-1 flex flex-col relative bg-[#1e2228]">
-        {/* Tabs no topo */}
-        <div className="flex items-center h-9 bg-[#181a1b] border-b border-[#23272e] px-1 gap-0 select-none" style={{ minHeight: 36 }}>
+        {/* Tabs no topo - Agora com z-index maior que o canvas */}
+        <div 
+          className="flex items-center h-9 bg-[#181a1b] border-b border-[#23272e] px-1 gap-0 select-none relative z-50" 
+          style={{ minHeight: 36 }}
+        >
           {tabs.map((tab, idx) => {
             const isActive = activeTab === tab.id;
             let icon = null;
@@ -829,7 +832,11 @@ export default function Home() {
                     paddingTop: 0,
                     paddingBottom: 0,
                   }}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveTab(tab.id);
+                  }}
                 >
                   {/* Ícone */}
                   <span className="mr-2 flex items-center">
@@ -842,7 +849,11 @@ export default function Home() {
                       className={`ml-2 text-[#bfbfbf] text-xs transition-opacity duration-100
                         ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
                         hover:text-[${VSCodeBlue}]`}
-                      onClick={e => { e.stopPropagation(); handleCloseTab(tab.id); }}
+                      onClick={e => { 
+                        e.preventDefault();
+                        e.stopPropagation(); 
+                        handleCloseTab(tab.id); 
+                      }}
                       style={{ fontSize: 16, lineHeight: 1 }}
                       tabIndex={-1}
                       title="Fechar aba"
@@ -853,8 +864,11 @@ export default function Home() {
             );
           })}
         </div>
-        {/* Conteúdo da aba ativa */}
-        <div className="flex-1 relative">
+        {/* Conteúdo da aba ativa - Agora com z-index menor que as abas */}
+        <div 
+          className="flex-1 relative z-0" 
+          style={{ pointerEvents: activeTab === 'main' ? 'auto' : 'auto' }}
+        >
           {renderTabContent()}
         </div>
       </div>
