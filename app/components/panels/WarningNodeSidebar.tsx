@@ -1,4 +1,5 @@
 import React from 'react';
+import SidebarBase from '../advanced/SidebarBase';
 
 interface WarningNodeSidebarProps {
   data: {
@@ -56,130 +57,106 @@ const renderIcon = (iconType: string, color: string) => {
 
 const WarningNodeSidebar: React.FC<WarningNodeSidebarProps> = ({ data, onChange }) => {
   return (
-    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-6 overflow-y-auto">
-      <h2 className="text-lg font-bold text-gray-200 mb-6 flex items-center">
-        {renderIcon(data.iconType || 'exclamation', data.color || '#facc15')}
-        Configuração de Warning
-      </h2>
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Título</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.label}
-            onChange={e => onChange({ ...data, label: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Mensagem de Alerta</label>
-          <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={data.message || ''}
-            onChange={e => onChange({ ...data, message: e.target.value })}
-            rows={4}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Severidade</label>
-          <select
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.severity || 'warning'}
-            onChange={e => onChange({ ...data, severity: e.target.value })}
-          >
-            {severityOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Cor de Destaque</label>
-          <input
-            type="color"
-            className="w-10 h-8 border-2 border-[#333] rounded"
-            value={data.color || '#facc15'}
-            onChange={e => onChange({ ...data, color: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Ícone</label>
-          <select
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.iconType || 'exclamation'}
-            onChange={e => onChange({ ...data, iconType: e.target.value })}
-          >
-            {iconOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Responsável</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.owner || ''}
-            onChange={e => onChange({ ...data, owner: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Prazo</label>
-          <input
-            type="date"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.deadline || ''}
-            onChange={e => onChange({ ...data, deadline: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Ação Sugerida</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.action || ''}
-            onChange={e => onChange({ ...data, action: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Link de Documentação (opcional)</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={data.docLink || ''}
-            onChange={e => onChange({ ...data, docLink: e.target.value })}
-          />
-        </div>
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            checked={!!data.showOnStart}
-            onChange={e => onChange({ ...data, showOnStart: e.target.checked })}
-            className="mr-2"
-          />
-          <span className="text-gray-200">Mostrar alerta no início do fluxo</span>
-        </div>
-        <div>
-          <button
-            className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded font-bold hover:bg-yellow-300"
-            onClick={() => navigator.clipboard.writeText(data.message || '')}
-          >
-            Copiar mensagem
-          </button>
-        </div>
-        <div className="mt-6 p-3 rounded bg-[#23272e] border border-[#333]">
-          <div className="font-bold text-yellow-400 mb-1">Preview:</div>
-          <div className={`text-sm ${data.severity === 'critical' ? 'text-red-400' : data.severity === 'info' ? 'text-blue-400' : 'text-yellow-300'}`}>
-            {renderIcon(data.iconType || 'exclamation', data.color || '#facc15')}
-            <span className="font-bold ml-2">{data.label}</span>
-            <div className="mt-1">{data.message || 'Atenção: configure a mensagem de alerta.'}</div>
-            {data.action && <div className="mt-1 text-xs text-yellow-200">Ação sugerida: <span className="font-semibold">{data.action}</span></div>}
-            {data.owner && <div className="mt-1 text-xs text-yellow-200">Responsável: <span className="font-semibold">{data.owner}</span></div>}
-            {data.deadline && <div className="mt-1 text-xs text-yellow-200">Prazo: <span className="font-semibold">{data.deadline}</span></div>}
-            {data.docLink && <div className="mt-1 text-xs"><a href={data.docLink} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">Documentação</a></div>}
-          </div>
+    <SidebarBase title={<span className="flex items-center">{renderIcon(data.iconType || 'exclamation', data.color || '#facc15')}Configuração de Warning</span>} onClose={() => onChange({ ...data, _close: true })}>
+      <label className="text-xs text-gray-400">Título</label>
+      <input
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={data.label}
+        onChange={e => onChange({ ...data, label: e.target.value })}
+        placeholder="Título do alerta"
+      />
+      <label className="text-xs text-gray-400">Mensagem de Alerta</label>
+      <textarea
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={data.message || ''}
+        onChange={e => onChange({ ...data, message: e.target.value })}
+        placeholder="Descreva o alerta..."
+        rows={3}
+      />
+      <label className="text-xs text-gray-400">Severidade</label>
+      <select
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none"
+        value={data.severity || 'warning'}
+        onChange={e => onChange({ ...data, severity: e.target.value })}
+      >
+        {severityOptions.map(opt => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
+      <label className="text-xs text-gray-400">Cor de Destaque</label>
+      <input
+        type="color"
+        className="w-10 h-8 border-2 border-[#333] rounded"
+        value={data.color || '#facc15'}
+        onChange={e => onChange({ ...data, color: e.target.value })}
+      />
+      <label className="text-xs text-gray-400">Ícone</label>
+      <select
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none"
+        value={data.iconType || 'exclamation'}
+        onChange={e => onChange({ ...data, iconType: e.target.value })}
+      >
+        {iconOptions.map(opt => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
+      <label className="text-xs text-gray-400">Responsável</label>
+      <input
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={data.owner || ''}
+        onChange={e => onChange({ ...data, owner: e.target.value })}
+        placeholder="Nome do responsável"
+      />
+      <label className="text-xs text-gray-400">Prazo</label>
+      <input
+        type="date"
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none"
+        value={data.deadline || ''}
+        onChange={e => onChange({ ...data, deadline: e.target.value })}
+      />
+      <label className="text-xs text-gray-400">Ação Sugerida</label>
+      <input
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={data.action || ''}
+        onChange={e => onChange({ ...data, action: e.target.value })}
+        placeholder="Descreva a ação sugerida"
+      />
+      <label className="text-xs text-gray-400">Link de Documentação (opcional)</label>
+      <input
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={data.docLink || ''}
+        onChange={e => onChange({ ...data, docLink: e.target.value })}
+        placeholder="https://..."
+      />
+      <label className="flex items-center gap-2 mt-1 text-gray-400 text-xs">
+        <input
+          type="checkbox"
+          className="w-4 h-4 rounded border-[#222] bg-[#23272e] text-blue-500 focus:ring-blue-500"
+          checked={!!data.showOnStart}
+          onChange={e => onChange({ ...data, showOnStart: e.target.checked })}
+        />
+        Mostrar alerta no início do fluxo
+      </label>
+      <button
+        className="px-3 py-1.5 rounded bg-yellow-400 text-yellow-900 text-xs font-semibold hover:bg-yellow-300 w-fit self-end mb-2"
+        onClick={() => navigator.clipboard.writeText(data.message || '')}
+        type="button"
+      >
+        Copiar mensagem
+      </button>
+      <div className="mt-6 p-3 rounded bg-[#23272e] border border-[#333]">
+        <div className="font-bold text-yellow-400 mb-1">Preview:</div>
+        <div className={`text-sm ${data.severity === 'critical' ? 'text-red-400' : data.severity === 'info' ? 'text-blue-400' : 'text-yellow-300'}`}>
+          {renderIcon(data.iconType || 'exclamation', data.color || '#facc15')}
+          <span className="font-bold ml-2">{data.label}</span>
+          <div className="mt-1">{data.message || 'Atenção: configure a mensagem de alerta.'}</div>
+          {data.action && <div className="mt-1 text-xs text-yellow-200">Ação sugerida: <span className="font-semibold">{data.action}</span></div>}
+          {data.owner && <div className="mt-1 text-xs text-yellow-200">Responsável: <span className="font-semibold">{data.owner}</span></div>}
+          {data.deadline && <div className="mt-1 text-xs text-yellow-200">Prazo: <span className="font-semibold">{data.deadline}</span></div>}
+          {data.docLink && <div className="mt-1 text-xs"><a href={data.docLink} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">Documentação</a></div>}
         </div>
       </div>
-    </div>
+    </SidebarBase>
   );
 };
 

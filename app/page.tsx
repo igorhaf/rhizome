@@ -33,6 +33,7 @@ import { WebhookNodeIcon } from './components/icons/WebhookNodeIcon';
 import { ApiNodeIcon } from './components/icons/ApiNodeIcon';
 import { FunctionNodeIcon } from './components/icons/FunctionNodeIcon';
 import { EmailNodeIcon } from './components/icons/EmailNodeIcon';
+import StartNodeSidebar from './components/StartNodeSidebar';
 
 // Definição do tipo de aba
 interface Tab {
@@ -682,6 +683,18 @@ export default function Home() {
           />
         ) : selectedNode.type === 'decision' ? (
           <DecisionNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'loop' ? (
+          <LoopNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'start' ? (
+          <StartNodeSidebar
             node={selectedNode}
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}

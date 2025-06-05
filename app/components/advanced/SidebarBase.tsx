@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SidebarBaseProps {
-  title: string;
+  title: React.ReactNode;
   onClose: () => void;
   children: React.ReactNode;
 }
