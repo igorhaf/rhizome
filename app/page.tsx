@@ -34,6 +34,7 @@ import { ApiNodeIcon } from './components/icons/ApiNodeIcon';
 import { FunctionNodeIcon } from './components/icons/FunctionNodeIcon';
 import { EmailNodeIcon } from './components/icons/EmailNodeIcon';
 import StartNodeSidebar from './components/StartNodeSidebar';
+import SubprocessNodeSidebar from './components/advanced/SubprocessNodeSidebar';
 
 // Definição do tipo de aba
 interface Tab {
@@ -695,6 +696,12 @@ export default function Home() {
           />
         ) : selectedNode.type === 'start' ? (
           <StartNodeSidebar
+            node={selectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => setSelectedNode(null)}
+          />
+        ) : selectedNode.type === 'subprocess' ? (
+          <SubprocessNodeSidebar
             node={selectedNode}
             onUpdate={handleNodeUpdate}
             onClose={() => setSelectedNode(null)}
