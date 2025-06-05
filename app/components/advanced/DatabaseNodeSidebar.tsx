@@ -1,5 +1,6 @@
 import React from 'react';
 import { Node } from '../../types/flow';
+import SidebarBase from './SidebarBase';
 
 interface DatabaseNodeSidebarProps {
   node: Node;
@@ -8,244 +9,93 @@ interface DatabaseNodeSidebarProps {
 }
 
 const DatabaseNodeSidebar: React.FC<DatabaseNodeSidebarProps> = ({ node, onUpdate, onClose }) => {
+  const databaseConfig = {
+    type: node.data.databaseConfig?.type || 'postgres',
+    query: node.data.databaseConfig?.query || '',
+  };
+
   return (
-    <div className="w-80 h-full bg-[#1e2228] border-l border-[#23272e] p-6 overflow-y-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-medium text-white">Database Configuration</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-white"
-        >
-          ×
-        </button>
-      </div>
-
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Name</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.label || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, label: e.target.value }
-            })}
-            placeholder="My Database"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Description</label>
-          <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            rows={3}
-            value={node.data.description || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, description: e.target.value }
-            })}
-            placeholder="Add a description..."
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Database Type</label>
-          <select
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.databaseConfig?.type || 'postgres'}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: {
-                ...node.data,
-                databaseConfig: {
-                  ...node.data.databaseConfig,
-                  type: e.target.value
-                }
-              }
-            })}
-          >
-            <option value="postgres">PostgreSQL</option>
-            <option value="mysql">MySQL</option>
-            <option value="mongodb">MongoDB</option>
-            <option value="sqlite">SQLite</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Host</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={node.data.databaseConfig?.host || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: {
-                ...node.data,
-                databaseConfig: {
-                  ...node.data.databaseConfig,
-                  host: e.target.value
-                }
-              }
-            })}
-            placeholder="localhost"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Port</label>
-          <input
-            type="number"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={node.data.databaseConfig?.port || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: {
-                ...node.data,
-                databaseConfig: {
-                  ...node.data.databaseConfig,
-                  port: parseInt(e.target.value)
-                }
-              }
-            })}
-            placeholder="5432"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Database Name</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={node.data.databaseConfig?.database || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: {
-                ...node.data,
-                databaseConfig: {
-                  ...node.data.databaseConfig,
-                  database: e.target.value
-                }
-              }
-            })}
-            placeholder="mydb"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Username</label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={node.data.databaseConfig?.username || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: {
-                ...node.data,
-                databaseConfig: {
-                  ...node.data.databaseConfig,
-                  username: e.target.value
-                }
-              }
-            })}
-            placeholder="user"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Password</label>
-          <input
-            type="password"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={node.data.databaseConfig?.password || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: {
-                ...node.data,
-                databaseConfig: {
-                  ...node.data.databaseConfig,
-                  password: e.target.value
-                }
-              }
-            })}
-            placeholder="••••••••"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Query Interface</label>
-          <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            rows={5}
-            value={node.data.queryInterface || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, queryInterface: e.target.value }
-            })}
-            placeholder="SELECT * FROM users WHERE id = ?"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Timeout (ms)</label>
-          <input
-            type="number"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white font-mono text-sm"
-            value={node.data.timeout || 30000}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, timeout: parseInt(e.target.value) }
-            })}
-            min="0"
-            step="1000"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Retry Count</label>
-          <input
-            type="number"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.retryCount || 0}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, retryCount: parseInt(e.target.value) }
-            })}
-            min="0"
-            step="1"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Retry Interval (ms)</label>
-          <input
-            type="number"
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            value={node.data.retryInterval || 1000}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, retryInterval: parseInt(e.target.value) }
-            })}
-            min="0"
-            step="1000"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">Notes</label>
-          <textarea
-            className="w-full px-3 py-2 bg-[#23272e] border border-[#333] rounded text-white"
-            rows={3}
-            value={node.data.notes || ''}
-            onChange={(e) => onUpdate({
-              ...node,
-              data: { ...node.data, notes: e.target.value }
-            })}
-            placeholder="Add any additional notes about this database..."
-          />
-        </div>
-      </div>
-    </div>
+    <SidebarBase title="Configuração do Banco de Dados" onClose={onClose}>
+      <label className="text-xs text-gray-400">Nome</label>
+      <input
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={node.data.label || ''}
+        onChange={e => onUpdate({
+          ...node,
+          data: { ...node.data, label: e.target.value }
+        })}
+        placeholder="Nome do banco"
+      />
+      <label className="text-xs text-gray-400">Descrição</label>
+      <textarea
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={node.data.description || ''}
+        onChange={e => onUpdate({
+          ...node,
+          data: { ...node.data, description: e.target.value }
+        })}
+        placeholder="Adicione uma descrição..."
+      />
+      <label className="text-xs text-gray-400">Tipo de Banco</label>
+      <select
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none"
+        value={databaseConfig.type}
+        onChange={e => onUpdate({
+          ...node,
+          data: {
+            ...node.data,
+            databaseConfig: {
+              ...databaseConfig,
+              type: e.target.value as 'postgres' | 'mysql' | 'sqlite' | 'mongodb'
+            }
+          }
+        })}
+      >
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mongodb">MongoDB</option>
+      </select>
+      <label className="text-xs text-gray-400">Query SQL</label>
+      <textarea
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={databaseConfig.query}
+        onChange={e => onUpdate({
+          ...node,
+          data: {
+            ...node.data,
+            databaseConfig: {
+              ...databaseConfig,
+              query: e.target.value
+            }
+          }
+        })}
+        placeholder="SELECT * FROM users WHERE id = ?"
+        rows={4}
+      />
+      <label className="text-xs text-gray-400">Timeout (ms)</label>
+      <input
+        type="number"
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={node.data.timeout || 30000}
+        onChange={e => onUpdate({
+          ...node,
+          data: { ...node.data, timeout: parseInt(e.target.value) }
+        })}
+        min="0"
+        step="1000"
+      />
+      <label className="text-xs font-medium mt-1 text-gray-400">Notas</label>
+      <textarea
+        className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+        value={node.data.notes || ''}
+        onChange={e => onUpdate({
+          ...node,
+          data: { ...node.data, notes: e.target.value }
+        })}
+        placeholder="Adicione notas sobre este banco..."
+      />
+    </SidebarBase>
   );
 };
 
