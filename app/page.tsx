@@ -280,7 +280,14 @@ export default function Home() {
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
 
   // Estado isolado para cada subprocesso
-  const [subprocessStates, setSubprocessStates] = useState<{ [id: string]: { nodes: Node[]; edges: Edge[] } }>({});
+  const [subprocessStates, setSubprocessStates] = useState<{ 
+    [id: string]: { 
+      nodes: Node[]; 
+      edges: Edge[];
+      selectedNode: Node | null;
+      selectedEdgeId: string | null;
+    } 
+  }>({});
 
   // Sistema de abas
   const [tabs, setTabs] = useState<Tab[]>([
@@ -297,6 +304,18 @@ export default function Home() {
       if (existing) {
         setActiveTab(existing.id);
       } else {
+        // Inicializa o estado do subprocesso se for um novo
+        if (node.type === 'subprocess') {
+          setSubprocessStates(prev => ({
+            ...prev,
+            [node.id]: {
+              nodes: [],
+              edges: [],
+              selectedNode: null,
+              selectedEdgeId: null
+            }
+          }));
+        }
         setTabs([
           ...tabs,
           {
@@ -332,39 +351,72 @@ export default function Home() {
 
     if (tab.type === 'main') {
       return (
-        <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
-          <FlowCanvas
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={setNodes}
-            onEdgesChange={setEdges}
-            onNodeClick={handleNodeClick}
-            selectedNode={selectedNode}
-            selectedEdgeId={selectedEdgeId}
-            onEdgeSelect={handleEdgeSelect}
-            setSelectedNode={setSelectedNode}
-            onNodeDoubleClick={handleNodeDoubleClick}
-          />
-        </div>
+        <FlowCanvas
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={setNodes}
+          onEdgesChange={setEdges}
+          onNodeClick={handleNodeSelect}
+          selectedNode={selectedNode}
+          selectedEdgeId={selectedEdgeId}
+          onEdgeSelect={handleEdgeSelect}
+          setSelectedNode={setSelectedNode}
+          onNodeDoubleClick={handleNodeDoubleClick}
+        />
       );
     }
 
     if (tab.type === 'subprocess') {
       const subprocessId = tab.id;
-      const subprocessState = subprocessStates[subprocessId] || { nodes: [], edges: [] };
+      const subprocessState = subprocessStates[subprocessId] || { 
+        nodes: [], 
+        edges: [], 
+        selectedNode: null, 
+        selectedEdgeId: null 
+      };
 
       const handleSubNodesChange = (newNodes: Node[]) => {
         setSubprocessStates(prev => ({
           ...prev,
-          [subprocessId]: { ...prev[subprocessId], nodes: newNodes, edges: prev[subprocessId]?.edges || [] }
+          [subprocessId]: { 
+            ...prev[subprocessId], 
+            nodes: newNodes 
+          }
         }));
       };
+
       const handleSubEdgesChange = (newEdges: Edge[]) => {
         setSubprocessStates(prev => ({
           ...prev,
-          [subprocessId]: { ...prev[subprocessId], nodes: prev[subprocessId]?.nodes || [], edges: newEdges }
+          [subprocessId]: { 
+            ...prev[subprocessId], 
+            edges: newEdges 
+          }
         }));
       };
+
+      const handleSubNodeSelect = (node: Node | null) => {
+        setSubprocessStates(prev => ({
+          ...prev,
+          [subprocessId]: { 
+            ...prev[subprocessId], 
+            selectedNode: node,
+            selectedEdgeId: null // Deseleciona edge quando seleciona node
+          }
+        }));
+      };
+
+      const handleSubEdgeSelect = (edgeId: string | null) => {
+        setSubprocessStates(prev => ({
+          ...prev,
+          [subprocessId]: { 
+            ...prev[subprocessId], 
+            selectedEdgeId: edgeId,
+            selectedNode: null // Deseleciona node quando seleciona edge
+          }
+        }));
+      };
+
       return (
         <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
           <FlowCanvas
@@ -372,7 +424,12 @@ export default function Home() {
             edges={subprocessState.edges}
             onNodesChange={handleSubNodesChange}
             onEdgesChange={handleSubEdgesChange}
-            // Você pode adicionar props extras conforme necessário
+            onNodeClick={handleSubNodeSelect}
+            selectedNode={subprocessState.selectedNode}
+            selectedEdgeId={subprocessState.selectedEdgeId}
+            onEdgeSelect={handleSubEdgeSelect}
+            setSelectedNode={handleSubNodeSelect}
+            onNodeDoubleClick={handleNodeDoubleClick}
           />
         </div>
       );
@@ -552,10 +609,26 @@ export default function Home() {
   };
 
   const handleNodeUpdate = (updatedNode: Node) => {
-    const newNodes = nodes.map(node => 
-      node.id === updatedNode.id ? updatedNode : node
-    );
-    setNodes(newNodes);
+    const tab = tabs.find(t => t.id === activeTab);
+    if (!tab) return;
+
+    if (tab.type === 'main') {
+      setNodes(prevNodes => 
+        prevNodes.map(node => 
+          node.id === updatedNode.id ? updatedNode : node
+        )
+      );
+    } else if (tab.type === 'subprocess') {
+      setSubprocessStates(prev => ({
+        ...prev,
+        [tab.id]: {
+          ...prev[tab.id],
+          nodes: prev[tab.id].nodes.map(node => 
+            node.id === updatedNode.id ? updatedNode : node
+          )
+        }
+      }));
+    }
   };
 
   // Determina se a aba ativa é canvas
@@ -586,20 +659,131 @@ export default function Home() {
 
   // Renderiza o painel lateral
   const renderSidePanel = () => {
-    if (!selectedNode) return null;
+    const tab = tabs.find(t => t.id === activeTab);
+    if (!tab) return null;
 
-    switch (selectedNode.type) {
-      case 'webhook':
-        return (
-          <WebhookConfigPanel
-            node={selectedNode}
-            onClose={() => setSelectedNode(null)}
+    // Se for uma aba de configuração, não mostra sidebar
+    if (tab.type !== 'main' && tab.type !== 'subprocess') return null;
+
+    // Determina qual nó está selecionado baseado na aba ativa
+    const currentSelectedNode = tab.type === 'main' ? selectedNode : 
+      tab.type === 'subprocess' ? subprocessStates[tab.id]?.selectedNode : null;
+
+    if (!currentSelectedNode) return null;
+
+    return (
+      <div className="w-80 border-l border-[#222] bg-[#1e2228] overflow-y-auto">
+        {currentSelectedNode.type === 'webhook' ? (
+          <WebhookNodeSidebar
+            node={currentSelectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => {
+              if (tab.type === 'main') {
+                setSelectedNode(null);
+              } else {
+                setSubprocessStates(prev => ({
+                  ...prev,
+                  [tab.id]: {
+                    ...prev[tab.id],
+                    selectedNode: null
+                  }
+                }));
+              }
+            }}
           />
-        );
-      // ... outros casos ...
-      default:
-        return null;
-    }
+        ) : currentSelectedNode.type === 'decision' ? (
+          <DecisionNodeSidebar
+            node={currentSelectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => {
+              if (tab.type === 'main') {
+                setSelectedNode(null);
+              } else {
+                setSubprocessStates(prev => ({
+                  ...prev,
+                  [tab.id]: {
+                    ...prev[tab.id],
+                    selectedNode: null
+                  }
+                }));
+              }
+            }}
+          />
+        ) : currentSelectedNode.type === 'loop' ? (
+          <LoopNodeSidebar
+            node={currentSelectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => {
+              if (tab.type === 'main') {
+                setSelectedNode(null);
+              } else {
+                setSubprocessStates(prev => ({
+                  ...prev,
+                  [tab.id]: {
+                    ...prev[tab.id],
+                    selectedNode: null
+                  }
+                }));
+              }
+            }}
+          />
+        ) : currentSelectedNode.type === 'start' ? (
+          <StartNodeSidebar
+            node={currentSelectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => {
+              if (tab.type === 'main') {
+                setSelectedNode(null);
+              } else {
+                setSubprocessStates(prev => ({
+                  ...prev,
+                  [tab.id]: {
+                    ...prev[tab.id],
+                    selectedNode: null
+                  }
+                }));
+              }
+            }}
+          />
+        ) : currentSelectedNode.type === 'subprocess' ? (
+          <SubprocessNodeSidebar
+            node={currentSelectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => {
+              if (tab.type === 'main') {
+                setSelectedNode(null);
+              } else {
+                setSubprocessStates(prev => ({
+                  ...prev,
+                  [tab.id]: {
+                    ...prev[tab.id],
+                    selectedNode: null
+                  }
+                }));
+              }
+            }}
+          />
+        ) : (
+          <NodeSidebar
+            node={currentSelectedNode}
+            onUpdate={handleNodeUpdate}
+            onClose={() => {
+              if (tab.type === 'main') {
+                setSelectedNode(null);
+              } else {
+                setSubprocessStates(prev => ({
+                  ...prev,
+                  [tab.id]: {
+                    ...prev[tab.id],
+                    selectedNode: null
+                  }
+                }));
+              }
+            }}
+          />
+        )}
+      </div>
+    );
   };
 
   return (
@@ -674,71 +858,6 @@ export default function Home() {
           {renderTabContent()}
         </div>
       </div>
-      {/* Sidebar direito só aparece se a aba ativa for CANVAS */}
-      {isCanvasTab && selectedNode && (
-        selectedNode.type === 'end' ? (
-          <EndNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'funcion' ? (
-          <FunctionNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'email' ? (
-          <EmailNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'spreadsheet' ? (
-          <SpreadsheetNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'webhook' ? (
-          <WebhookNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'decision' ? (
-          <DecisionNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'loop' ? (
-          <LoopNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'start' ? (
-          <StartNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : selectedNode.type === 'subprocess' ? (
-          <SubprocessNodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-          />
-        ) : (
-          <NodeSidebar
-            node={selectedNode}
-            onUpdate={handleNodeUpdate}
-            onClose={() => setSelectedNode(null)}
-            canClose={true}
-          />
-        )
-      )}
       {renderSidePanel()}
     </div>
   );
