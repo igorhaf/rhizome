@@ -4,8 +4,20 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Node, Edge, NodeType } from '../types/flow';
 import FlowNode from './FlowNode';
 import FlowEdge from './FlowEdge';
-import WebhookNode from './nodes/WebhookNode';
-import WarningNode from './nodes/WarningNode';
+import {
+  EndNode,
+  FunctionNode,
+  SpreadsheetNode,
+  StartNode,
+  EmailNode,
+  DecisionNode,
+  LoopNode,
+  SubprocessNode,
+  DatabaseNode,
+  ApiNode,
+  WarningNode,
+  WebhookNode
+} from './nodes';
 import { EmailNodeIcon } from './icons/EmailNodeIcon';
 import { StartNodeIcon } from './icons/StartNodeIcon';
 import { EndNodeIcon } from './icons/EndNodeIcon';
@@ -33,18 +45,10 @@ import ReactFlow, {
   MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import StartNode from './nodes/StartNode';
-import EndNode from './nodes/EndNode';
-import FunctionNode from './nodes/FunctionNode';
-import EmailNode from './nodes/EmailNode';
-import DecisionNode from './nodes/DecisionNode';
-import LoopNode from './nodes/LoopNode';
-import SubprocessNode from './nodes/SubprocessNode';
-import DatabaseNode from './nodes/DatabaseNode';
-import ApiNode from './nodes/ApiNode';
-import SpreadsheetNode from './nodes/SpreadsheetNode';
 
 interface FlowCanvasProps {
+  nodes?: Node[];
+  edges?: Edge[];
   initialNodes?: Node[];
   initialEdges?: Edge[];
   onNodesChange?: (changes: NodeChange[]) => void;
@@ -55,7 +59,7 @@ interface FlowCanvasProps {
   onPaneClick?: () => void;
   selectedNode?: Node | null;
   selectedEdgeId?: string | null;
-  onNodeAdd?: (type: NodeType, position: { x: number; y: number }) => void;
+  onNodeAdd?: (nodeData: Partial<Node>, position: { x: number; y: number }) => void;
 }
 
 // Função utilitária: grid, obstáculos e BFS ortogonal (copiada do FlowEdge)
@@ -195,6 +199,8 @@ const nodeTypes = {
 };
 
 export const FlowCanvas: React.FC<FlowCanvasProps> = ({
+  nodes,
+  edges,
   initialNodes = [],
   initialEdges = [],
   onNodesChange,
@@ -208,8 +214,11 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   onNodeAdd,
 }) => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChangeInternal] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChangeInternal] = useEdgesState(initialEdges);
+  // Se nodes/edges são passados como props, use-os; senão, use estado local
+  const [localNodes, setLocalNodes, onNodesChangeInternal] = useNodesState(initialNodes);
+  const [localEdges, setLocalEdges, onEdgesChangeInternal] = useEdgesState(initialEdges);
+  const renderNodes = nodes ?? localNodes;
+  const renderEdges = edges ?? localEdges;
   const { getIntersectingNodes, getNode } = useReactFlow();
   const [isDragging, setIsDragging] = useState(false);
   const [isPanning, setIsPanning] = useState(false);
@@ -234,6 +243,40 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [connectionStart, setConnectionStart] = useState<{ nodeId: string; connectorId: string } | null>(null);
   // Força re-render após drop
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  // Debug visual
+  const [debugInfo, setDebugInfo] = useState({
+    lastType: '',
+    lastDrop: '',
+    overlay: false,
+    lastEvent: '',
+  });
+
+  React.useEffect(() => {
+    setDebugInfo((info) => ({ ...info, overlay: isDragOver }));
+  }, [isDragOver]);
+
+  // Diagnóstico: Adiciona um nó fixo ao montar
+  React.useEffect(() => {
+    setLocalNodes((nds) => {
+      if (nds.length === 0) {
+        return [
+          ...nds,
+          {
+            id: 'diagnostic-node',
+            type: 'start',
+            position: { x: 100, y: 100 },
+            data: { label: 'Diagnóstico', description: 'Nó de teste' },
+          },
+        ];
+      }
+      return nds;
+    });
+  }, [setLocalNodes]);
+
+  // Diagnóstico: log nodeTypes
+  console.log('[DEBUG] nodeTypes:', nodeTypes);
 
   // Centralizar o canvas na inicialização com posição arredondada
   useEffect(() => {
@@ -286,30 +329,63 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     });
   }, [position]);
 
-  const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
-  }, []);
-
   const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-
+    event.stopPropagation();
+    setIsDragOver(false);
+    setDebugInfo((info) => ({ ...info, lastEvent: 'drop', overlay: false }));
+    
     const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
     if (!reactFlowBounds) return;
-
-    const data = event.dataTransfer.getData('application/json');
-    if (!data) return;
-
-    const { type } = JSON.parse(data) as { type: NodeType };
-    if (!type) return;
-
-    const position = {
-      x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top,
+    
+    let nodeData;
+    try {
+      const data = event.dataTransfer.getData('application/json');
+      setDebugInfo((info) => ({ ...info, lastDrop: data }));
+      if (!data) return;
+      nodeData = JSON.parse(data);
+    } catch (error) {
+      return;
+    }
+    const type = nodeData.type || 'start';
+    setDebugInfo((info) => ({ ...info, lastType: type }));
+    const dropPosition = {
+      x: (event.clientX - reactFlowBounds.left - position.x) / scale,
+      y: (event.clientY - reactFlowBounds.top - position.y) / scale,
     };
+    if (onNodeAdd) {
+      onNodeAdd({ type, data: nodeData }, dropPosition);
+    } else {
+      // Corrige headers se vier como objeto vazio
+      if (nodeData.headers && !Array.isArray(nodeData.headers)) {
+        nodeData.headers = [];
+      }
+      setLocalNodes((nds) => [
+        ...nds,
+        {
+          id: `node-${Date.now()}`,
+          type,
+          position: dropPosition,
+          data: nodeData,
+        },
+      ]);
+    }
+  }, [onNodeAdd, setLocalNodes, scale, position]);
 
-    onNodeAdd?.(type, position);
-  }, [onNodeAdd]);
+  const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    event.dataTransfer.dropEffect = 'copy';
+    if (!isDragOver) setIsDragOver(true);
+    setDebugInfo((info) => ({ ...info, lastEvent: 'dragOver', overlay: true }));
+  }, [isDragOver]);
+
+  const handleDragLeave = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragOver(false);
+    setDebugInfo((info) => ({ ...info, lastEvent: 'dragLeave', overlay: false }));
+  }, []);
 
   const handleCanvasMouseMove = useCallback((e: MouseEvent) => {
     if (!isPanning || !startPoint || !startOffset) return;
@@ -348,10 +424,10 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   // Função para atualizar o label da edge
   const handleEdgeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (selectedEdgeId) {
-      const updatedEdges = edges.map(edge =>
+      const updatedEdges = renderEdges.map(edge =>
         edge.id === selectedEdgeId ? { ...edge, label: e.target.value } : edge
       );
-      setEdges(updatedEdges);
+      setLocalEdges(updatedEdges);
     }
   };
 
@@ -364,18 +440,18 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   useEffect(() => {
     function handleUpdateEdgeLabelOffset(e: any) {
       const { edgeId, offset } = e.detail;
-      const updatedEdges = edges.map((edge: Edge) =>
+      const updatedEdges = renderEdges.map((edge: Edge) =>
         edge.id === edgeId
           ? { ...edge, data: { ...edge.data, labelOffset: offset } }
           : edge
       );
-      setEdges(updatedEdges);
+      setLocalEdges(updatedEdges);
     }
     window.addEventListener('updateEdgeLabelOffset', handleUpdateEdgeLabelOffset);
     return () => {
       window.removeEventListener('updateEdgeLabelOffset', handleUpdateEdgeLabelOffset);
     };
-  }, [edges, setEdges]);
+  }, [renderEdges, setLocalEdges]);
 
   // Handler para selecionar label para arrasto
   const handleLabelSelect = (edge: Edge) => {
@@ -402,10 +478,10 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const handleLabelEditSave = () => {
     console.log('handleLabelEditSave', editingLabelEdgeId);
     if (editingLabelEdgeId) {
-      const updatedEdges = edges.map(edge =>
+      const updatedEdges = renderEdges.map(edge =>
         edge.id === editingLabelEdgeId ? { ...edge, label: editingLabelValue } : edge
       );
-      setEdges(updatedEdges);
+      setLocalEdges(updatedEdges);
       setEditingLabelEdgeId(null);
       setSelectedLabelEdgeId(null); // Desmarca o label após salvar
     }
@@ -414,16 +490,16 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   useEffect(() => {
     function handleUpdateEdgeLabel(e: any) {
       const { edgeId, label } = e.detail;
-      const updatedEdges = edges.map(edge =>
+      const updatedEdges = renderEdges.map(edge =>
         edge.id === edgeId ? { ...edge, label } : edge
       );
-      setEdges(updatedEdges);
+      setLocalEdges(updatedEdges);
     }
     window.addEventListener('updateEdgeLabel', handleUpdateEdgeLabel);
     return () => {
       window.removeEventListener('updateEdgeLabel', handleUpdateEdgeLabel);
     };
-  }, [edges, setEdges]);
+  }, [renderEdges, setLocalEdges]);
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -456,7 +532,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   // Handler para iniciar drag de conector da seta
   const handleEdgeConnectorDragStart = useCallback((edgeId: string, end: 'source' | 'target', connector: { nodeId: string; connectorId: string }, event: React.MouseEvent) => {
     event.stopPropagation();
-    const edge = edges.find(e => e.id === edgeId);
+    const edge = renderEdges.find(e => e.id === edgeId);
     if (!edge) return;
     
     setEdgeBackup(edge);
@@ -472,7 +548,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     
     draggingToRef.current = { x, y };
     setIsDraggingConnection(true);
-  }, [edges, position, scale]);
+  }, [renderEdges, position, scale]);
 
   // Atualiza draggingTo em tempo real durante arraste de ligação e limpa ao soltar
   useEffect(() => {
@@ -511,7 +587,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     }, 0);
     console.log('handleConnectorDrop chamado');
     if (draggingEdgeId && draggingEnd && draggingFromRef.current) {
-      const updated = edges.map((edge: Edge) => {
+      const updated = renderEdges.map((edge: Edge) => {
         if (edge.id !== draggingEdgeId) return edge;
         if (draggingEnd === 'source') {
           return { ...edge, source: nodeId, data: { ...edge.data, sourceConnector: connectorId } };
@@ -519,14 +595,14 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
           return { ...edge, target: nodeId, data: { ...edge.data, targetConnector: connectorId } };
         }
       });
-      setEdges(updated);
+      setLocalEdges(updated);
     }
     setDraggingEdgeId(null);
     setDraggingEnd(null);
     setEdgeBackup(null);
     setActiveConnector(null);
     setForceUpdate(f => f + 1);
-  }, [draggingEdgeId, draggingEnd, setEdges, edges]);
+  }, [draggingEdgeId, draggingEnd, setLocalEdges, renderEdges]);
 
   // Exemplo de objeto de ícones
   const nodeIcons = {
@@ -608,15 +684,15 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
           targetConnector: connectorId,
         },
       };
-      setEdges([...edges, newEdge]);
+      setLocalEdges([...renderEdges, newEdge]);
     }
     setConnectionStart(null);
-  }, [connectionStart, edges, setEdges]);
+  }, [connectionStart, renderEdges, setLocalEdges]);
 
   const handleConnect = useCallback(
     (connection: Connection) => {
       // Verifica se já existe uma conexão entre os nós
-      const existingConnection = edges.find(
+      const existingConnection = renderEdges.find(
         (edge) => edge.source === connection.source && edge.target === connection.target
       );
 
@@ -626,7 +702,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
       // Verifica se o nó de destino já tem uma conexão de entrada
       const targetNode = getNode(connection.target!);
-      const hasIncomingConnection = edges.some((edge) => edge.target === connection.target);
+      const hasIncomingConnection = renderEdges.some((edge) => edge.target === connection.target);
 
       if (hasIncomingConnection && targetNode?.type !== 'decision') {
         return;
@@ -643,34 +719,49 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
         },
       };
 
-      setEdges((eds) => addEdge(newEdge, eds));
+      setLocalEdges((eds) => addEdge(newEdge, eds));
       onConnect?.(connection);
     },
-    [edges, getNode, onConnect, setEdges]
+    [renderEdges, getNode, onConnect, setLocalEdges]
   );
 
   return (
-    <div className="w-full h-full" ref={reactFlowWrapper}>
+    <div className="w-full h-full relative" ref={reactFlowWrapper}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onDragLeave={handleDragLeave}
+    >
+      {isDragOver && (
+        <div className="absolute inset-0 bg-blue-500 bg-opacity-20 z-50 pointer-events-none flex items-center justify-center">
+          <span className="text-blue-700 text-lg font-bold">Solte aqui para criar o nó</span>
+        </div>
+      )}
+      {/* Painel de debug visual */}
+      <div className="fixed bottom-2 right-2 bg-black bg-opacity-80 text-green-300 text-xs rounded p-3 z-[1000] shadow-lg max-w-xs w-72">
+        <div className="font-bold text-green-400 mb-1">Debug FlowCanvas</div>
+        <div><b>Último tipo:</b> {debugInfo.lastType}</div>
+        <div><b>Último drop:</b> {debugInfo.lastDrop}</div>
+        <div><b>Status overlay:</b> {debugInfo.overlay ? 'Ativo' : 'Inativo'}</div>
+        <div><b>Último evento:</b> {debugInfo.lastEvent}</div>
+      </div>
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChangeInternal}
-        onEdgesChange={onEdgesChangeInternal}
+        nodes={renderNodes}
+        edges={renderEdges}
+        onNodesChange={onNodesChange ?? onNodesChangeInternal}
+        onEdgesChange={onEdgesChange ?? onEdgesChangeInternal}
         onConnect={handleConnect}
         onNodeClick={(_, node) => onNodeClick?.(node)}
         onEdgeClick={(_, edge) => onEdgeClick?.(edge)}
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         connectionMode={ConnectionMode.Loose}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
         fitView
       >
         <Background />
         <Controls />
         <Panel position="top-right" className="bg-[#181a1b] text-white p-2 rounded shadow-lg">
-          <div className="text-sm">Nodes: {nodes.length}</div>
-          <div className="text-sm">Edges: {edges.length}</div>
+          <div className="text-sm">Nodes: {renderNodes.length}</div>
+          <div className="text-sm">Edges: {renderEdges.length}</div>
         </Panel>
       </ReactFlow>
     </div>

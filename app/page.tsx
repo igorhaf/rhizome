@@ -315,17 +315,23 @@ export default function Home() {
     return newName;
   };
 
-  const handleNodeAdd = (type: NodeType, position: { x: number; y: number }) => {
+  const handleNodeAdd = (nodeData: Partial<Node>, position: { x: number; y: number }) => {
+    const type = nodeData.type as NodeType;
+    let data = {
+      ...nodeData.data,
+      label: nodeData.data?.label || getNextNodeName(type, nodes),
+      description: nodeData.data?.description || `This is a ${type} node`,
+    };
+    // Corrige headers se vier como objeto vazio
+    if (data.headers && !Array.isArray(data.headers)) {
+      data.headers = [];
+    }
     const newNode: Node = {
       id: `node-${Date.now()}`,
       type,
       position,
-      data: {
-        label: getNextNodeName(type, nodes),
-        description: `This is a ${type} node`,
-      },
+      data,
     };
-
     setNodes((nds) => [...nds, newNode]);
   };
 
@@ -409,8 +415,8 @@ export default function Home() {
       return (
         <ReactFlowProvider>
           <FlowCanvas
-            initialNodes={nodes}
-            initialEdges={edges}
+            nodes={nodes}
+            edges={edges}
             onNodesChange={handleNodesChange}
             onEdgesChange={handleEdgesChange}
             onConnect={handleConnect}
@@ -616,20 +622,121 @@ export default function Home() {
     const tab = tabs.find(t => t.id === activeTab);
     if (!tab) return;
 
+    // Atualiza o nó no estado apropriado
     if (tab.type === 'main') {
       setNodes(prevNodes => 
-        prevNodes.map(node => 
-          node.id === updatedNode.id ? updatedNode : node
-        )
+        prevNodes.map(node => {
+          if (node.id !== updatedNode.id) return node;
+          let data = {
+            ...node.data,
+            ...updatedNode.data,
+            // Preserva campos específicos por tipo
+            ...(updatedNode.type === 'start' && { active: node.data.active }),
+            ...(updatedNode.type === 'end' && { isFinal: node.data.isFinal }),
+            ...(updatedNode.type === 'decision' && { conditions: node.data.conditions || [] }),
+            ...(updatedNode.type === 'loop' && { iterations: node.data.iterations || 1 }),
+            ...(updatedNode.type === 'funcion' && {
+              inputParams: node.data.inputParams || '',
+              timeout: node.data.timeout || 30000,
+              retryCount: node.data.retryCount || 0,
+              retryInterval: node.data.retryInterval || 1000,
+              isAsync: node.data.isAsync || false,
+              shouldLog: node.data.shouldLog ?? true
+            }),
+            ...(updatedNode.type === 'email' && {
+              to: node.data.to || '',
+              subject: node.data.subject || '',
+              body: node.data.body || '',
+              attachments: node.data.attachments || []
+            }),
+            ...(updatedNode.type === 'webhook' && {
+              url: node.data.url || '',
+              method: node.data.method || 'POST',
+              headers: node.data.headers || [],
+              body: node.data.body || ''
+            }),
+            ...(updatedNode.type === 'api' && {
+              url: node.data.url || '',
+              method: node.data.method || 'GET',
+              headers: node.data.headers || [],
+              body: node.data.body || '',
+              timeout: node.data.timeout || 30000
+            }),
+            ...(updatedNode.type === 'spreadsheet' && {
+              file: node.data.file || '',
+              sheet: node.data.sheet || '',
+              range: node.data.range || '',
+              operation: node.data.operation || 'read'
+            })
+          };
+          // Corrige headers se vier como objeto vazio
+          if (data.headers && !Array.isArray(data.headers)) {
+            data.headers = [];
+          }
+          return {
+            ...updatedNode,
+            data,
+          };
+        })
       );
     } else if (tab.type === 'subprocess') {
       setSubprocessStates(prev => ({
         ...prev,
         [tab.id]: {
           ...prev[tab.id],
-          nodes: prev[tab.id].nodes.map(node => 
-            node.id === updatedNode.id ? updatedNode : node
-          )
+          nodes: prev[tab.id].nodes.map(node => {
+            if (node.id !== updatedNode.id) return node;
+            let data = {
+              ...node.data,
+              ...updatedNode.data,
+              // Preserva campos específicos por tipo (mesmo tratamento do main)
+              ...(updatedNode.type === 'start' && { active: node.data.active }),
+              ...(updatedNode.type === 'end' && { isFinal: node.data.isFinal }),
+              ...(updatedNode.type === 'decision' && { conditions: node.data.conditions || [] }),
+              ...(updatedNode.type === 'loop' && { iterations: node.data.iterations || 1 }),
+              ...(updatedNode.type === 'funcion' && {
+                inputParams: node.data.inputParams || '',
+                timeout: node.data.timeout || 30000,
+                retryCount: node.data.retryCount || 0,
+                retryInterval: node.data.retryInterval || 1000,
+                isAsync: node.data.isAsync || false,
+                shouldLog: node.data.shouldLog ?? true
+              }),
+              ...(updatedNode.type === 'email' && {
+                to: node.data.to || '',
+                subject: node.data.subject || '',
+                body: node.data.body || '',
+                attachments: node.data.attachments || []
+              }),
+              ...(updatedNode.type === 'webhook' && {
+                url: node.data.url || '',
+                method: node.data.method || 'POST',
+                headers: node.data.headers || [],
+                body: node.data.body || ''
+              }),
+              ...(updatedNode.type === 'api' && {
+                url: node.data.url || '',
+                method: node.data.method || 'GET',
+                headers: node.data.headers || [],
+                body: node.data.body || '',
+                timeout: node.data.timeout || 30000
+              }),
+              ...(updatedNode.type === 'spreadsheet' && {
+                file: node.data.file || '',
+                sheet: node.data.sheet || '',
+                range: node.data.range || '',
+                operation: node.data.operation || 'read'
+              })
+            };
+            // Corrige headers se vier como objeto vazio
+            if (data.headers && !Array.isArray(data.headers)) {
+              data.headers = [];
+            }
+            return {
+              ...updatedNode,
+              data,
+            };
+          })
         }
       }));
     }
@@ -793,85 +900,87 @@ export default function Home() {
   return (
     <div className="flex h-screen bg-[#e5e7eb]">
       <div className="relative z-50">
-        <Toolbar onNodeSelect={(type) => handleNodeAdd(type, { x: 100, y: 100 })} />
+        <Toolbar onNodeSelect={handleNodeAdd} />
       </div>
       <div className="flex-1 flex flex-col relative bg-[#1e2228]">
-        {/* Tabs no topo - Agora com z-index maior que o canvas */}
-        <div 
-          className="flex items-center h-9 bg-[#181a1b] border-b border-[#23272e] px-1 gap-0 select-none relative z-50" 
-          style={{ minHeight: 36 }}
-        >
-          {tabs.map((tab, idx) => {
-            const isActive = activeTab === tab.id;
-            let icon = null;
-            if (tab.id === 'main') icon = StartIcon;
-            else if (tab.type === 'subprocess') icon = SubprocessIcon;
-            else if (tab.type === 'decision-config') icon = DecisionIcon;
-            else if (tab.type === 'loop') icon = SubprocessIcon;
-            else icon = SubprocessIcon;
-            return (
-              <React.Fragment key={tab.id}>
-                {/* Divisória à esquerda de todas as abas, exceto a primeira */}
-                {idx > 0 && (
-                  <div style={{ width: 1, height: 36, background: '#2a2d2e', margin: 0 }} />
-                )}
-                {/* Aba */}
-                <div
-                  className={`relative group flex items-center h-9 min-h-[36px] max-h-[36px] px-3 cursor-pointer text-sm font-medium transition-colors duration-100
-                    ${isActive
-                      ? 'bg-[#1e2228] text-white border-b-2'
-                      : 'bg-transparent text-[#bfbfbf] hover:bg-[#181a1b] hover:text-white'}
-                  `}
-                  style={{
-                    userSelect: 'none',
-                    minWidth: 80,
-                    height: '36px',
-                    borderRadius: 0,
-                    border: 'none',
-                    borderLeft: 'none',
-                    borderRight: 'none',
-                    borderBottomColor: isActive ? VSCodeBlue : 'transparent',
-                    marginTop: 0,
-                    marginBottom: 0,
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setActiveTab(tab.id);
-                  }}
-                >
-                  {/* Ícone */}
-                  <span className="mr-2 flex items-center">
-                    {icon}
-                  </span>
-                  <span className="truncate max-w-[120px]">{tab.label}</span>
-                  {/* X só aparece em abas não-main, sempre visível na ativa, só on hover na inativa */}
-                  {tab.id !== 'main' && (
-                    <button
-                      className={`ml-2 text-[#bfbfbf] text-xs transition-opacity duration-100
-                        ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
-                        hover:text-[${VSCodeBlue}]`}
-                      onClick={e => { 
-                        e.preventDefault();
-                        e.stopPropagation(); 
-                        handleCloseTab(tab.id); 
-                      }}
-                      style={{ fontSize: 16, lineHeight: 1 }}
-                      tabIndex={-1}
-                      title="Fechar aba"
-                    >×</button>
+        {/* Wrapper para abas com pointer-events: auto */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 50, pointerEvents: 'auto' }}>
+          <div 
+            className="flex items-center h-9 bg-[#181a1b] border-b border-[#23272e] px-1 gap-0 select-none" 
+            style={{ minHeight: 36 }}
+          >
+            {tabs.map((tab, idx) => {
+              const isActive = activeTab === tab.id;
+              let icon = null;
+              if (tab.id === 'main') icon = StartIcon;
+              else if (tab.type === 'subprocess') icon = SubprocessIcon;
+              else if (tab.type === 'decision-config') icon = DecisionIcon;
+              else if (tab.type === 'loop') icon = SubprocessIcon;
+              else icon = SubprocessIcon;
+              return (
+                <React.Fragment key={tab.id}>
+                  {/* Divisória à esquerda de todas as abas, exceto a primeira */}
+                  {idx > 0 && (
+                    <div style={{ width: 1, height: 36, background: '#2a2d2e', margin: 0 }} />
                   )}
-                </div>
-              </React.Fragment>
-            );
-          })}
+                  {/* Aba */}
+                  <div
+                    className={`relative group flex items-center h-9 min-h-[36px] max-h-[36px] px-3 cursor-pointer text-sm font-medium transition-colors duration-100
+                      ${isActive
+                        ? 'bg-[#1e2228] text-white border-b-2'
+                        : 'bg-transparent text-[#bfbfbf] hover:bg-[#181a1b] hover:text-white'}
+                    `}
+                    style={{
+                      userSelect: 'none',
+                      minWidth: 80,
+                      height: '36px',
+                      borderRadius: 0,
+                      border: 'none',
+                      borderLeft: 'none',
+                      borderRight: 'none',
+                      borderBottomColor: isActive ? VSCodeBlue : 'transparent',
+                      marginTop: 0,
+                      marginBottom: 0,
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setActiveTab(tab.id);
+                    }}
+                  >
+                    {/* Ícone */}
+                    <span className="mr-2 flex items-center">
+                      {icon}
+                    </span>
+                    <span className="truncate max-w-[120px]">{tab.label}</span>
+                    {/* X só aparece em abas não-main, sempre visível na ativa, só on hover na inativa */}
+                    {tab.id !== 'main' && (
+                      <button
+                        className={`ml-2 text-[#bfbfbf] text-xs transition-opacity duration-100
+                          ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+                          hover:text-[${VSCodeBlue}]`}
+                        onClick={e => { 
+                          e.preventDefault();
+                          e.stopPropagation(); 
+                          handleCloseTab(tab.id); 
+                        }}
+                        style={{ fontSize: 16, lineHeight: 1 }}
+                        tabIndex={-1}
+                        title="Fechar aba"
+                      >×</button>
+                    )}
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
         </div>
-        {/* Conteúdo da aba ativa - Agora com z-index menor que as abas */}
+        {/* Conteúdo da aba ativa - canvas deve ocupar toda a área, pointer-events: auto */}
         <div 
           className="flex-1 relative z-0" 
-          style={{ pointerEvents: activeTab === 'main' ? 'auto' : 'auto' }}
+          style={{ pointerEvents: 'auto', height: '100%', marginTop: 36 }}
         >
           {renderTabContent()}
         </div>

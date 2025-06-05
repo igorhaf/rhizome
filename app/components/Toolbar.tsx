@@ -15,7 +15,7 @@ import { ApiNodeIcon } from './icons/ApiNodeIcon';
 import { SpreadsheetNodeIcon } from './icons/SpreadsheetNodeIcon';
 
 interface ToolbarProps {
-  onNodeSelect: (type: NodeType) => void;
+  onNodeSelect: (nodeData: Partial<import('../types/flow').Node>, position: { x: number; y: number }) => void;
 }
 
 // Novo tipo para grupos hierárquicos
@@ -78,111 +78,92 @@ const icons: Record<string, React.ReactNode> = {
 };
 
 const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
+  const [draggingType, setDraggingType] = React.useState<NodeType | null>(null);
+
   const handleDragStart = (e: React.DragEvent, type: NodeType) => {
-    e.dataTransfer.setData('application/json', JSON.stringify({ type }));
+    const data = {
+      type,
+      label: `${type} Node`,
+      description: `A ${type} node`,
+      ...(type === 'start' && { active: true }),
+      ...(type === 'end' && { isFinal: true }),
+      ...(type === 'decision' && { conditions: [] }),
+      ...(type === 'loop' && { iterations: 1 }),
+      ...(type === 'funcion' && { 
+        inputParams: '',
+        timeout: 30000,
+        retryCount: 0,
+        retryInterval: 1000,
+        isAsync: false,
+        shouldLog: true
+      }),
+      ...(type === 'email' && {
+        to: '',
+        subject: '',
+        body: '',
+        attachments: []
+      }),
+      ...(type === 'webhook' && {
+        url: '',
+        method: 'POST',
+        headers: {},
+        body: ''
+      }),
+      ...(type === 'api' && {
+        url: '',
+        method: 'GET',
+        headers: {},
+        body: '',
+        timeout: 30000
+      }),
+      ...(type === 'spreadsheet' && {
+        file: '',
+        sheet: '',
+        range: '',
+        operation: 'read'
+      })
+    };
+    
+    e.dataTransfer.setData('application/json', JSON.stringify(data));
+    e.dataTransfer.effectAllowed = 'copy';
+    setDraggingType(type);
   };
+
+  const handleDragEnd = () => {
+    setDraggingType(null);
+  };
+
+  const nodeButtons = [
+    { type: 'start', icon: <StartNodeIcon />, title: 'Start Node' },
+    { type: 'end', icon: <EndNodeIcon />, title: 'End Node' },
+    { type: 'funcion', icon: <FunctionNodeIcon />, title: 'Function Node' },
+    { type: 'email', icon: <EmailNodeIcon />, title: 'Email Node' },
+    { type: 'webhook', icon: <WebhookNodeIcon />, title: 'Webhook Node' },
+    { type: 'decision', icon: <DecisionNodeIcon />, title: 'Decision Node' },
+    { type: 'loop', icon: <LoopNodeIcon />, title: 'Loop Node' },
+    { type: 'subprocess', icon: <SubprocessNodeIcon />, title: 'Subprocess Node' },
+    { type: 'Database', icon: <DatabaseNodeIcon />, title: 'Database Node' },
+    { type: 'api', icon: <ApiNodeIcon />, title: 'API Node' },
+    { type: 'spreadsheet', icon: <SpreadsheetNodeIcon />, title: 'Spreadsheet Node' },
+  ];
 
   return (
     <div className="w-16 h-full bg-[#181a1b] border-r border-[#23272e] flex flex-col items-center py-4 gap-2">
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('start')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'start')}
-        title="Start Node"
-      >
-        <StartNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('end')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'end')}
-        title="End Node"
-      >
-        <EndNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('funcion')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'funcion')}
-        title="Function Node"
-      >
-        <FunctionNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('email')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'email')}
-        title="Email Node"
-      >
-        <EmailNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('webhook')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'webhook')}
-        title="Webhook Node"
-      >
-        <WebhookNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('decision')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'decision')}
-        title="Decision Node"
-      >
-        <DecisionNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('loop')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'loop')}
-        title="Loop Node"
-      >
-        <LoopNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('subprocess')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'subprocess')}
-        title="Subprocess Node"
-      >
-        <SubprocessNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('Database')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'Database')}
-        title="Database Node"
-      >
-        <DatabaseNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('api')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'api')}
-        title="API Node"
-      >
-        <ApiNodeIcon />
-      </button>
-      <button
-        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        onClick={() => onNodeSelect('spreadsheet')}
-        draggable
-        onDragStart={(e) => handleDragStart(e, 'spreadsheet')}
-        title="Spreadsheet Node"
-      >
-        <SpreadsheetNodeIcon />
-      </button>
+      {nodeButtons.map(({ type, icon, title }) => (
+        <button
+          key={type}
+          className={`w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors
+            ${draggingType === type ? 'scale-110 shadow-lg cursor-grabbing z-10' : ''}`}
+          onClick={() => onNodeSelect({ type, data: { label: `${type} Node`, description: `A ${type} node` } }, { x: 100, y: 100 })}
+          draggable
+          onDragStart={(e) => handleDragStart(e, type as NodeType)}
+          onDragEnd={handleDragEnd}
+          title={title}
+          style={{ cursor: draggingType === type ? 'grabbing' : 'grab' }}
+        >
+          {icon}
+        </button>
+      ))}
     </div>
   );
 };

@@ -1,19 +1,15 @@
 import React from 'react';
-import { Handle, Position } from 'reactflow';
-import { FunctionNodeIcon } from '../icons/FunctionNodeIcon';
+import { NodeProps, Handle, Position } from 'reactflow';
 
-const FunctionNode = ({ data }: { data: any }) => {
+const FunctionNode: React.FC<NodeProps> = ({ data }) => {
   return (
-    <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
-      <div className="flex items-center">
-        <FunctionNodeIcon />
-        <div className="ml-2">
-          <div className="text-lg font-bold">{data.label}</div>
-          <div className="text-gray-500">{data.description}</div>
-        </div>
+    <div className="rounded-lg shadow-md bg-[#23272e] border-2 border-[#10b981] px-4 py-2 flex flex-col items-center">
+      <div className="w-8 h-8 rounded-full bg-[#10b981] flex items-center justify-center mb-1">
+        <span className="text-white font-bold">ƒ</span>
       </div>
+      <div className="text-xs text-gray-200 font-semibold">{data.label || 'Function'}</div>
+      <Handle type="target" position={Position.Top} style={{ background: '#10b981' }} />
+      <Handle type="source" position={Position.Bottom} style={{ background: '#10b981' }} />
     </div>
   );
 };
