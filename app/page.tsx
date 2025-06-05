@@ -279,6 +279,9 @@ export default function Home() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
 
+  // Estado isolado para cada subprocesso
+  const [subprocessStates, setSubprocessStates] = useState<{ [id: string]: { nodes: Node[]; edges: Edge[] } }>({});
+
   // Sistema de abas
   const [tabs, setTabs] = useState<Tab[]>([
     { id: 'main', label: 'Main', type: 'main', content: null, mode: 'canvas' },
@@ -333,8 +336,8 @@ export default function Home() {
           <FlowCanvas
             nodes={nodes}
             edges={edges}
-            onNodesChange={handleNodesChange}
-            onEdgesChange={handleEdgesChange}
+            onNodesChange={setNodes}
+            onEdgesChange={setEdges}
             onNodeClick={handleNodeClick}
             selectedNode={selectedNode}
             selectedEdgeId={selectedEdgeId}
@@ -347,9 +350,30 @@ export default function Home() {
     }
 
     if (tab.type === 'subprocess') {
+      const subprocessId = tab.id;
+      const subprocessState = subprocessStates[subprocessId] || { nodes: [], edges: [] };
+
+      const handleSubNodesChange = (newNodes: Node[]) => {
+        setSubprocessStates(prev => ({
+          ...prev,
+          [subprocessId]: { ...prev[subprocessId], nodes: newNodes, edges: prev[subprocessId]?.edges || [] }
+        }));
+      };
+      const handleSubEdgesChange = (newEdges: Edge[]) => {
+        setSubprocessStates(prev => ({
+          ...prev,
+          [subprocessId]: { ...prev[subprocessId], nodes: prev[subprocessId]?.nodes || [], edges: newEdges }
+        }));
+      };
       return (
-        <div className="flex items-center justify-center h-full text-2xl text-white">
-          eu sou um subprocesso
+        <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
+          <FlowCanvas
+            nodes={subprocessState.nodes}
+            edges={subprocessState.edges}
+            onNodesChange={handleSubNodesChange}
+            onEdgesChange={handleSubEdgesChange}
+            // Você pode adicionar props extras conforme necessário
+          />
         </div>
       );
     }
