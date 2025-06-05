@@ -36,6 +36,8 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
     setShowDatabaseModal(false);
   };
 
+  const type = node.type?.toLowerCase?.() || node.type;
+
   if (node.type === 'api') {
     return <ApiNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
   }
@@ -52,8 +54,58 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
     return <StartNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
   }
 
-  if (node.type === 'warning') {
-    return <WarningNodeSidebar data={node.data} onChange={newData => onUpdate({ ...node, data: { ...node.data, ...newData } })} />;
+  if (type === 'schedule') {
+    return (
+      <SidebarBase title="Configuração de Agendamento" onClose={onClose}>
+        <label className="text-xs text-gray-400">Nome</label>
+        <input
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+          value={node.data.label || ''}
+          onChange={(e) => onUpdate({
+            ...node,
+            data: { ...node.data, label: e.target.value }
+          })}
+          placeholder="Nome do agendamento"
+        />
+        <label className="text-xs text-gray-400">Descrição</label>
+        <textarea
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+          value={node.data.description || ''}
+          onChange={(e) => onUpdate({
+            ...node,
+            data: { ...node.data, description: e.target.value }
+          })}
+          placeholder="Adicione uma descrição..."
+        />
+      </SidebarBase>
+    );
+  }
+
+  if (type === 'warning') {
+    return (
+      <SidebarBase title="Configuração de Aviso" onClose={onClose}>
+        <label className="text-xs text-gray-400">Nome</label>
+        <input
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+          value={node.data.label || ''}
+          onChange={(e) => onUpdate({
+            ...node,
+            data: { ...node.data, label: e.target.value }
+          })}
+          placeholder="Nome do aviso"
+        />
+        <label className="text-xs text-gray-400">Descrição</label>
+        <textarea
+          className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
+          value={node.data.description || ''}
+          onChange={(e) => onUpdate({
+            ...node,
+            data: { ...node.data, description: e.target.value }
+          })}
+          placeholder="Adicione uma descrição..."
+        />
+      </SidebarBase>
+    );
   }
 
   return (
