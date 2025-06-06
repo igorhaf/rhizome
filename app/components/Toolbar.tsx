@@ -145,17 +145,17 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   ];
 
   return (
-    <div className="w-16 h-full bg-[#181a1b] border-r border-[#23272e] flex flex-col items-center py-4 gap-2">
+    <div className="w-12 h-full bg-[#181a1b] border-r border-[#23272e] flex flex-col items-center py-2 gap-1">
       {nodeButtons.map(({ type, icon, title }) => (
         <button
           key={type}
-          className={`w-12 h-12 flex items-center justify-center rounded-lg transition-colors duration-150 ${draggingType === type ? 'bg-blue-800' : 'hover:bg-[#23272e]'} text-white`}
+          className={`w-10 h-10 flex items-center justify-center rounded transition-colors duration-150 ${draggingType === type ? 'bg-blue-800' : 'hover:bg-[#23272e]'} text-white`}
           draggable
           onDragStart={e => handleDragStart(e, type as NodeType)}
           onDragEnd={handleDragEnd}
           title={title}
         >
-          {icon}
+          <span className="w-6 h-6 flex items-center justify-center">{icon}</span>
         </button>
       ))}
     </div>
