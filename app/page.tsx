@@ -446,6 +446,49 @@ export default function Home() {
     }
   }, [selectedNode, handleStartSidebarClose, activeTab, setSelectedNode, setSubprocessStates, tabs]);
 
+  // Callbacks para subprocessos
+  const handleSubNodesChange = React.useCallback((subprocessId: string) => (changes: NodeChange[]) => {
+    setSubprocessStates(prev => ({
+      ...prev,
+      [subprocessId]: { 
+        ...prev[subprocessId], 
+        nodes: applyNodeChanges(changes, prev[subprocessId].nodes)
+      }
+    }));
+  }, [setSubprocessStates]);
+
+  const handleSubEdgesChange = React.useCallback((subprocessId: string) => (changes: EdgeChange[]) => {
+    setSubprocessStates(prev => ({
+      ...prev,
+      [subprocessId]: { 
+        ...prev[subprocessId], 
+        edges: applyEdgeChanges(changes, prev[subprocessId].edges)
+      }
+    }));
+  }, [setSubprocessStates]);
+
+  const handleSubNodeSelect = React.useCallback((subprocessId: string) => (node: Node | null) => {
+    setSubprocessStates(prev => ({
+      ...prev,
+      [subprocessId]: { 
+        ...prev[subprocessId], 
+        selectedNode: node,
+        selectedEdgeId: null
+      }
+    }));
+  }, [setSubprocessStates]);
+
+  const handleSubEdgeSelect = React.useCallback((subprocessId: string) => (edgeId: string | null) => {
+    setSubprocessStates(prev => ({
+      ...prev,
+      [subprocessId]: { 
+        ...prev[subprocessId], 
+        selectedEdgeId: edgeId,
+        selectedNode: null
+      }
+    }));
+  }, [setSubprocessStates]);
+
   // Renderiza conteúdo da aba
   const renderTabContent = () => {
     const tab = tabs.find(t => t.id === activeTab);
@@ -493,64 +536,16 @@ export default function Home() {
         selectedEdgeId: null 
       };
 
-      const handleSubNodesChange = React.useCallback(
-        (changes: NodeChange[]) => {
-          setSubprocessStates(prev => ({
-            ...prev,
-            [subprocessId]: { 
-              ...prev[subprocessId], 
-              nodes: applyNodeChanges(changes, prev[subprocessId].nodes)
-            }
-          }));
-        },
-        [setSubprocessStates, subprocessId]
-      );
-
-      const handleSubEdgesChange = React.useCallback(
-        (changes: EdgeChange[]) => {
-          setSubprocessStates(prev => ({
-            ...prev,
-            [subprocessId]: { 
-              ...prev[subprocessId], 
-              edges: applyEdgeChanges(changes, prev[subprocessId].edges)
-            }
-          }));
-        },
-        [setSubprocessStates, subprocessId]
-      );
-
-      const handleSubNodeSelect = (node: Node | null) => {
-        setSubprocessStates(prev => ({
-          ...prev,
-          [subprocessId]: { 
-            ...prev[subprocessId], 
-            selectedNode: node,
-            selectedEdgeId: null // Deseleciona edge quando seleciona node
-          }
-        }));
-      };
-
-      const handleSubEdgeSelect = (edgeId: string | null) => {
-        setSubprocessStates(prev => ({
-          ...prev,
-          [subprocessId]: { 
-            ...prev[subprocessId], 
-            selectedEdgeId: edgeId,
-            selectedNode: null // Deseleciona node quando seleciona edge
-          }
-        }));
-      };
-
       return (
         <div className="flex-1 h-full overflow-hidden bg-[#1e2228]">
           <ReactFlowProvider>
             <FlowCanvas
               initialNodes={subprocessState.nodes}
               initialEdges={subprocessState.edges}
-              onNodesChange={handleSubNodesChange}
-              onEdgesChange={handleSubEdgesChange}
+              onNodesChange={handleSubNodesChange(subprocessId)}
+              onEdgesChange={handleSubEdgesChange(subprocessId)}
               onConnect={handleConnect}
-              onNodeClick={handleSubNodeSelect}
+              onNodeClick={handleSubNodeSelect(subprocessId)}
               onEdgeClick={(edge) => setSelectedEdgeId(edge?.id ?? null)}
               onPaneClick={handlePaneClick}
               selectedNode={subprocessState.selectedNode}
