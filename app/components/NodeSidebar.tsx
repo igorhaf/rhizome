@@ -54,25 +54,25 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
   return (
     <SidebarBase title="Configuração do Nó" onClose={onClose}>
       <label className="text-xs text-gray-400">Nome</label>
-      <input
+          <input
         className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
-        value={node.data.label || ''}
-        onChange={(e) => onUpdate({
-          ...node,
-          data: { ...node.data, label: e.target.value }
-        })}
-        placeholder="Nome do nó"
-      />
+            value={node.data.label || ''}
+            onChange={(e) => onUpdate({
+              ...node,
+              data: { ...node.data, label: e.target.value }
+            })}
+            placeholder="Nome do nó"
+          />
       <label className="text-xs text-gray-400">Descrição</label>
-      <textarea
+          <textarea
         className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
         value={node.data.description || ''}
-        onChange={(e) => onUpdate({
-          ...node,
+            onChange={(e) => onUpdate({
+              ...node,
           data: { ...node.data, description: e.target.value }
-        })}
+            })}
         placeholder="Adicione uma descrição..."
-      />
+          />
     </SidebarBase>
   );
 };

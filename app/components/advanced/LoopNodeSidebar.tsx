@@ -24,19 +24,19 @@ const LoopNodeSidebar: React.FC<LoopNodeSidebarProps> = ({ node, onUpdate, onClo
   return (
     <SidebarBase title="Configuração do Loop" onClose={onClose}>
       <label className="text-xs text-gray-400">Nome</label>
-      <input
+          <input
         className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
         value={data.label || ''}
         onChange={e => handleChange('label', e.target.value)}
         placeholder="Nome do loop"
-      />
+          />
       <label className="text-xs text-gray-400">Descrição</label>
-      <textarea
+          <textarea
         className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
         value={data.description || ''}
         onChange={e => handleChange('description', e.target.value)}
         placeholder="Adicione uma descrição..."
-      />
+          />
       <label className="flex items-center gap-2 mt-1 text-gray-400 text-xs">
         <input
           type="checkbox"
@@ -47,14 +47,14 @@ const LoopNodeSidebar: React.FC<LoopNodeSidebarProps> = ({ node, onUpdate, onClo
         Registrar no Log
       </label>
       <label className="text-xs font-medium mt-1 text-gray-400">Notas</label>
-      <textarea
+          <textarea
         className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none"
         value={data.notes || ''}
         onChange={e => handleChange('notes', e.target.value)}
         placeholder="Adicione notas sobre este loop..."
-      />
+          />
       <label className="text-xs text-gray-400">ID</label>
-      <input
+          <input
         className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-500 text-sm"
         value={localNode.id}
         readOnly

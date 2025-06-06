@@ -12,7 +12,6 @@ import ActionNodeSidebar from './components/ActionNodeSidebar';
 import DecisionNodeSidebar from './components/DecisionNodeSidebar';
 import FunctionNodeSidebar from './components/advanced/FunctionNodeSidebar';
 import EmailNodeSidebar from './components/advanced/EmailNodeSidebar';
-import SpreadsheetNodeSidebar from './components/advanced/SpreadsheetNodeSidebar';
 import WebhookNodeSidebar from './components/advanced/WebhookNodeSidebar';
 import DatabaseQueryModal from './components/DatabaseQueryModal';
 import QueryInterfaceModal from './components/QueryInterfaceModal';
@@ -21,7 +20,6 @@ import WebhookConfigTab from './components/WebhookConfigTab';
 import ApiConfigTab from './components/ApiConfigTab';
 import FunctionConfigTab from './components/FunctionConfigTab';
 import EmailConfigTab from './components/EmailConfigTab';
-import SpreadsheetConfigTab from './components/SpreadsheetConfigTab';
 import { DecisionNodeIcon } from './components/FlowEdge';
 import WebhookNode from './components/nodes/WebhookNode';
 import WebhookConfigPanel from './components/panels/WebhookConfigPanel';
@@ -298,6 +296,8 @@ export default function Home() {
   ]);
   const [activeTab, setActiveTab] = useState('main');
 
+  const [startSidebarClosing, setStartSidebarClosing] = useState(false);
+
   const getNextNodeName = (type: NodeType, nodes: Node[]): string => {
     const baseName = type.charAt(0).toUpperCase() + type.slice(1);
     const existingNames = nodes
@@ -317,6 +317,10 @@ export default function Home() {
 
   const handleNodeAdd = (nodeData: Partial<Node>, position: { x: number; y: number }) => {
     const type = nodeData.type as NodeType;
+    if (type === 'start' && nodes.some(n => n.type === 'start')) {
+      // Não permite adicionar outro nó start
+      return;
+    }
     let data = {
       ...nodeData.data,
       label: nodeData.data?.label || getNextNodeName(type, nodes),
@@ -406,6 +410,42 @@ export default function Home() {
     }
   };
 
+  const handleStartSidebarClose = useCallback(() => {
+    setStartSidebarClosing(true);
+    setTimeout(() => {
+      setStartSidebarClosing(false);
+      if (activeTab && tabs.find(t => t.id === activeTab)?.type === 'main') {
+        setSelectedNode(null);
+      } else if (activeTab && tabs.find(t => t.id === activeTab)?.type === 'subprocess') {
+        setSubprocessStates(prev => ({
+          ...prev,
+          [activeTab]: {
+            ...prev[activeTab],
+            selectedNode: null
+          }
+        }));
+      }
+    }, 300);
+  }, [activeTab, setSelectedNode, setSubprocessStates, tabs]);
+
+  const handlePaneClick = useCallback(() => {
+    if (selectedNode && selectedNode.type === 'start') {
+      handleStartSidebarClose();
+    } else {
+      if (activeTab && tabs.find(t => t.id === activeTab)?.type === 'main') {
+        setSelectedNode(null);
+      } else if (activeTab && tabs.find(t => t.id === activeTab)?.type === 'subprocess') {
+        setSubprocessStates(prev => ({
+          ...prev,
+          [activeTab]: {
+            ...prev[activeTab],
+            selectedNode: null
+          }
+        }));
+      }
+    }
+  }, [selectedNode, handleStartSidebarClose, activeTab, setSelectedNode, setSubprocessStates, tabs]);
+
   // Renderiza conteúdo da aba
   const renderTabContent = () => {
     const tab = tabs.find(t => t.id === activeTab);
@@ -415,7 +455,19 @@ export default function Home() {
       return (
         <ReactFlowProvider>
           <FlowCanvas
-            nodes={nodes}
+            nodes={nodes.map(n =>
+              n.type === 'start'
+                ? {
+                    ...n,
+                    data: {
+                      ...n.data,
+                      onToggleActive: (value: boolean) => {
+                        setNodes(prevNodes => prevNodes.map(node => node.id === n.id ? { ...node, data: { ...node.data, active: value } } : node));
+                      },
+                    },
+                  }
+                : n
+            )}
             edges={edges}
             onNodesChange={handleNodesChange}
             onEdgesChange={handleEdgesChange}
@@ -423,10 +475,7 @@ export default function Home() {
             onNodeClick={setSelectedNode}
             onNodeDoubleClick={handleNodeDoubleClick}
             onEdgeClick={(edge) => setSelectedEdgeId(edge?.id ?? null)}
-            onPaneClick={() => {
-              setSelectedNode(null);
-              setSelectedEdgeId(null);
-            }}
+            onPaneClick={handlePaneClick}
             selectedNode={selectedNode}
             selectedEdgeId={selectedEdgeId}
             onNodeAdd={handleNodeAdd}
@@ -503,10 +552,7 @@ export default function Home() {
               onConnect={handleConnect}
               onNodeClick={handleSubNodeSelect}
               onEdgeClick={(edge) => setSelectedEdgeId(edge?.id ?? null)}
-              onPaneClick={() => {
-                setSelectedNode(null);
-                setSelectedEdgeId(null);
-              }}
+              onPaneClick={handlePaneClick}
               selectedNode={subprocessState.selectedNode}
               selectedEdgeId={subprocessState.selectedEdgeId}
               onNodeAdd={handleNodeAdd}
@@ -572,14 +618,6 @@ export default function Home() {
       );
     }
 
-    if (tab.type === 'spreadsheet') {
-      return (
-        <div className="flex-1 h-full overflow-y-auto bg-[#1e2228]">
-          <SpreadsheetConfigTab node={tab.content as Node} setNodes={setNodes} />
-        </div>
-      );
-    }
-
     return null;
   };
 
@@ -631,8 +669,6 @@ export default function Home() {
           let data = {
             ...node.data,
             ...updatedNode.data,
-            // Preserva campos específicos por tipo
-            ...(updatedNode.type === 'start' && { active: node.data.active }),
             ...(updatedNode.type === 'end' && { isFinal: node.data.isFinal }),
             ...(updatedNode.type === 'decision' && { conditions: node.data.conditions || [] }),
             ...(updatedNode.type === 'loop' && { iterations: node.data.iterations || 1 }),
@@ -690,8 +726,6 @@ export default function Home() {
             let data = {
               ...node.data,
               ...updatedNode.data,
-              // Preserva campos específicos por tipo (mesmo tratamento do main)
-              ...(updatedNode.type === 'start' && { active: node.data.active }),
               ...(updatedNode.type === 'end' && { isFinal: node.data.isFinal }),
               ...(updatedNode.type === 'decision' && { conditions: node.data.conditions || [] }),
               ...(updatedNode.type === 'loop' && { iterations: node.data.iterations || 1 }),
@@ -767,6 +801,21 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedNode, selectedEdgeId]);
 
+  React.useEffect(() => {
+    // Garante que sempre exista um nó start ao abrir o app
+    if (!nodes.some(n => n.type === 'start')) {
+      setNodes(nds => [
+        {
+          id: `node-start`,
+          type: 'start',
+          position: { x: 120, y: 120 },
+          data: { label: 'Início', active: true },
+        },
+        ...nds,
+      ]);
+    }
+  }, [nodes]);
+
   const DecisionIcon = DecisionNodeIcon;
 
   // Renderiza o painel lateral
@@ -783,7 +832,7 @@ export default function Home() {
 
     if (!currentSelectedNode) return null;
 
-    return (
+        return (
       <div className="w-80 border-l border-[#222] bg-[#1e2228] overflow-y-auto">
         {currentSelectedNode.type === 'webhook' ? (
           <WebhookNodeSidebar
@@ -841,21 +890,10 @@ export default function Home() {
           />
         ) : currentSelectedNode.type === 'start' ? (
           <StartNodeSidebar
-            node={currentSelectedNode}
+            node={nodes.find(n => n.id === currentSelectedNode.id) || currentSelectedNode}
             onUpdate={handleNodeUpdate}
-            onClose={() => {
-              if (tab.type === 'main') {
-                setSelectedNode(null);
-              } else {
-                setSubprocessStates(prev => ({
-                  ...prev,
-                  [tab.id]: {
-                    ...prev[tab.id],
-                    selectedNode: null
-                  }
-                }));
-              }
-            }}
+            onClose={handleStartSidebarClose}
+            isClosing={startSidebarClosing}
           />
         ) : currentSelectedNode.type === 'subprocess' ? (
           <SubprocessNodeSidebar
@@ -910,73 +948,73 @@ export default function Home() {
             className="flex items-center h-9 bg-[#181a1b] border-b border-[#23272e] px-1 gap-0 select-none" 
             style={{ minHeight: 36 }}
           >
-            {tabs.map((tab, idx) => {
-              const isActive = activeTab === tab.id;
-              let icon = null;
-              if (tab.id === 'main') icon = StartIcon;
-              else if (tab.type === 'subprocess') icon = SubprocessIcon;
-              else if (tab.type === 'decision-config') icon = DecisionIcon;
-              else if (tab.type === 'loop') icon = SubprocessIcon;
-              else icon = SubprocessIcon;
-              return (
-                <React.Fragment key={tab.id}>
-                  {/* Divisória à esquerda de todas as abas, exceto a primeira */}
-                  {idx > 0 && (
-                    <div style={{ width: 1, height: 36, background: '#2a2d2e', margin: 0 }} />
-                  )}
-                  {/* Aba */}
-                  <div
-                    className={`relative group flex items-center h-9 min-h-[36px] max-h-[36px] px-3 cursor-pointer text-sm font-medium transition-colors duration-100
-                      ${isActive
-                        ? 'bg-[#1e2228] text-white border-b-2'
-                        : 'bg-transparent text-[#bfbfbf] hover:bg-[#181a1b] hover:text-white'}
-                    `}
-                    style={{
-                      userSelect: 'none',
-                      minWidth: 80,
-                      height: '36px',
-                      borderRadius: 0,
-                      border: 'none',
-                      borderLeft: 'none',
-                      borderRight: 'none',
-                      borderBottomColor: isActive ? VSCodeBlue : 'transparent',
-                      marginTop: 0,
-                      marginBottom: 0,
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                    }}
+          {tabs.map((tab, idx) => {
+            const isActive = activeTab === tab.id;
+            let icon = null;
+            if (tab.id === 'main') icon = StartIcon;
+            else if (tab.type === 'subprocess') icon = SubprocessIcon;
+            else if (tab.type === 'decision-config') icon = DecisionIcon;
+            else if (tab.type === 'loop') icon = SubprocessIcon;
+            else icon = SubprocessIcon;
+            return (
+              <React.Fragment key={tab.id}>
+                {/* Divisória à esquerda de todas as abas, exceto a primeira */}
+                {idx > 0 && (
+                  <div style={{ width: 1, height: 36, background: '#2a2d2e', margin: 0 }} />
+                )}
+                {/* Aba */}
+                <div
+                  className={`relative group flex items-center h-9 min-h-[36px] max-h-[36px] px-3 cursor-pointer text-sm font-medium transition-colors duration-100
+                    ${isActive
+                      ? 'bg-[#1e2228] text-white border-b-2'
+                      : 'bg-transparent text-[#bfbfbf] hover:bg-[#181a1b] hover:text-white'}
+                  `}
+                  style={{
+                    userSelect: 'none',
+                    minWidth: 80,
+                    height: '36px',
+                    borderRadius: 0,
+                    border: 'none',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    borderBottomColor: isActive ? VSCodeBlue : 'transparent',
+                    marginTop: 0,
+                    marginBottom: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                  }}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       setActiveTab(tab.id);
                     }}
-                  >
-                    {/* Ícone */}
-                    <span className="mr-2 flex items-center">
-                      {icon}
-                    </span>
-                    <span className="truncate max-w-[120px]">{tab.label}</span>
-                    {/* X só aparece em abas não-main, sempre visível na ativa, só on hover na inativa */}
-                    {tab.id !== 'main' && (
-                      <button
-                        className={`ml-2 text-[#bfbfbf] text-xs transition-opacity duration-100
-                          ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
-                          hover:text-[${VSCodeBlue}]`}
+                >
+                  {/* Ícone */}
+                  <span className="mr-2 flex items-center">
+                    {icon}
+                  </span>
+                  <span className="truncate max-w-[120px]">{tab.label}</span>
+                  {/* X só aparece em abas não-main, sempre visível na ativa, só on hover na inativa */}
+                  {tab.id !== 'main' && (
+                    <button
+                      className={`ml-2 text-[#bfbfbf] text-xs transition-opacity duration-100
+                        ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+                        hover:text-[${VSCodeBlue}]`}
                         onClick={e => { 
                           e.preventDefault();
                           e.stopPropagation(); 
                           handleCloseTab(tab.id); 
                         }}
-                        style={{ fontSize: 16, lineHeight: 1 }}
-                        tabIndex={-1}
-                        title="Fechar aba"
-                      >×</button>
-                    )}
-                  </div>
-                </React.Fragment>
-              );
-            })}
-          </div>
+                      style={{ fontSize: 16, lineHeight: 1 }}
+                      tabIndex={-1}
+                      title="Fechar aba"
+                    >×</button>
+                  )}
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
         </div>
         {/* Conteúdo da aba ativa - canvas deve ocupar toda a área, pointer-events: auto */}
         <div 

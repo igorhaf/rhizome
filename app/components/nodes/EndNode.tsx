@@ -8,7 +8,7 @@ const EndNode: React.FC<NodeProps> = ({ data }) => {
         <span className="text-white font-bold">⏹</span>
       </div>
       <div className="text-xs text-gray-200 font-semibold">{data.label || 'End'}</div>
-      <Handle type="target" position={Position.Top} style={{ background: '#4b5563' }} />
+      <Handle type="target" position={Position.Top} className="handle-extended" style={{ top: -8, background: '#4b5563' }} />
     </div>
   );
 };

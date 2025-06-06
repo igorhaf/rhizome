@@ -28,3 +28,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Universal handle touch area for ReactFlow nodes - bolinha menor */
+.handle-extended {
+  position: absolute;
+  width: 16px !important;
+  height: 16px !important;
+  z-index: 10;
+  background: transparent !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+}
+.handle-extended::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  margin: auto;
+}
