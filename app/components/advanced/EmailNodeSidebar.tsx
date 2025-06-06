@@ -22,16 +22,16 @@ const EmailNodeSidebar: React.FC<EmailNodeSidebarProps> = ({ node, onUpdate, onC
       <input className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 placeholder-gray-500 text-sm focus:outline-none" value={data.subject || ''} onChange={e => onUpdate({ ...node, data: { ...data, subject: e.target.value } })} placeholder="Assunto do email" />
       <label className="text-xs text-gray-400">Tipo de Conteúdo</label>
       <select className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.contentType || 'html'} onChange={e => onUpdate({ ...node, data: { ...data, contentType: e.target.value } })}>
-        <option value="html">HTML</option>
+            <option value="html">HTML</option>
         <option value="text">Texto Simples</option>
-        <option value="template">Template</option>
-      </select>
+            <option value="template">Template</option>
+          </select>
       <label className="text-xs text-gray-400">Prioridade</label>
       <select className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.priority || 'normal'} onChange={e => onUpdate({ ...node, data: { ...data, priority: e.target.value } })}>
         <option value="high">Alta</option>
-        <option value="normal">Normal</option>
+            <option value="normal">Normal</option>
         <option value="low">Baixa</option>
-      </select>
+          </select>
       <label className="text-xs text-gray-400">Timeout (ms)</label>
       <input type="number" className="border border-[#222] rounded px-2 py-1.5 bg-[#23272e] text-gray-300 text-sm focus:outline-none" value={data.timeout || 30000} onChange={e => onUpdate({ ...node, data: { ...data, timeout: parseInt(e.target.value) } })} min="0" step="1000" />
       <label className="text-xs text-gray-400">Tentativas</label>

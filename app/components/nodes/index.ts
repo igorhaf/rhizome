@@ -9,4 +9,5 @@ export { default as SubprocessNode } from './SubprocessNode';
 export { default as DatabaseNode } from './DatabaseNode';
 export { default as ApiNode } from './ApiNode';
 export { default as WarningNode } from './WarningNode';
-export { default as WebhookNode } from './WebhookNode'; 
+export { default as WebhookNode } from './WebhookNode';
+export { default as ScheduleNode } from './ScheduleNode'; 

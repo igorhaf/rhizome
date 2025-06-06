@@ -16,7 +16,8 @@ import {
   DatabaseNode,
   ApiNode,
   WarningNode,
-  WebhookNode
+  WebhookNode,
+  ScheduleNode
 } from './nodes';
 import { EmailNodeIcon } from './icons/EmailNodeIcon';
 import { StartNodeIcon } from './icons/StartNodeIcon';
@@ -197,6 +198,7 @@ const nodeTypes = {
   api: ApiNode,
   spreadsheet: SpreadsheetNode,
   warning: WarningNode,
+  schedule: ScheduleNode,
 };
 
 export const FlowCanvas: React.FC<FlowCanvasProps> = ({
@@ -226,7 +228,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const [isPanning, setIsPanning] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [startOffset, setStartOffset] = useState<{ x: number; y: number } | null>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.7);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [selectedLabelEdgeId, setSelectedLabelEdgeId] = useState<string | null>(null);
   const [editingLabelEdgeId, setEditingLabelEdgeId] = useState<string | null>(null);
@@ -645,6 +647,13 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
             <polygon points="12,3 22,21 2,21" fill="#facc15" stroke="#b45309" strokeWidth="2"/>
             <text x="12" y="18" textAnchor="middle" fontSize="16" fill="#b45309" fontWeight="bold">!</text>
+          </svg>
+        );
+      case 'schedule':
+        return (
+          <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="20" fill="#eab308" />
+            <text x="24" y="32" textAnchor="middle" fontSize="22" fill="#fff" fontWeight="bold">?</text>
           </svg>
         );
       default:

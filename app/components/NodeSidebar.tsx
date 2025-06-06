@@ -6,6 +6,7 @@ import StartNodeSidebar from './StartNodeSidebar';
 import WarningNodeSidebar from './panels/WarningNodeSidebar';
 import ApiNodeSidebar from './advanced/ApiNodeSidebar';
 import SidebarBase from './advanced/SidebarBase';
+import ScheduleNodeSidebar from './ScheduleNodeSidebar';
 
 interface NodeSidebarProps {
   node: Node;
@@ -49,6 +50,10 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
 
   if (node.type === 'warning') {
     return <WarningNodeSidebar data={node.data} onChange={newData => onUpdate({ ...node, data: { ...node.data, ...newData } })} />;
+  }
+
+  if (node.type === 'schedule') {
+    return <ScheduleNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
   }
 
   return (

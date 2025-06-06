@@ -12,7 +12,8 @@ export type NodeType =
   | 'Database'
   | 'api'
   | 'spreadsheet'
-  | 'warning';
+  | 'warning'
+  | 'schedule';
 
 export interface Position {
   x: number;
@@ -73,6 +74,14 @@ export interface NodeData {
   trackOpens?: boolean;
   functionShouldLog?: boolean;
   functionNotes?: string;
+  scheduleType?: 'interval' | 'cron';
+  interval?: number;
+  intervalUnit?: 'seconds' | 'minutes' | 'hours' | 'days';
+  cronExpression?: string;
+  timezone?: string;
+  startDate?: string;
+  endDate?: string;
+  enabled?: boolean;
 }
 
 export type Node = ReactFlowNode<NodeData>;

@@ -12,6 +12,7 @@ import { LoopNodeIcon } from './icons/LoopNodeIcon';
 import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
 import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
 import { ApiNodeIcon } from './icons/ApiNodeIcon';
+import { ScheduleNodeIcon } from './icons/ScheduleNodeIcon';
 
 interface ToolbarProps {
   onNodeSelect: (nodeData: Partial<import('../types/flow').Node>, position: { x: number; y: number }) => void;
@@ -134,17 +135,19 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
   const nodeButtons = [
     { type: 'start', icon: <StartNodeIcon />, title: 'Start Node' },
     { type: 'end', icon: <EndNodeIcon />, title: 'End Node' },
-    { type: 'funcion', icon: <FunctionNodeIcon />, title: 'Function Node' },
-    { type: 'email', icon: <EmailNodeIcon />, title: 'Email Node' },
-    { type: 'webhook', icon: <WebhookNodeIcon />, title: 'Webhook Node' },
     { type: 'decision', icon: <DecisionNodeIcon />, title: 'Decision Node' },
     { type: 'loop', icon: <LoopNodeIcon />, title: 'Loop Node' },
+    { type: 'api', icon: <ApiNodeIcon />, title: 'API Node' },
+    { type: 'webhook', icon: <WebhookNodeIcon />, title: 'Webhook Node' },
+    { type: 'email', icon: <EmailNodeIcon />, title: 'Email Node' },
+    { type: 'funcion', icon: <FunctionNodeIcon />, title: 'Function Node' },
     { type: 'subprocess', icon: <SubprocessNodeIcon />, title: 'Subprocess Node' },
     { type: 'Database', icon: <DatabaseNodeIcon />, title: 'Database Node' },
-    { type: 'api', icon: <ApiNodeIcon />, title: 'API Node' },
+    { type: 'warning', icon: icons.warning, title: 'Warning Node' },
+    { type: 'schedule', icon: <ScheduleNodeIcon />, title: 'Schedule Node' },
   ];
 
-  return (
+    return (
     <div className="w-12 h-full bg-[#181a1b] border-r border-[#23272e] flex flex-col items-center py-2 gap-1">
       {nodeButtons.map(({ type, icon, title }) => (
         <button
