@@ -12,7 +12,6 @@ import { LoopNodeIcon } from './icons/LoopNodeIcon';
 import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
 import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
 import { ApiNodeIcon } from './icons/ApiNodeIcon';
-import { SpreadsheetNodeIcon } from './icons/SpreadsheetNodeIcon';
 
 interface ToolbarProps {
   onNodeSelect: (nodeData: Partial<import('../types/flow').Node>, position: { x: number; y: number }) => void;
@@ -144,7 +143,6 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
     { type: 'subprocess', icon: <SubprocessNodeIcon />, title: 'Subprocess Node' },
     { type: 'Database', icon: <DatabaseNodeIcon />, title: 'Database Node' },
     { type: 'api', icon: <ApiNodeIcon />, title: 'API Node' },
-    { type: 'spreadsheet', icon: <SpreadsheetNodeIcon />, title: 'Spreadsheet Node' },
   ];
 
   return (
@@ -152,14 +150,11 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
       {nodeButtons.map(({ type, icon, title }) => (
         <button
           key={type}
-          className={`w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors
-            ${draggingType === type ? 'scale-110 shadow-lg cursor-grabbing z-10' : ''}`}
-          onClick={() => onNodeSelect({ type, data: { label: `${type} Node`, description: `A ${type} node` } }, { x: 100, y: 100 })}
+          className={`w-12 h-12 flex items-center justify-center rounded-lg transition-colors duration-150 ${draggingType === type ? 'bg-blue-800' : 'hover:bg-[#23272e]'} text-white`}
           draggable
-          onDragStart={(e) => handleDragStart(e, type as NodeType)}
+          onDragStart={e => handleDragStart(e, type as NodeType)}
           onDragEnd={handleDragEnd}
           title={title}
-          style={{ cursor: draggingType === type ? 'grabbing' : 'grab' }}
         >
           {icon}
         </button>

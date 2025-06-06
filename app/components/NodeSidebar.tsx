@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Node } from '../types/flow';
 import DatabaseQueryModal from './DatabaseQueryModal';
 import EmailNodeSidebar from './EmailNodeSidebar';
-import SpreadsheetNodeSidebar from './SpreadsheetNodeSidebar';
 import StartNodeSidebar from './StartNodeSidebar';
 import WarningNodeSidebar from './panels/WarningNodeSidebar';
 import ApiNodeSidebar from './advanced/ApiNodeSidebar';
@@ -42,10 +41,6 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({ node, onUpdate, onClose }) =>
 
   if (node.type === 'email') {
     return <EmailNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
-  }
-
-  if (node.type === 'spreadsheet') {
-    return <SpreadsheetNodeSidebar node={node} onUpdate={onUpdate} onClose={onClose} />;
   }
 
   if (node.type === 'start') {

@@ -1,5 +1,4 @@
 import { EmailNodeIcon } from '../icons/EmailNodeIcon';
-import { SpreadsheetNodeIcon } from '../icons/SpreadsheetNodeIcon';
 
 export const nodeTypes = [
   {

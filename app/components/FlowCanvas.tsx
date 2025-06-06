@@ -28,7 +28,6 @@ import { LoopNodeIcon } from './icons/LoopNodeIcon';
 import { SubprocessNodeIcon } from './icons/SubprocessNodeIcon';
 import { DatabaseNodeIcon } from './icons/DatabaseNodeIcon';
 import { ApiNodeIcon } from './icons/ApiNodeIcon';
-import { SpreadsheetNodeIcon } from './icons/SpreadsheetNodeIcon';
 import { Node as FlowNodeType } from '../types/flow';
 import ReactFlow, {
   Controls,
@@ -640,9 +639,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
       case 'Database':
         return <DatabaseNodeIcon />;
       case 'api':
-        return <ApiNodeIcon />;
-      case 'spreadsheet':
-        return <SpreadsheetNodeIcon />;
+        return <ApiNodeIcon/>;
       case 'warning':
         return (
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
