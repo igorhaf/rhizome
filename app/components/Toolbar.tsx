@@ -60,9 +60,9 @@ const icons: Record<string, React.ReactNode> = {
   data: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="3" fill="#a78bfa"/></svg>,
   api: <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#38bdf8"/><circle cx="10" cy="10" r="4" fill="#fff" fillOpacity=".2"/></svg>,
   funcion: (
-    <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-      <rect x="4" y="4" width="12" height="12" rx="3" fill="#10b981"/>
-      <path d="M8 8h4v4H8z" fill="#fff"/>
+    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#10b981" />
+      <rect x="18" y="18" width="12" height="12" rx="2" fill="#fff" />
     </svg>
   ),
   email: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="#3b82f6"/></svg>,
