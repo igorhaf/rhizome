@@ -348,69 +348,37 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
       if (!data) return;
       nodeData = JSON.parse(data);
     } catch (error) {
-      console.error('Error parsing node data:', error);
       return;
     }
-
-    // Garantir que temos um tipo válido
-    const type = nodeData.type?.toLowerCase() || 'start';
+    const type = nodeData.type || 'start';
     setDebugInfo((info) => ({ ...info, lastType: type }));
-
-    // Calcular posição considerando o viewport e scale
+    // Corrigir posição usando project do ReactFlow
     const pos = project({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     });
-
-    // Garantir que temos um ID único
-    const nodeId = `node-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-    // Preparar dados do nó
-    const newNodeData = {
-      ...nodeData,
-      id: nodeId,
-      type,
-      position: pos,
-      data: {
-        ...nodeData,
-        label: nodeData.label || type.charAt(0).toUpperCase() + type.slice(1),
-        description: nodeData.description || '',
-      }
-    };
-
-    // Se temos um callback onNodeAdd, use-o
     if (onNodeAdd) {
-      onNodeAdd(newNodeData, pos);
+      onNodeAdd({ type, data: nodeData }, pos);
     } else {
-      // Caso contrário, atualize o estado local
-      setLocalNodes((nds) => [...nds, newNodeData]);
+      // Corrige headers se vier como objeto vazio
+      if (nodeData.headers && !Array.isArray(nodeData.headers)) {
+        nodeData.headers = [];
+      }
+      setLocalNodes((nds) => [
+        ...nds,
+        {
+          id: `node-${Date.now()}`,
+          type,
+          position: pos,
+          data: nodeData,
+        },
+      ]);
     }
-
-    // Forçar atualização do canvas
-    setForceUpdate(prev => prev + 1);
   }, [onNodeAdd, setLocalNodes, project]);
 
   const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    
-    // Verificar se os dados são válidos
-    try {
-      const data = event.dataTransfer.getData('application/json');
-      if (!data) {
-        event.dataTransfer.dropEffect = 'none';
-        return;
-      }
-      const nodeData = JSON.parse(data);
-      if (!nodeData.type) {
-        event.dataTransfer.dropEffect = 'none';
-        return;
-      }
-    } catch {
-      event.dataTransfer.dropEffect = 'none';
-      return;
-    }
-    
     event.dataTransfer.dropEffect = 'copy';
     if (!isDragOver) setIsDragOver(true);
     setDebugInfo((info) => ({ ...info, lastEvent: 'dragOver', overlay: true }));
@@ -422,18 +390,6 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     setIsDragOver(false);
     setDebugInfo((info) => ({ ...info, lastEvent: 'dragLeave', overlay: false }));
   }, []);
-
-  // Adicionar efeito visual de hover no canvas
-  useEffect(() => {
-    if (isDragOver) {
-      document.body.style.cursor = 'copy';
-    } else {
-      document.body.style.cursor = 'default';
-    }
-    return () => {
-      document.body.style.cursor = 'default';
-    };
-  }, [isDragOver]);
 
   const handleCanvasMouseMove = useCallback((e: MouseEvent) => {
     if (!isPanning || !startPoint || !startOffset) return;
@@ -795,14 +751,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
     >
       {isDragOver && (
         <div className="absolute inset-0 bg-blue-500 bg-opacity-20 z-50 pointer-events-none flex items-center justify-center">
-          <div className="bg-white bg-opacity-90 rounded-lg p-4 shadow-lg transform transition-all duration-200 scale-105">
-            <div className="flex items-center space-x-3">
-              <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              <span className="text-blue-700 text-lg font-bold">Solte aqui para criar o nó</span>
-            </div>
-          </div>
+          <span className="text-blue-700 text-lg font-bold">Solte aqui para criar o nó</span>
         </div>
       )}
       {/* Painel de debug visual */}
@@ -834,7 +783,6 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         connectionMode={ConnectionMode.Loose}
-        fitView
       >
         <Background />
         <Controls />
