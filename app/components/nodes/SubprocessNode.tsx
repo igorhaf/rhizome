@@ -4,7 +4,7 @@ import { SubprocessNodeIcon } from '../icons/SubprocessNodeIcon';
 
 const SubprocessNode = ({ data }: { data: any }) => {
   return (
-    <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
+    <div className="px-4 py-2 shadow-md rounded-md border-2 border-stone-400">
       <Handle type="target" position={Position.Top} className="handle-extended" style={{ top: -8 }} />
       <Handle type="source" position={Position.Bottom} className="handle-extended" style={{ bottom: -8 }} />
       <div className="flex items-center">
