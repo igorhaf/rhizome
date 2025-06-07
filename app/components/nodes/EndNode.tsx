@@ -12,6 +12,8 @@ const EndNode: React.FC<NodeProps> = ({ data }) => {
       <div className="text-xs text-gray-200 font-semibold">{data.label || 'End'}</div>
       <Handle type="target" position={Position.Top} className="handle-extended" style={{ top: -8, background: END_COLOR }} />
       <Handle type="source" position={Position.Bottom} className="handle-extended" style={{ bottom: -8, background: END_COLOR }} />
+      <Handle type="source" position={Position.Right} className="handle-extended" style={{ right: -8, background: END_COLOR }} />
+      <Handle type="source" position={Position.Left} className="handle-extended" style={{ left: -8, background: END_COLOR }} />
     </div>
   );
 };
