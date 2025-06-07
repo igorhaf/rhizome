@@ -132,8 +132,10 @@ const DecisionConfigTab: React.FC<{ node: Node; setNodes: React.Dispatch<React.S
       data: {
         ...(localNode.data as any),
         inputVars,
+        inputVarsCount: inputVars.length,
         conditions,
         outputVars,
+        outputVarsCount: outputVars.length,
       },
     };
     setLocalNode(updated);

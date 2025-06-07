@@ -54,6 +54,9 @@ export interface NodeData {
   returnCode?: number;
   returnType?: 'json' | 'text' | 'xml';
   inputVars?: any;
+  inputVarsCount?: number;
+  outputVars?: any;
+  outputVarsCount?: number;
   emailBody?: string;
   webhookUrl?: string;
   httpMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
@@ -64,7 +67,6 @@ export interface NodeData {
   actionType?: string;
   apiUrl?: string;
   sslVerification?: boolean;
-  outputVars?: any;
   cc?: string;
   bcc?: string;
   replyTo?: string;

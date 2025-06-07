@@ -79,6 +79,14 @@ const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdat
       >
         Parâmetros/Regras
       </button>
+      <div className="flex gap-4 my-2">
+        <span className="text-xs text-gray-400">
+          Entradas: <span className="font-bold text-white">{data.inputVarsCount ?? 0}</span>
+        </span>
+        <span className="text-xs text-gray-400">
+          Saídas: <span className="font-bold text-white">{data.outputVarsCount ?? 0}</span>
+        </span>
+      </div>
       {showBusinessRules && (
         <BusinessRulesModal
           open={showBusinessRules}
@@ -87,6 +95,8 @@ const DecisionNodeSidebar: React.FC<DecisionNodeSidebarProps> = ({ node, onUpdat
             handleChange('conditions', data.conditions);
             handleChange('inputVars', data.inputVars);
             handleChange('outputVars', data.outputVars);
+            handleChange('inputVarsCount', data.inputVars ? data.inputVars.split(',').filter(Boolean).length : 0);
+            handleChange('outputVarsCount', data.outputVars ? data.outputVars.split(',').filter(Boolean).length : 0);
             handleChange('testWithSimData', data.testWithSimData);
             handleChange('notes', data.notes);
             setShowBusinessRules(false);
