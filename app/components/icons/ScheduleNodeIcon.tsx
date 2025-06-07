@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const ScheduleNodeIcon: React.FC = () => {
+export const ScheduleNodeIcon: React.FC<{ color?: string }> = ({ color = 'currentColor' }) => {
   return (
     <svg
       width="32"
@@ -11,7 +11,7 @@ export const ScheduleNodeIcon: React.FC = () => {
     >
       <path
         d="M12 8V12L15 15"
-        stroke="white"
+        stroke={color}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -20,7 +20,7 @@ export const ScheduleNodeIcon: React.FC = () => {
         cx="12"
         cy="12"
         r="9"
-        stroke="white"
+        stroke={color}
         strokeWidth="2"
       />
     </svg>
