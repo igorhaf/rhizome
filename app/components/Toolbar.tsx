@@ -153,9 +153,9 @@ const Toolbar: React.FC<ToolbarProps> = ({ onNodeSelect }) => {
         <button
           key={type}
           className={`w-10 h-10 flex items-center justify-center rounded transition-colors duration-150 ${draggingType === type ? 'bg-blue-800' : 'hover:bg-[#23272e]'} text-white`}
-          draggable
+                draggable
           onDragStart={e => handleDragStart(e, type as NodeType)}
-          onDragEnd={handleDragEnd}
+                onDragEnd={handleDragEnd}
           title={title}
         >
           <span className="w-6 h-6 flex items-center justify-center">{icon}</span>

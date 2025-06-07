@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const DecisionNodeIcon: React.FC = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="24" height="24" fill="currentColor">
+export const DecisionNodeIcon: React.FC<{ color?: string }> = ({ color = 'currentColor' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="24" height="24" fill={color}>
     <path d="M215.9,171.1c0.1-0.5,0.2-1,0.2-1.5v-43.9c0-10.3-8.4-18.8-18.8-18.8h-63.2v-22c17.1-3.4,30-18.5,30-36.5
       c0-20.5-16.7-37.2-37.2-37.2c-20.5,0-37.2,16.7-37.2,37.2c0,18.1,12.9,33.1,30,36.5v22.1H56.5c-10.3,0-18.8,8.4-18.8,18.8v43.6
       c-15.9,4.2-27.7,18.7-27.7,36c0,20.5,16.7,37.2,37.2,37.2s37.2-16.7,37.2-37.2c0-18.9-14.1-34.5-32.3-36.9v-42.8
