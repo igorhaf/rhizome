@@ -47,6 +47,28 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import type { Edge } from 'reactflow';
 
+// Add custom styles to hide ReactFlow attribution
+const customStyles = `
+  .react-flow__attribution {
+    display: none !important;
+  }
+  .react-flow__node,
+  .react-flow__node-default,
+  .react-flow__node[data-type],
+  .react-flow__node[data-type='decision'],
+  .react-flow__node[data-type='api'],
+  .react-flow__node[data-type='loop'],
+  .react-flow__node[data-type='webhook'],
+  .react-flow__node[data-type='email'],
+  .react-flow__node[data-type='subprocess'],
+  .react-flow__node[data-type='Database'],
+  .react-flow__node[data-type='warning'] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+`;
+
 interface FlowCanvasProps {
   nodes?: Node[];
   edges?: Edge[];
@@ -755,6 +777,7 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
       onDrop={handleDrop}
       onDragLeave={handleDragLeave}
     >
+      <style>{customStyles}</style>
       {isDragOver && (
         <div className="absolute inset-0 bg-blue-500 bg-opacity-20 z-50 pointer-events-none flex items-center justify-center">
           <span className="text-blue-700 text-lg font-bold">Solte aqui para criar o nó</span>

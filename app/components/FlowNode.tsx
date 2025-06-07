@@ -94,23 +94,23 @@ const FlowNode: React.FC<FlowNodeProps> = ({
       case 'funcion':
         return `${baseStyle} bg-green-400 text-white`;
       case 'email':
-        return `${baseStyle} bg-blue-400 text-white`;
+        return `${baseStyle} text-white`;
       case 'webhook':
-        return `${baseStyle} bg-orange-400 text-white`;
+        return `${baseStyle} text-white`;
       case 'decision':
-        return `${baseStyle} bg-yellow-500 text-white`;
+        return `${baseStyle} text-white`;
       case 'loop':
-        return `${baseStyle} bg-purple-500 text-white`;
+        return `${baseStyle} text-white`;
       case 'subprocess':
-        return `${baseStyle} bg-orange-500 text-white`;
+        return `${baseStyle} text-white`;
       case 'Database':
-        return `${baseStyle} bg-teal-500 text-white`;
+        return `${baseStyle} text-white`;
       case 'api':
-        return `${baseStyle} bg-indigo-500 text-white`;
+        return `${baseStyle} text-white`;
       case 'spreadsheet':
         return `${baseStyle} bg-green-500 text-white`;
       case 'warning':
-        return `${baseStyle} bg-yellow-400 text-black`;
+        return `${baseStyle} text-black`;
       default:
         return `${baseStyle} bg-gray-500 text-white`;
     }

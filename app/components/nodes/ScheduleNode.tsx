@@ -1,26 +1,23 @@
 import React from 'react';
-import { Node } from '../../types/flow';
+import { Handle, Position } from 'reactflow';
 import { ScheduleNodeIcon } from '../icons/ScheduleNodeIcon';
 
-interface ScheduleNodeProps {
-  data: Node['data'];
-  isConnectable: boolean;
-}
-
-const ScheduleNode: React.FC<ScheduleNodeProps> = ({ data, isConnectable }) => {
+const ScheduleNode = ({ data }: { data: any }) => {
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center shadow-md">
+    <div className="px-4 py-2 shadow-md rounded-md border-2 border-stone-400">
+      <Handle type="target" position={Position.Top} className="handle-extended" style={{ top: -8 }} />
+      <Handle type="source" position={Position.Bottom} className="handle-extended" style={{ bottom: -8 }} />
+      <div className="flex items-center">
         <ScheduleNodeIcon />
-      </div>
-      <div className="mt-2 text-sm font-medium text-white">{data.label}</div>
-      {data.scheduleType && (
-        <div className="mt-1 text-xs text-gray-300">
-          {data.scheduleType === 'interval' 
-            ? `${data.interval} ${data.intervalUnit}`
-            : data.cronExpression}
+        <div className="ml-2">
+          <div className="text-lg font-bold">{data.label}</div>
+          <div className="text-gray-500">
+            {data.scheduleType === 'interval'
+              ? `${data.interval} ${data.intervalUnit}`
+              : data.cronExpression || data.description}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
